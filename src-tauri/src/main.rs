@@ -560,6 +560,8 @@ async fn check_game(state: State<'_, AppState>, dir: String) -> Result<Value, St
 
 #[tauri::command]
 async fn list_mods(state: State<'_, AppState>) -> Result<Value, String> {
+    let state = state.inner().clone();
+    blocking(move || {
     let p = &state.paths;
     let s = load_settings(p);
     let dir = mods_dir(p, &s);
@@ -567,6 +569,7 @@ async fn list_mods(state: State<'_, AppState>) -> Result<Value, String> {
     let mut v = api(p, &["mods", &dir.to_string_lossy(), &p.data.join("mods.json").to_string_lossy()])?;
     v["dir"] = json!(dir);
     Ok(v)
+    }).await
 }
 
 #[tauri::command]
@@ -580,6 +583,8 @@ fn save_mods(state: State<AppState>, order: Vec<String>, disabled: Vec<String>) 
 
 #[tauri::command]
 async fn list_patches(state: State<'_, AppState>) -> Result<Value, String> {
+    let state = state.inner().clone();
+    blocking(move || {
     let p = &state.paths;
     let s = load_settings(p);
     let dir = patches_dir(p, &s);
@@ -587,6 +592,7 @@ async fn list_patches(state: State<'_, AppState>) -> Result<Value, String> {
     let mut v = api(p, &["patches", &dir.to_string_lossy(), &p.data.join("patches.json").to_string_lossy()])?;
     v["dir"] = json!(dir);
     Ok(v)
+    }).await
 }
 
 /// patches.json: the switches that differ from each file's default; choices for patches not

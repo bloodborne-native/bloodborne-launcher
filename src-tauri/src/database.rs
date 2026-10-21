@@ -11,6 +11,8 @@ pub type Result<T> = std::result::Result<T, String>;
 pub fn path(data: &Path) -> PathBuf {
     data.join("launcher.db")
 }
+/// Blocking wait on one query: call it from a blocking thread only (a command's `blocking(...)`),
+/// never on the async runtime itself, where tokio panics and the invoke never answers.
 pub fn block<T>(future: impl std::future::Future<Output = Result<T>>) -> Result<T> {
     tauri::async_runtime::block_on(future)
 }
