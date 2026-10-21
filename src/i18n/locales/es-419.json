@@ -113,7 +113,7 @@
     "openFolder": "Carpeta de registros", "empty": "Nada todavía", "emptyHint": "Inicia el juego para ver aquí su salida.", "follow": "Seguir"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Renderiza por debajo de la salida y reconstruye la imagen", "off": "Desactivado", "offHint": "Resolución nativa" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Renderiza por debajo de la salida y reconstruye la imagen", "metalfx": "MetalFX (Apple)", "metalfxHint": "Escalado temporal de Apple", "off": "Desactivado", "offHint": "Resolución nativa" },
     "preset": { "0": "Native AA", "1": "Calidad", "2": "Equilibrado", "3": "Rendimiento", "4": "Ultra rendimiento" },
     "fps": { "uncap": "Sin límite", "uncapHint": "El tiempo real de cada cuadro: cualquier tasa, con la física correcta", "60": "60", "90": "90", "30": "30", "30Hint": "Como en PS4" },
     "fpsSize": { "small": "Pequeño", "big": "Grande" },

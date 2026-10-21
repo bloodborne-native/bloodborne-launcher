@@ -3,6 +3,7 @@ import type { Option, TKey } from "@/lib/types";
 
 export const UPSCALERS: Option<string>[] = [
   { value: "fsr3", label: "options.upscaler.fsr3", hint: "options.upscaler.fsr3Hint" },
+  { value: "metalfx", label: "options.upscaler.metalfx", hint: "options.upscaler.metalfxHint" },
   { value: "off", label: "options.upscaler.off", hint: "options.upscaler.offHint" },
 ];
 

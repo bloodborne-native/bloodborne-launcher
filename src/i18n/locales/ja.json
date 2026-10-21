@@ -113,7 +113,7 @@
     "openFolder": "ログフォルダ", "empty": "まだ何もありません", "emptyHint": "ゲームを起動すると、ここに出力が表示されます。", "follow": "追従"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "出力より低い解像度で描画して再構成", "off": "オフ", "offHint": "ネイティブ解像度" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "出力より低い解像度で描画して再構成", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apple のテンポラルアップスケーラー", "off": "オフ", "offHint": "ネイティブ解像度" },
     "preset": { "0": "Native AA", "1": "品質", "2": "バランス", "3": "パフォーマンス", "4": "ウルトラパフォーマンス" },
     "fps": { "uncap": "無制限", "uncapHint": "各フレームの実時間で進行：任意のフレームレート、物理挙動も正確", "60": "60", "90": "90", "30": "30", "30Hint": "PS4 と同じ" },
     "fpsSize": { "small": "小", "big": "大" },

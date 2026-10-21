@@ -244,6 +244,8 @@
     "upscaler": {
       "fsr3": "AMD FSR 3.1",
       "fsr3Hint": "Renderiza abaixo da saída e reconstrói a imagem",
+      "metalfx": "MetalFX (Apple)",
+      "metalfxHint": "Upscaler temporal da Apple",
       "off": "Desligado",
       "offHint": "Resolução nativa"
     },

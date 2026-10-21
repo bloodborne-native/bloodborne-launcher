@@ -69,7 +69,7 @@ export function GraphicsPage() {
         )}
       </SettingsSection>
       <SettingsSection title={t("graphics.upscaling")} description={t("graphics.upscalingHint")}>
-        <SelectRow title={t("graphics.upscaler")} value={upscaler} options={UPSCALERS} onChange={(v) => setIni("upscaler", v)} />
+        <SelectRow title={t("graphics.upscaler")} value={upscaler} options={UPSCALERS.filter((o) => o.value !== "metalfx" || config?.platform === "macos")} onChange={(v) => setIni("upscaler", v)} />
         <SelectRow
           title={t("graphics.preset")}
           description={t("common.restartNote")}
