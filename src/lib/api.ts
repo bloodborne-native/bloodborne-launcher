@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { profilesService } from "@/services";
 import { mockApi } from "@/lib/mockApi";
-import type { ReleaseInfo, Config, Display, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, CharacterEdit } from "@/lib/types";
+import type { ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, CharacterEdit } from "@/lib/types";
 
 /** Running inside the Tauri app (else a browser preview with mock data). */
 const inTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -30,6 +30,8 @@ const tauriApi = {
     invoke<void>("save_patches", { shown, enabled, disabled }),
   listGamepads: () => invoke<Gamepad[]>("list_gamepads"),
   listDisplays: () => invoke<Display[]>("list_displays"),
+  fsr411Support: () => invoke<Fsr411Support>("fsr411_support"),
+  addFsr411Files: (dll: string) => invoke<void>("add_fsr411_files", { dll }),
   readInput: (kind: "key" | "pad") => invoke<string | null>("read_input", { kind }),
   openLauncherData: () => invoke<void>("open_launcher_data"),
   openPath: (path: string) => invoke<void>("open_path", { path }),

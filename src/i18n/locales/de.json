@@ -42,6 +42,12 @@
     "metalHud": "Metal-Leistungs-HUD",
     "metalHudHint": "Apples Statistik-Overlay für Metal: Bildzeit, GPU-Zeit und Speicher. Gilt beim Start des Spiels.",
     "upscalingHint": "Das Spiel rendert unter der Ausgabeauflösung und FSR rekonstruiert das Bild: der größte Leistungshebel auf Apple Silicon.",
+    "fsr411Files": "AMD-FSR-4.1.1-Dateien",
+    "fsr411FilesReady": "Gefunden: AMD FSR 4.1.1 (Metal) ist unter Upscaler verfügbar.",
+    "fsr411FilesMissing": "FSR 4.1.1 braucht zwei Dateien von AMDs Modell aus deiner eigenen Kopie von AMDs Upscaler-DLL (amd_fidelityfx_upscaler_dx12.dll 4.1.1, aus OptiScaler oder einem Spiel).",
+    "fsr411ChooseDll": "AMD-DLL wählen…",
+    "fsr411Added": "FSR-4.1.1-Dateien hinzugefügt",
+    "fsr411Failed": "Die FSR-4.1.1-Dateien konnten dieser DLL nicht entnommen werden",
     "upscaler": "Upscaler", "preset": "Qualitätsstufe", "presetRender": "{{name}} · rendert in {{size}}",
     "sharpen": "Schärfung (RCAS)", "sharpness": "Schärfe", "objectMotion": "Bewegungsvektoren der Figuren",
     "objectMotionHint": "Weniger Nachziehen bei bewegten Figuren mit FSR. Kostet auf Apple-GPUs etwa 5 ms pro Bild.",
@@ -113,7 +119,7 @@
     "openFolder": "Protokollordner", "empty": "Noch nichts", "emptyHint": "Starte das Spiel, um hier seine Ausgabe zu sehen.", "follow": "Mitlaufen"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Rendert unter der Ausgabe und rekonstruiert das Bild", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apples temporales Upscaling", "off": "Aus", "offHint": "Native Auflösung" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Rendert unter der Ausgabe und rekonstruiert das Bild", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apples temporales Upscaling", "fsr411": "AMD FSR 4.1.1 (Metal)", "fsr411Hint": "FSR 4.1.1 neuronales Upscaling auf Apple Metal", "off": "Aus", "offHint": "Native Auflösung" },
     "preset": { "0": "Native AA", "1": "Qualität", "2": "Ausgewogen", "3": "Leistung", "4": "Ultra-Leistung" },
     "fps": { "uncap": "Unbegrenzt", "uncapHint": "Die echte Zeit jedes Bildes: jede Bildrate, Physik bleibt richtig", "60": "60", "90": "90", "30": "30", "30Hint": "Wie auf der PS4" },
     "fpsSize": { "small": "Klein", "big": "Groß" },

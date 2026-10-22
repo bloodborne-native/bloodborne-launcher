@@ -42,6 +42,12 @@
     "metalHud": "HUD wydajności Metal",
     "metalHudHint": "Nakładka statystyk Apple dla Metal: czas klatki, czas GPU i pamięć. Działa od uruchomienia gry.",
     "upscalingHint": "Gra renderuje poniżej rozdzielczości wyjściowej, a FSR odtwarza obraz: największy zysk wydajności na Apple Silicon.",
+    "fsr411Files": "Pliki AMD FSR 4.1.1",
+    "fsr411FilesReady": "Znaleziono: AMD FSR 4.1.1 (Metal) jest dostępny w Upscalerze.",
+    "fsr411FilesMissing": "FSR 4.1.1 potrzebuje dwóch plików modelu AMD z Twojej własnej kopii biblioteki DLL upscalera AMD (amd_fidelityfx_upscaler_dx12.dll 4.1.1, z OptiScalera lub gry).",
+    "fsr411ChooseDll": "Wybierz DLL AMD…",
+    "fsr411Added": "Dodano pliki FSR 4.1.1",
+    "fsr411Failed": "Nie udało się pobrać plików FSR 4.1.1 z tej biblioteki DLL",
     "upscaler": "Skalowanie", "preset": "Ustawienie jakości", "presetRender": "{{name}} · renderuje w {{size}}",
     "sharpen": "Wyostrzanie (RCAS)", "sharpness": "Siła wyostrzania", "objectMotion": "Wektory ruchu postaci",
     "objectMotionHint": "Mniej smug na poruszających się postaciach z FSR. Kosztuje około 5 ms na klatkę na GPU Apple.",
@@ -113,7 +119,7 @@
     "openFolder": "Folder dzienników", "empty": "Jeszcze nic", "emptyHint": "Uruchom grę, aby zobaczyć tutaj jej wyjście.", "follow": "Śledź"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Renderuje poniżej wyjścia i odtwarza obraz", "metalfx": "MetalFX (Apple)", "metalfxHint": "Temporalny upskaler firmy Apple", "off": "Wył.", "offHint": "Natywna rozdzielczość" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Renderuje poniżej wyjścia i odtwarza obraz", "metalfx": "MetalFX (Apple)", "metalfxHint": "Temporalny upskaler firmy Apple", "fsr411": "AMD FSR 4.1.1 (Metal)", "fsr411Hint": "Neuronowe skalowanie FSR 4.1.1 na Apple Metal", "off": "Wył.", "offHint": "Natywna rozdzielczość" },
     "preset": { "0": "Native AA", "1": "Jakość", "2": "Zrównoważone", "3": "Wydajność", "4": "Ultrawydajność" },
     "fps": { "uncap": "Bez limitu", "uncapHint": "Rzeczywisty czas każdej klatki: dowolna liczba klatek, poprawna fizyka", "60": "60", "90": "90", "30": "30", "30Hint": "Jak na PS4" },
     "fpsSize": { "small": "Mały", "big": "Duży" },

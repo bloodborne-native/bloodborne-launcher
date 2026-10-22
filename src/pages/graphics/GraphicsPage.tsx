@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { NumberRow, PageHeader, SelectRow, SettingsSection, SliderRow, SwitchRow } from "@/components/settings";
-import { useConfig, useIni, useSetting, useSettingsData } from "@/hooks";
+import { useConfig, useFsr411Support, useIni, useSetting, useSettingsData } from "@/hooks";
 import { ASPECT_RATIOS, EFFECTS, FPS_MODES, FPS_POSITIONS, FPS_SIZES, MODEL_LOD, PRESENT_MODES, PRESETS, UPSCALERS, nearestOutput, outputOptions, renderSize } from "@/lib/data";
 import type { Option } from "@/lib";
 import { DisplayPicker } from "@/pages/graphics/DisplayPicker";
+import { Fsr411FilesRow } from "@/pages/graphics/Fsr411FilesRow";
 import { MemoryEstimate } from "@/pages/graphics/MemoryEstimate";
 
 export function GraphicsPage() {
@@ -18,6 +19,15 @@ export function GraphicsPage() {
   const aspect = ini.aspect_ratio ?? "16:9";
   const preset = Number(ini.preset ?? 2);
   const fsrOff = upscaler === "off";
+  // MetalFX and FSR 4.1.1 on Metal are macOS-only; FSR 4.1.1 is offered when this Mac can run it
+  // (bb-gpu-capabilities --fsr411), or while it is the setting, so the choice stays visible.
+  const macos = config?.platform === "macos";
+  const fsr411 = useFsr411Support(macos);
+  const fsr411Ready = fsr411.data?.supported ?? false;
+  const fsr411NeedsFiles = !fsr411Ready && (fsr411.data?.reason.includes("initializers") ?? false);
+  const upscalers = UPSCALERS.filter((o) =>
+    o.value === "metalfx" ? macos : o.value === "fsr411" ? macos && (fsr411Ready || upscaler === "fsr411") : true,
+  );
   const presets: Option<number>[] = PRESETS.map((p) => ({
     value: p.value,
     label: t("graphics.presetRender", { name: t(p.label), size: renderSize(output, p.value, upscaler) }),
@@ -69,7 +79,8 @@ export function GraphicsPage() {
         )}
       </SettingsSection>
       <SettingsSection title={t("graphics.upscaling")} description={t("graphics.upscalingHint")}>
-        <SelectRow title={t("graphics.upscaler")} value={upscaler} options={UPSCALERS.filter((o) => o.value !== "metalfx" || config?.platform === "macos")} onChange={(v) => setIni("upscaler", v)} />
+        <SelectRow title={t("graphics.upscaler")} value={upscaler} options={upscalers} onChange={(v) => setIni("upscaler", v)} />
+        {macos && (fsr411Ready || fsr411NeedsFiles) && <Fsr411FilesRow ready={fsr411Ready} />}
         <SelectRow
           title={t("graphics.preset")}
           description={t("common.restartNote")}

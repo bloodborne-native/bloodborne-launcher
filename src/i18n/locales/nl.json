@@ -42,6 +42,12 @@
     "metalHud": "Metal-prestatie-HUD",
     "metalHudHint": "Apples statistiekoverlay voor Metal: frametijd, GPU-tijd en geheugen. Geldt bij het starten van het spel.",
     "upscalingHint": "Het spel rendert onder de uitvoerresolutie en FSR reconstrueert het beeld: de grootste prestatiewinst op Apple Silicon.",
+    "fsr411Files": "AMD FSR 4.1.1-bestanden",
+    "fsr411FilesReady": "Gevonden: AMD FSR 4.1.1 (Metal) is beschikbaar bij Upscaler.",
+    "fsr411FilesMissing": "FSR 4.1.1 heeft twee bestanden van AMD’s model nodig, uit je eigen kopie van AMD’s upscaler-DLL (amd_fidelityfx_upscaler_dx12.dll 4.1.1, van OptiScaler of een game).",
+    "fsr411ChooseDll": "AMD-DLL kiezen…",
+    "fsr411Added": "FSR 4.1.1-bestanden toegevoegd",
+    "fsr411Failed": "Kon de FSR 4.1.1-bestanden niet uit deze DLL halen",
     "upscaler": "Upscaler", "preset": "Kwaliteitsvoorinstelling", "presetRender": "{{name}} · rendert op {{size}}",
     "sharpen": "Verscherping (RCAS)", "sharpness": "Scherpte", "objectMotion": "Bewegingsvectoren van personages",
     "objectMotionHint": "Minder sporen bij bewegende personages met FSR. Kost ongeveer 5 ms per frame op Apple-GPU's.",
@@ -113,7 +119,7 @@
     "openFolder": "Logboekmap", "empty": "Nog niets", "emptyHint": "Start het spel om hier de uitvoer te zien.", "follow": "Volgen"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Rendert onder de uitvoer en reconstrueert het beeld", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apple's temporele upscaler", "off": "Uit", "offHint": "Native resolutie" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Rendert onder de uitvoer en reconstrueert het beeld", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apple's temporele upscaler", "fsr411": "AMD FSR 4.1.1 (Metal)", "fsr411Hint": "FSR 4.1.1 neurale upscaler op Apple Metal", "off": "Uit", "offHint": "Native resolutie" },
     "preset": { "0": "Native AA", "1": "Kwaliteit", "2": "Gebalanceerd", "3": "Prestaties", "4": "Ultraprestaties" },
     "fps": { "uncap": "Onbeperkt", "uncapHint": "De echte tijd van elk beeld: elke framerate, natuurkunde blijft kloppen", "60": "60", "90": "90", "30": "30", "30Hint": "Zoals op de PS4" },
     "fpsSize": { "small": "Klein", "big": "Groot" },
