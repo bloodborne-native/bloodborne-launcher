@@ -112,7 +112,7 @@ export const mockApi = {
     if (!profile || edit.fingerprint !== previewCharacter.fingerprint) return Promise.reject("Character changed. Refresh the preview.");
     profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
     profile.trophies_eligible = false;
-    const level = previewCharacter.vitality + previewCharacter.endurance
+    const level = edit.vitality + edit.endurance
       + edit.strength + edit.skill + edit.bloodtinge + edit.arcane - 50;
     previewCharacter = { ...previewCharacter, ...edit, level, fingerprint: `preview-${nextBackup}` };
     return wait(undefined);

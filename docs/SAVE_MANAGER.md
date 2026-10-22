@@ -78,10 +78,12 @@ unknown schemas are kept and reported, never reset.
 
 The Saves page previews readable character slots in supported Bloodborne save sets (name,
 level, attributes, Blood Echoes, Insight, playtime and journey). It refuses ambiguous or
-malformed character layouts. The editor changes Strength, Skill, Bloodtinge and Arcane (1–99),
-Blood Echoes (0–999,999,999) and Insight (0–99). It recomputes level from the six attributes.
-Vitality and Endurance stay read-only because the game keeps separate saved HP and stamina
-values; changing Vitality and level in an isolated load left the saved HP unchanged. Editing
+malformed character layouts. The editor changes Vitality (7–99), Endurance (8–99) and the
+other four attributes (1–99),
+Blood Echoes (0–999,999,999) and Insight (0–99). Max all sets these values to their maxima
+and reaches level 544. It recomputes level from the six attributes and updates the three saved
+HP or stamina values when Vitality or Endurance changes. Health and stamina use the game's base
+progression values; runes and equipment may change the displayed values. Editing
 requires the game to be stopped and a preview that still matches the
 character file. The launcher edits a staged copy of the whole set, verifies the edited fields,
 backs up the live set, marks the staged set edited and then swaps it into place with a

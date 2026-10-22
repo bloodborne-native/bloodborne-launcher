@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-//! Bounded, read-only character previews from a profile's decrypted Bloodborne save set.
+//! Bounded character previews and verified edits of decrypted Bloodborne save sets.
 //! Format locations were checked against Noxde/Bloodborne-save-editor d8d0365 (GPL-3.0).
 //! This parser is independently written and validates the structure before exposing fields.
 use serde::{Deserialize, Serialize};
@@ -39,6 +39,8 @@ pub struct Edit {
     pub fingerprint: String,
     pub echoes: u32,
     pub insight: u32,
+    pub vitality: u32,
+    pub endurance: u32,
     pub strength: u32,
     pub skill: u32,
     pub bloodtinge: u32,
@@ -197,11 +199,28 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
     if !before.stats_consistent || before.fingerprint != edit.fingerprint {
         return Err("The character changed since it was opened, or its stats are inconsistent. Refresh the save preview.".into());
     }
-    let offensive = [edit.strength, edit.skill, edit.bloodtinge, edit.arcane];
-    if !offensive.iter().all(|value| (1..=99).contains(value)) {
+    let attributes = [
+        edit.vitality,
+        edit.endurance,
+        edit.strength,
+        edit.skill,
+        edit.bloodtinge,
+        edit.arcane,
+    ];
+    if !attributes.iter().all(|value| (1..=99).contains(value)) {
         return Err("Character attributes must be between 1 and 99.".into());
     }
-    let level = (before.vitality + before.endurance + offensive.iter().sum::<u32>())
+    if edit.vitality != before.vitality && crate::character_growth::hp(edit.vitality).is_none() {
+        return Err("Vitality must be between 7 and 99 to update health.".into());
+    }
+    if edit.endurance != before.endurance
+        && crate::character_growth::stamina(edit.endurance).is_none()
+    {
+        return Err("Endurance must be between 8 and 99 to update stamina.".into());
+    }
+    let level = attributes
+        .iter()
+        .sum::<u32>()
         .checked_sub(50)
         .ok_or("The resulting character level is outside the game range.")?;
     if !(4..=544).contains(&level) {
@@ -210,11 +229,13 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
     if before.echoes == edit.echoes
         && before.insight == edit.insight
         && [
+            before.vitality,
+            before.endurance,
             before.strength,
             before.skill,
             before.bloodtinge,
             before.arcane,
-        ] == offensive
+        ] == attributes
     {
         return Err("No character values changed.".into());
     }
@@ -222,6 +243,8 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
     for (offset, value) in [
         (-19, edit.echoes),
         (-35, edit.insight),
+        (-103, edit.vitality),
+        (-95, edit.endurance),
         (-79, edit.strength),
         (-71, edit.skill),
         (-63, edit.bloodtinge),
@@ -233,6 +256,29 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
             .ok_or("Invalid character field offset.")?;
         bytes[at..at + 4].copy_from_slice(&value.to_le_bytes());
     }
+    for (changed, start, value) in [
+        (
+            edit.vitality != before.vitality,
+            -147,
+            crate::character_growth::hp(edit.vitality),
+        ),
+        (
+            edit.endurance != before.endurance,
+            -119,
+            crate::character_growth::stamina(edit.endurance),
+        ),
+    ] {
+        if changed {
+            let value = value.ok_or("Unsupported health or stamina progression value.")?;
+            // Three saved copies represent the character's current and maximum base value.
+            for index in 0..3 {
+                let at = base
+                    .checked_add_signed(start + index * 4)
+                    .ok_or("Invalid derived field offset.")?;
+                bytes[at..at + 4].copy_from_slice(&value.to_le_bytes());
+            }
+        }
+    }
     let after = parse(&bytes, &edit.title_id, edit.slot)?
         .ok_or("Character validation failed after editing.")?;
     if after.echoes != edit.echoes
@@ -240,11 +286,29 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
         || after.name != before.name
         || after.level != level
         || !after.stats_consistent
-        || [after.strength, after.skill, after.bloodtinge, after.arcane] != offensive
-        || after.vitality != before.vitality
-        || after.endurance != before.endurance
+        || [
+            after.vitality,
+            after.endurance,
+            after.strength,
+            after.skill,
+            after.bloodtinge,
+            after.arcane,
+        ] != attributes
     {
         return Err("Character validation failed after editing.".into());
+    }
+    for (changed, start, expected) in [
+        (edit.vitality != before.vitality, -147, crate::character_growth::hp(edit.vitality)),
+        (edit.endurance != before.endurance, -119, crate::character_growth::stamina(edit.endurance)),
+    ] {
+        if changed {
+            let expected = expected.ok_or("Unsupported health or stamina progression value.")?;
+            for index in 0..3 {
+                if number(&bytes, base, start + index * 4)? != expected {
+                    return Err("Character health or stamina validation failed after editing.".into());
+                }
+            }
+        }
     }
     fs::write(path, bytes).map_err(|e| e.to_string())
 }
@@ -289,6 +353,12 @@ mod tests {
             bytes[base + 1 + i * 2..base + 3 + i * 2].copy_from_slice(&unit.to_le_bytes());
         }
         for (relative, value) in [
+            (-147, 616_u32),
+            (-143, 616),
+            (-139, 616),
+            (-119, 93),
+            (-115, 93),
+            (-111, 93),
             (-103, 12_u32),
             (-95, 11),
             (-79, 22),
@@ -339,23 +409,33 @@ mod tests {
             title_id: before.title_id.clone(),
             slot: before.slot,
             fingerprint: before.fingerprint.clone(),
-            echoes: 12345,
-            insight: 7,
-            strength: before.strength + 1,
-            skill: before.skill,
-            bloodtinge: before.bloodtinge,
-            arcane: before.arcane,
+            echoes: 999_999_999,
+            insight: 99,
+            vitality: 99,
+            endurance: 99,
+            strength: 99,
+            skill: 99,
+            bloodtinge: 99,
+            arcane: 99,
         };
         crate::saves::edit(&root, &original, "original", |savedata| {
             rewrite(savedata, &edit)
         })
         .unwrap();
         let after = list(&original).unwrap().remove(0);
-        assert_eq!((after.echoes, after.insight), (12345, 7));
+        assert_eq!((after.echoes, after.insight), (999_999_999, 99));
         assert_eq!(
-            (after.strength, after.level),
-            (before.strength + 1, before.level + 1)
+            (after.vitality, after.endurance, after.strength, after.level),
+            (99, 99, 99, 544)
         );
+        let edited = fs::read(set.join("userdata0000")).unwrap();
+        let base = character_base(&edited).unwrap().unwrap();
+        for offset in [-147, -143, -139] {
+            assert_eq!(number(&edited, base, offset).unwrap(), 1900);
+        }
+        for offset in [-119, -115, -111] {
+            assert_eq!(number(&edited, base, offset).unwrap(), 170);
+        }
         assert!(original.join("savedata/.bb-edited").is_file());
         assert!(!crate::trophies::eligible(&original));
         let backups = crate::saves::list(&root, &original)

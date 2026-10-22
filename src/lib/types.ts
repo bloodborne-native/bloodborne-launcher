@@ -106,7 +106,7 @@ export type Character = {
   stats_consistent: boolean; fingerprint: string;
 };
 export type CharacterEdit = { title_id: string; slot: number; fingerprint: string; echoes: number; insight: number;
-  strength: number; skill: number; bloodtinge: number; arcane: number };
+  vitality: number; endurance: number; strength: number; skill: number; bloodtinge: number; arcane: number };
 
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };
 export type ProfileChange = { action: "initialize" | "create" | "select" | "rename" | "delete"; id: string; name?: string };

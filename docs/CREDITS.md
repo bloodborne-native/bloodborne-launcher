@@ -23,6 +23,12 @@ The Bloodborne character preview and limited editor use field locations checked 
 (GPL-3.0). Its source is not copied: the parser, validation, staged whole-set edit, backup and
 edited-save handling here are independent launcher code.
 
+The base HP and stamina progression values used when editing Vitality or Endurance were checked
+against the public [Bloodborne Wiki Vitality](https://www.bloodborne-wiki.com/2015/05/vitality.html)
+and [Endurance](https://www.bloodborne-wiki.com/2015/05/endurance.html) tables
+([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)). No wiki text or game data files
+are included.
+
 ## Leari database architecture
 
 The Drizzle-to-Tauri SQL adapter in `src/db/client.ts` is adapted from

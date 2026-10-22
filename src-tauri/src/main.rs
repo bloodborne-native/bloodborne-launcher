@@ -10,6 +10,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod saves;
+mod character_growth;
 mod save_editor;
 mod profiles;
 mod trophies;
