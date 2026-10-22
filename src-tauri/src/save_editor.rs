@@ -1,0 +1,403 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+//! Bounded, read-only character previews from a profile's decrypted Bloodborne save set.
+//! Format locations were checked against Noxde/Bloodborne-save-editor d8d0365 (GPL-3.0).
+//! This parser is independently written and validates the structure before exposing fields.
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+use std::fs;
+use std::path::{Path, PathBuf};
+
+type Result<T> = std::result::Result<T, String>;
+const SLOT_BYTES: usize = 0x140000;
+const TITLES: &[&str] = &["CUSA00207", "CUSA00900", "CUSA01363", "CUSA03173"];
+const INVENTORY_MAGIC: [u8; 4] = [0x40, 0xf0, 0xff, 0xff];
+
+#[derive(Serialize)]
+pub struct Character {
+    pub title_id: String,
+    pub slot: u8,
+    pub name: String,
+    pub level: u32,
+    pub vitality: u32,
+    pub endurance: u32,
+    pub strength: u32,
+    pub skill: u32,
+    pub bloodtinge: u32,
+    pub arcane: u32,
+    pub echoes: u32,
+    pub insight: u32,
+    pub playtime_ms: u32,
+    pub new_game_cycle: u8,
+    pub stats_consistent: bool,
+    pub fingerprint: String,
+}
+
+#[derive(Deserialize)]
+pub struct Edit {
+    pub title_id: String,
+    pub slot: u8,
+    pub fingerprint: String,
+    pub echoes: u32,
+    pub insight: u32,
+    pub strength: u32,
+    pub skill: u32,
+    pub bloodtinge: u32,
+    pub arcane: u32,
+}
+
+fn real_dir(path: &Path) -> Result<bool> {
+    match fs::symlink_metadata(path) {
+        Ok(meta) if meta.is_dir() && !meta.file_type().is_symlink() => Ok(true),
+        Ok(_) => Err(format!(
+            "Save folder is not a regular directory: {}",
+            path.display()
+        )),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(false),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
+    if !TITLES.contains(&title) || slot > 9 {
+        return Err("Unsupported Bloodborne save slot.".into());
+    }
+    let save = user.join("savedata");
+    let account = save.join("1");
+    let game = account.join(title);
+    let set = game.join("SPRJ0005");
+    for path in [user, &save, &account, &game, &set] {
+        if !real_dir(path)? {
+            return Err("The Bloodborne save folder is missing.".into());
+        }
+    }
+    Ok(set.join(format!("userdata{slot:04}")))
+}
+
+fn slot_bytes(path: &Path) -> Result<Vec<u8>> {
+    let meta = fs::symlink_metadata(path).map_err(|e| e.to_string())?;
+    if !meta.is_file() || meta.file_type().is_symlink() || meta.len() != SLOT_BYTES as u64 {
+        return Err("Unsupported Bloodborne character file.".into());
+    }
+    let bytes = fs::read(path).map_err(|e| e.to_string())?;
+    if bytes.len() != SLOT_BYTES {
+        return Err("The character file changed while it was read.".into());
+    }
+    Ok(bytes)
+}
+
+fn number(bytes: &[u8], base: usize, relative: isize) -> Result<u32> {
+    let at = base
+        .checked_add_signed(relative)
+        .ok_or("Invalid character field offset.")?;
+    let raw: [u8; 4] = bytes
+        .get(at..at + 4)
+        .ok_or("Truncated character field.")?
+        .try_into()
+        .map_err(|_| "Invalid character field.")?;
+    Ok(u32::from_le_bytes(raw))
+}
+
+fn character_base(bytes: &[u8]) -> Result<Option<usize>> {
+    if bytes.len() != SLOT_BYTES {
+        return Err("Unsupported Bloodborne character file.".into());
+    }
+    // Empty slot files have no FACE block. A nonempty file must have one unambiguous anchor.
+    let faces: Vec<usize> = bytes[0xf000..]
+        .windows(4)
+        .enumerate()
+        .filter_map(|(index, window)| (window == b"FACE").then_some(index + 0xf000))
+        .take(2)
+        .collect();
+    let face = match faces.as_slice() {
+        [] => return Ok(None),
+        [face] => *face,
+        _ => return Err("Ambiguous character appearance block.".into()),
+    };
+    // The inventory marker and UTF-16 name independently confirm the FACE location.
+    let inventory = face.checked_sub(34028).ok_or("Invalid character layout.")?;
+    let base = inventory
+        .checked_sub(469)
+        .ok_or("Invalid character layout.")?;
+    if bytes.get(inventory..inventory + 4) != Some(INVENTORY_MAGIC.as_slice()) {
+        return Err("Unrecognized character inventory layout.".into());
+    }
+    Ok(Some(base))
+}
+
+fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
+    let Some(base) = character_base(bytes)? else {
+        return Ok(None);
+    };
+    let name_bytes = bytes
+        .get(base + 1..base + 33)
+        .ok_or("Truncated character name.")?;
+    let units: Vec<u16> = name_bytes
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|pair| u16::from_le_bytes(*pair))
+        .collect();
+    let end = units
+        .iter()
+        .position(|&unit| unit == 0)
+        .unwrap_or(units.len());
+    let name = String::from_utf16(&units[..end]).map_err(|_| "Invalid character name.")?;
+    if name.is_empty()
+        || name.chars().any(char::is_control)
+        || units[end..].iter().any(|&unit| unit != 0)
+    {
+        return Err("Invalid character name.".into());
+    }
+    let vitality = number(bytes, base, -103)?;
+    let endurance = number(bytes, base, -95)?;
+    let strength = number(bytes, base, -79)?;
+    let skill = number(bytes, base, -71)?;
+    let bloodtinge = number(bytes, base, -63)?;
+    let arcane = number(bytes, base, -55)?;
+    let level = number(bytes, base, -23)?;
+    let attributes = [vitality, endurance, strength, skill, bloodtinge, arcane];
+    if !attributes.iter().all(|&value| (1..=99).contains(&value)) || !(4..=544).contains(&level) {
+        return Err("Invalid character attributes.".into());
+    }
+    let sum: u32 = attributes.iter().sum();
+    let stats_consistent = sum.checked_sub(50) == Some(level);
+    let new_game_cycle = *bytes
+        .get(base + 68831)
+        .ok_or("Truncated character progression.")?;
+    let playtime_ms =
+        u32::from_le_bytes(bytes[8..12].try_into().map_err(|_| "Truncated playtime.")?);
+    Ok(Some(Character {
+        title_id: title.into(),
+        slot,
+        name,
+        level,
+        vitality,
+        endurance,
+        strength,
+        skill,
+        bloodtinge,
+        arcane,
+        echoes: number(bytes, base, -19)?,
+        insight: number(bytes, base, -35)?,
+        playtime_ms,
+        new_game_cycle,
+        stats_consistent,
+        fingerprint: format!("{:x}", Sha256::digest(bytes)),
+    }))
+}
+
+pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
+    if edit.echoes > 999_999_999 || edit.insight > 99 {
+        return Err("Blood Echoes or Insight is outside the game range.".into());
+    }
+    let user = savedata.parent().ok_or("Invalid save staging folder.")?;
+    let path = slot_path(user, &edit.title_id, edit.slot)?;
+    let mut bytes = slot_bytes(&path)?;
+    let before = parse(&bytes, &edit.title_id, edit.slot)?.ok_or("The character slot is empty.")?;
+    if !before.stats_consistent || before.fingerprint != edit.fingerprint {
+        return Err("The character changed since it was opened, or its stats are inconsistent. Refresh the save preview.".into());
+    }
+    let offensive = [edit.strength, edit.skill, edit.bloodtinge, edit.arcane];
+    if !offensive.iter().all(|value| (1..=99).contains(value)) {
+        return Err("Character attributes must be between 1 and 99.".into());
+    }
+    let level = (before.vitality + before.endurance + offensive.iter().sum::<u32>())
+        .checked_sub(50)
+        .ok_or("The resulting character level is outside the game range.")?;
+    if !(4..=544).contains(&level) {
+        return Err("The resulting character level is outside the game range.".into());
+    }
+    if before.echoes == edit.echoes
+        && before.insight == edit.insight
+        && [
+            before.strength,
+            before.skill,
+            before.bloodtinge,
+            before.arcane,
+        ] == offensive
+    {
+        return Err("No character values changed.".into());
+    }
+    let base = character_base(&bytes)?.ok_or("The character slot is empty.")?;
+    for (offset, value) in [
+        (-19, edit.echoes),
+        (-35, edit.insight),
+        (-79, edit.strength),
+        (-71, edit.skill),
+        (-63, edit.bloodtinge),
+        (-55, edit.arcane),
+        (-23, level),
+    ] {
+        let at = base
+            .checked_add_signed(offset)
+            .ok_or("Invalid character field offset.")?;
+        bytes[at..at + 4].copy_from_slice(&value.to_le_bytes());
+    }
+    let after = parse(&bytes, &edit.title_id, edit.slot)?
+        .ok_or("Character validation failed after editing.")?;
+    if after.echoes != edit.echoes
+        || after.insight != edit.insight
+        || after.name != before.name
+        || after.level != level
+        || !after.stats_consistent
+        || [after.strength, after.skill, after.bloodtinge, after.arcane] != offensive
+        || after.vitality != before.vitality
+        || after.endurance != before.endurance
+    {
+        return Err("Character validation failed after editing.".into());
+    }
+    fs::write(path, bytes).map_err(|e| e.to_string())
+}
+
+pub fn list(user: &Path) -> Result<Vec<Character>> {
+    let mut found = Vec::new();
+    if !real_dir(&user.join("savedata"))? || !real_dir(&user.join("savedata/1"))? {
+        return Ok(found);
+    }
+    for title in TITLES {
+        let set = user.join("savedata/1").join(title).join("SPRJ0005");
+        if !real_dir(&user.join("savedata/1").join(title))? || !real_dir(&set)? {
+            continue;
+        }
+        for slot in 0..10 {
+            let path = slot_path(user, title, slot)?;
+            match fs::symlink_metadata(&path) {
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => continue,
+                Err(e) => return Err(e.to_string()),
+                Ok(_) => {}
+            }
+            if let Some(character) = parse(&slot_bytes(&path)?, title, slot)? {
+                found.push(character);
+            }
+        }
+    }
+    Ok(found)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn sample() -> Vec<u8> {
+        let mut bytes = vec![0; SLOT_BYTES];
+        let base: usize = 0xc000;
+        let inventory = base + 469;
+        let face = inventory + 34028;
+        bytes[inventory..inventory + 4].copy_from_slice(&INVENTORY_MAGIC);
+        bytes[face..face + 4].copy_from_slice(b"FACE");
+        for (i, unit) in "Hunter".encode_utf16().enumerate() {
+            bytes[base + 1 + i * 2..base + 3 + i * 2].copy_from_slice(&unit.to_le_bytes());
+        }
+        for (relative, value) in [
+            (-103, 12_u32),
+            (-95, 11),
+            (-79, 22),
+            (-71, 9),
+            (-63, 6),
+            (-55, 7),
+            (-23, 17),
+            (-19, 100),
+            (-35, 3),
+        ] {
+            let at = base.checked_add_signed(relative).unwrap();
+            bytes[at..at + 4].copy_from_slice(&value.to_le_bytes());
+        }
+        bytes
+    }
+
+    #[test]
+    fn parses_only_a_bounded_character_slot() {
+        let mut bytes = sample();
+        let face = 0xc000 + 469 + 34028;
+        let character = parse(&bytes, "CUSA03173", 0).unwrap().unwrap();
+        assert_eq!(character.name, "Hunter");
+        assert_eq!(character.level, 17);
+        assert!(character.stats_consistent);
+        bytes[face + 20..face + 24].copy_from_slice(b"FACE");
+        assert!(parse(&bytes, "CUSA03173", 0).is_err());
+        assert!(parse(&bytes[..100], "CUSA03173", 0).is_err());
+    }
+
+    #[test]
+    fn edit_keeps_clean_backup_and_rejects_stale_preview() {
+        let root = fs::canonicalize(std::env::temp_dir())
+            .unwrap()
+            .join(format!(
+                "bb-editor-{}-{}",
+                std::process::id(),
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_nanos()
+            ));
+        let original = root.join("user");
+        let set = original.join("savedata/1/CUSA03173/SPRJ0005");
+        fs::create_dir_all(&set).unwrap();
+        fs::write(set.join("userdata0000"), sample()).unwrap();
+        let before = list(&original).unwrap().remove(0);
+        let edit = Edit {
+            title_id: before.title_id.clone(),
+            slot: before.slot,
+            fingerprint: before.fingerprint.clone(),
+            echoes: 12345,
+            insight: 7,
+            strength: before.strength + 1,
+            skill: before.skill,
+            bloodtinge: before.bloodtinge,
+            arcane: before.arcane,
+        };
+        crate::saves::edit(&root, &original, "original", |savedata| {
+            rewrite(savedata, &edit)
+        })
+        .unwrap();
+        let after = list(&original).unwrap().remove(0);
+        assert_eq!((after.echoes, after.insight), (12345, 7));
+        assert_eq!(
+            (after.strength, after.level),
+            (before.strength + 1, before.level + 1)
+        );
+        assert!(original.join("savedata/.bb-edited").is_file());
+        assert!(!crate::trophies::eligible(&original));
+        let backups = crate::saves::list(&root, &original)
+            .unwrap()
+            .remove(0)
+            .backups;
+        assert_eq!(backups.len(), 1);
+        let backup_set = root
+            .join("save-backups/original")
+            .join(&backups[0].id)
+            .join("savedata");
+        assert!(!backup_set.join(".bb-edited").exists());
+        assert_eq!(
+            fs::read(backup_set.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap(),
+            sample()
+        );
+        assert!(
+            crate::saves::edit(&root, &original, "original", |savedata| rewrite(
+                savedata, &edit
+            ))
+            .is_err()
+        );
+        assert_eq!(
+            crate::saves::list(&root, &original)
+                .unwrap()
+                .remove(0)
+                .backups
+                .len(),
+            1
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn copied_save_preview_when_provided() {
+        let Ok(user) = std::env::var("BB_TEST_SAVE_USER") else {
+            return;
+        };
+        let characters = list(Path::new(&user)).unwrap();
+        assert!(!characters.is_empty());
+        assert!(characters
+            .iter()
+            .all(|character| character.stats_consistent));
+    }
+}

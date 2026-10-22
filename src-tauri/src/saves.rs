@@ -195,10 +195,11 @@ fn check_restore(user: &Path) -> Result<()> {
     plain_directory(user)?;
     for entry in fs::read_dir(user).map_err(fail)? {
         let entry = entry.map_err(fail)?;
-        if entry.file_name().to_string_lossy().starts_with(".restore-")
+        if (entry.file_name().to_string_lossy().starts_with(".restore-")
+            || entry.file_name().to_string_lossy().starts_with(".edit-"))
             && entry.path().join("previous").try_exists().map_err(fail)?
         {
-            return Err(format!("An unfinished restore needs recovery before this save can be used. Previous files: {}", entry.path().join("previous").display()));
+            return Err(format!("An unfinished save change needs recovery before this save can be used. Previous files: {}", entry.path().join("previous").display()));
         }
     }
     Ok(())
@@ -378,6 +379,37 @@ pub fn restore(data: &Path, original: &Path, id: &str, bid: &str) -> Result<()> 
     result
 }
 
+/// Edit a staged copy of the whole set, then publish it with the trophy marker.
+/// The pre-edit backup remains separate from the newly edited lineage.
+pub fn edit(data: &Path, original: &Path, id: &str, change: impl FnOnce(&Path) -> Result<()>) -> Result<()> {
+    let user = user_dir(data, original, id)?;
+    let live = user.join("savedata");
+    plain_directory(&live)?;
+    let (_, stage) = allocate(&user, "edit-")?;
+    let result = (|| {
+        copy_tree(&live, &stage.join("savedata"))?;
+        change(&stage.join("savedata"))?;
+        let marker = stage.join("savedata/.bb-edited");
+        match fs::symlink_metadata(&marker) {
+            Ok(meta) if !meta.is_file() || meta.file_type().is_symlink() => return Err("Invalid edited-save marker.".into()),
+            Ok(_) => {},
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => fs::write(&marker, b"edited by bloodborne-mac\n").map_err(fail)?,
+            Err(e) => return Err(fail(e)),
+        }
+        backup(data, original, id)?;
+        fs::rename(&live, stage.join("previous")).map_err(fail)?;
+        if let Err(e) = fs::rename(stage.join("savedata"), &live) {
+            fs::rename(stage.join("previous"), &live).map_err(|rollback| format!("Edit failed: {e}; rollback failed: {rollback}. Previous files retained at {}", stage.display()))?;
+            return Err(fail(e));
+        }
+        Ok(())
+    })();
+    if !stage.join("previous").exists() || result.is_ok() {
+        fs::remove_dir_all(&stage).map_err(|e| format!("Could not remove edit staging folder {}: {e}", stage.display()))?;
+    }
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -463,11 +495,20 @@ mod tests {
         .unwrap();
         assert!(user_dir(&f.0, &original, "original")
             .unwrap_err()
-            .contains("unfinished restore"));
+            .contains("unfinished save change"));
         assert_eq!(
             fs::read(original.join(".restore-a.pending/previous/data")).unwrap(),
             b"synthetic previous save"
         );
+    }
+    #[test]
+    fn interrupted_edit_blocks_launch_and_preserves_previous_files() {
+        let f = Fixture::new();
+        let original = f.original();
+        fs::create_dir_all(original.join(".edit-a.pending/previous")).unwrap();
+        fs::write(original.join(".edit-a.pending/previous/data"), b"synthetic previous save").unwrap();
+        assert!(user_dir(&f.0, &original, "original").unwrap_err().contains("unfinished save change"));
+        assert_eq!(fs::read(original.join(".edit-a.pending/previous/data")).unwrap(), b"synthetic previous save");
     }
     #[cfg(unix)]
     #[test]

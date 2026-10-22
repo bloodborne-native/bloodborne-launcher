@@ -59,8 +59,9 @@ When implementing editing, warn before applying changes and persist edited-save 
 Playing an edited save must not unlock trophies: enforce this in the runtime and reject
 ineligible session events in the launcher. Copies/backups retain the edited marker; existing
 profile trophies remain. See docs/SAVE_MANAGER.md for eligibility and recovery requirements.
-Runtime generation and launcher import gates exist for marked saves; the editor and its
-confirmation are still planned. Online access policy for edited saves is undecided; only
+Runtime generation and launcher import gates exist for marked saves; the first editor fields
+(offensive attributes, Blood Echoes and Insight) and confirmation are implemented. Online access
+policy for edited saves is undecided; only
 trophies are blocked. Do not claim external-edit detection or PSN synchronization.
 
 Public trophy names/grades may be used, per the maintainer. Keep their source per locale in

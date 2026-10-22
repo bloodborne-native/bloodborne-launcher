@@ -16,6 +16,13 @@ dependency; no implementation source was copied. These are package
 dependencies; their licenses remain with their packages. No external update-checker source code
 was copied. No code from an external save editor has been adopted.
 
+## Character save format
+
+The Bloodborne character preview and limited editor use field locations checked against
+[Noxde/Bloodborne-save-editor at d8d0365](https://github.com/Noxde/Bloodborne-save-editor/tree/d8d03658f288fe747f819d0dc9a09c5f9d2e1668)
+(GPL-3.0). Its source is not copied: the parser, validation, staged whole-set edit, backup and
+edited-save handling here are independent launcher code.
+
 ## Leari database architecture
 
 The Drizzle-to-Tauri SQL adapter in `src/db/client.ts` is adapted from

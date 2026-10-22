@@ -10,6 +10,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod saves;
+mod save_editor;
 mod profiles;
 mod trophies;
 mod trophy_catalog;
@@ -464,6 +465,37 @@ async fn list_saves(state: State<'_, AppState>, id: Option<String>) -> Result<Va
     blocking(move || {
     let _game = state.game.lock().map_err(|e| e.to_string())?;
     profile_saves(&state.paths, id.as_deref())
+    }).await
+}
+#[tauri::command]
+async fn list_characters(state: State<'_, AppState>, id: String) -> Result<Vec<save_editor::Character>, String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = state.game.lock().map_err(|e| e.to_string())?;
+        saves_idle(&game)?;
+        profile_saves(&state.paths, Some(&id))?;
+        let registry = profiles::require(&state.paths.data)?;
+        let user = saves::user_dir(&state.paths.data, &registry.original_user_dir, &id)?;
+        save_editor::list(&user)
+    }).await
+}
+#[tauri::command]
+async fn edit_character(state: State<'_, AppState>, id: String, edit: save_editor::Edit) -> Result<(), String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = state.game.lock().map_err(|e| e.to_string())?;
+        saves_idle(&game)?;
+        profile_saves(&state.paths, Some(&id))?;
+        let p = &state.paths;
+        let registry = profiles::require(&p.data)?;
+        let operation = profiles::operation(&p.data, Some(&id), "edit")?;
+        let result = (|| {
+            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| save_editor::rewrite(stage, &edit))?;
+            profiles::list(&p.data, &registry.original_user_dir)?;
+            Ok(())
+        })();
+        profiles::finish(&p.data, &operation, &result)?;
+        result
     }).await
 }
 #[tauri::command]
@@ -935,7 +967,7 @@ fn main() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, read_input, open_path, open_launcher_data, launch, stop, list_saves, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, read_input, open_path, open_launcher_data, launch, stop, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

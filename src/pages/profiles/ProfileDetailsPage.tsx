@@ -1,14 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, FilePenLine, RefreshCw } from "lucide-react";
-import { Badge, Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, RefreshCw } from "lucide-react";
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import { PageHeader, SettingsSection } from "@/components/settings";
 import { TrophyGroup, TrophyStatus } from "@/components/trophies";
 import { useUiStore } from "@/stores";
 import { useSaves } from "@/hooks";
 import { SaveProfileCard } from "@/pages/saves/SaveProfileCard";
+import { CharacterPreview } from "@/pages/saves/CharacterPreview";
 
 export function ProfileDetailsPage({ profileId }: { profileId: string }) {
   const { t } = useTranslation();
+  const client = useQueryClient();
   const { data, error, refetch, isFetching, change, busy, running } = useSaves(profileId);
   const section = useUiStore((state) => state.profileSection);
   const openProfile = useUiStore((state) => state.openProfile);
@@ -21,7 +24,10 @@ export function ProfileDetailsPage({ profileId }: { profileId: string }) {
         <ArrowLeft aria-hidden="true" /> {t("profiles.title")}
       </Button>
       <PageHeader title={selected?.name ?? t("profiles.title")} actions={
-        <Button variant="secondary" size="sm" disabled={busy} onClick={() => refetch()}>
+        <Button variant="secondary" size="sm" disabled={busy} onClick={() => {
+          void refetch();
+          void client.invalidateQueries({ queryKey: ["characters", profileId] });
+        }}>
           <RefreshCw className={isFetching ? "animate-spin" : undefined} /> {t("common.refresh")}
         </Button>
       } />
@@ -34,11 +40,7 @@ export function ProfileDetailsPage({ profileId }: { profileId: string }) {
         </TabsList>
         <TabsContent value="saves">
           <SaveProfileCard profile={selected} disabled={disabled} onChange={change} />
-          <div className="flex flex-wrap items-center gap-2 px-1 text-xs text-muted-foreground">
-            <FilePenLine className="size-4" aria-hidden="true" />
-            <span>{t("saves.editor")}</span>
-            <Badge variant="outline">{t("profiles.inDevelopment")}</Badge>
-          </div>
+          <CharacterPreview profileId={profileId} running={running} />
         </TabsContent>
         <TabsContent value="trophies" className="space-y-5">
           <p className="text-sm text-muted-foreground">{t("trophies.local")}</p>

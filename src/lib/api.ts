@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { profilesService } from "@/services";
 import { mockApi } from "@/lib/mockApi";
-import type { ReleaseInfo, Config, Display, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange } from "@/lib/types";
+import type { ReleaseInfo, Config, Display, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, CharacterEdit } from "@/lib/types";
 
 /** Running inside the Tauri app (else a browser preview with mock data). */
 const inTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -16,6 +16,8 @@ const tauriApi = {
   listProfiles: profilesService.list,
   changeProfile: profilesService.change,
   listSaves: (id?: string) => invoke<SaveList>("list_saves", { id }),
+  listCharacters: (id: string) => invoke<Character[]>("list_characters", { id }),
+  editCharacter: (id: string, edit: CharacterEdit) => invoke<void>("edit_character", { id, edit }),
   changeSave: (change: SaveChange) => invoke<void>("change_save", change),
   loadConfig: () => invoke<Config>("load_config"),
   saveSettings: (settings: Partial<Settings>) => invoke<void>("save_settings", { settings }),

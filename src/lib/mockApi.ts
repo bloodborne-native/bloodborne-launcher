@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange } from "@/lib/types";
+import type { Config, Display, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -77,6 +77,9 @@ let nextBackup = 0;
 const previewProfile = new URLSearchParams(window.location.search).get("profile");
 let profileSetup = previewProfile !== null;
 const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: true, trophy_unlocks: [], trophy_error: null }] };
+let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
+  skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
+  new_game_cycle: 0, stats_consistent: true, fingerprint: "preview" };
 
 export const mockApi = {
   setTrayLabels: () => wait(undefined),
@@ -103,6 +106,17 @@ export const mockApi = {
     return wait(undefined);
   },
   listSaves: (id?: string) => wait({ active: saves.active, profiles: structuredClone(saves.profiles.filter((p) => p.id === (id ?? saves.active))) }),
+  listCharacters: (id: string) => wait<Character[]>(saves.profiles.some((p) => p.id === id && p.bytes > 0) ? [structuredClone(previewCharacter)] : []),
+  editCharacter: (id: string, edit: CharacterEdit) => {
+    const profile = saves.profiles.find((p) => p.id === id);
+    if (!profile || edit.fingerprint !== previewCharacter.fingerprint) return Promise.reject("Character changed. Refresh the preview.");
+    profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
+    profile.trophies_eligible = false;
+    const level = previewCharacter.vitality + previewCharacter.endurance
+      + edit.strength + edit.skill + edit.bloodtinge + edit.arcane - 50;
+    previewCharacter = { ...previewCharacter, ...edit, level, fingerprint: `preview-${nextBackup}` };
+    return wait(undefined);
+  },
   changeSave: (change: SaveChange) => {
     const profile = saves.profiles.find((p) => p.id === change.id);
     if (!profile) return Promise.reject("Unknown profile.");

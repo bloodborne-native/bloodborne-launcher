@@ -14,6 +14,7 @@ export function useSaves(profileId: string) {
     mutationFn: (change: SaveChange) => api.changeSave(change),
     onSuccess: async () => {
       await Promise.all([
+        client.invalidateQueries({ queryKey: ["characters", profileId] }),
         client.invalidateQueries({ queryKey: queryKeys.saves }),
         client.invalidateQueries({ queryKey: queryKeys.config }),
         client.invalidateQueries({ queryKey: queryKeys.profiles }),

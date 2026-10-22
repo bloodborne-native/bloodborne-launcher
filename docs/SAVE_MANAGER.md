@@ -7,14 +7,14 @@ The player's view is the app's [Profiles and saves](https://github.com/bloodborn
 
 ## Roadmap
 
-Completed stages: **1/4 (25%)** `█████░░░░░░░░░░░░░░░`
+Completed stages: **2/4 (50%)** `██████████░░░░░░░░░░`
 
 | Stage | Scope | Status |
 |---|---|---|
 | S0 | Profile ownership, first-profile setup, complete save sets, active selection, backup and restore, deletion, local trophies | Done |
-| S1 | Read-only character preview: name, level, attributes, playtime, progression | Planned |
+| S1 | Read-only character preview: name, level, attributes, playtime, progression | Done |
 | S2 | Import/export and backup history management (pruning) | Planned |
-| S3 | Editor for verified fields, with edited-save lineage | Trophy gating done; editor planned |
+| S3 | Editor for verified fields, with edited-save lineage | Offensive attributes, Blood Echoes and Insight editing done; defensive attributes and items planned |
 
 ## Profiles
 
@@ -76,6 +76,17 @@ unknown schemas are kept and reported, never reset.
   single instance. Backups are not pruned yet.
 - Restores keep the profile's identity and trophy history.
 
+The Saves page previews readable character slots in supported Bloodborne save sets (name,
+level, attributes, Blood Echoes, Insight, playtime and journey). It refuses ambiguous or
+malformed character layouts. The editor changes Strength, Skill, Bloodtinge and Arcane (1–99),
+Blood Echoes (0–999,999,999) and Insight (0–99). It recomputes level from the six attributes.
+Vitality and Endurance stay read-only because the game keeps separate saved HP and stamina
+values; changing Vitality and level in an isolated load left the saved HP unchanged. Editing
+requires the game to be stopped and a preview that still matches the
+character file. The launcher edits a staged copy of the whole set, verifies the edited fields,
+backs up the live set, marks the staged set edited and then swaps it into place with a
+rollback copy. An interrupted swap blocks the profile and names the recovery folder.
+
 Database transactions do not make folder copies atomic: this is not a power-loss guarantee.
 
 ## Trophies and edited saves
@@ -90,11 +101,11 @@ Portuguese and French; anything missing falls back to English.
 
 The rule, approved on 2026-10-13: **an edited save never unlocks trophies.** The marker
 `savedata/.bb-edited` travels with the save through copies, backups, imports and exports; the
-runtime refuses to record and the launcher refuses to import while it is present. When the editor
-exists it must warn before the first edit, write the marker before publishing the edited save,
-and never offer a way to make an edited save eligible again; a clean pre-edit backup keeps its
-own eligibility. Earned history is never removed by a restore. Whether edited saves may go online
-is undecided.
+runtime refuses to record and the launcher refuses to import while it is present. The editor
+warns before applying a change, writes the marker before publishing the edited save and never
+offers a way to make an edited save eligible again; a clean pre-edit backup keeps its own
+eligibility. Earned history is never removed by a restore. Whether edited saves may go online is
+undecided.
 
 ## Checks
 

@@ -99,6 +99,14 @@ export type TrophyUnlock = { translations: Record<string, { name: string; descri
 export type SaveProfile = { trophies_eligible: boolean; trophy_unlocks: TrophyUnlock[]; trophy_error: string | null; id: string; name: string; path: string; bytes: number; modified: number | null; backups: SaveBackup[] };
 export type SaveList = { active: string; profiles: SaveProfile[] };
 export type SaveChange = { action: "backup" | "restore"; id: string; backup?: string };
+export type Character = {
+  title_id: string; slot: number; name: string; level: number;
+  vitality: number; endurance: number; strength: number; skill: number; bloodtinge: number; arcane: number;
+  echoes: number; insight: number; playtime_ms: number; new_game_cycle: number;
+  stats_consistent: boolean; fingerprint: string;
+};
+export type CharacterEdit = { title_id: string; slot: number; fingerprint: string; echoes: number; insight: number;
+  strength: number; skill: number; bloodtinge: number; arcane: number };
 
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };
 export type ProfileChange = { action: "initialize" | "create" | "select" | "rename" | "delete"; id: string; name?: string };
