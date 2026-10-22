@@ -55,6 +55,6 @@ Requirement descriptions are original summaries, based on public requirements in
 No extracted game metadata, decryption key, game description text or game artwork is included.
 Grade emblems use the existing lucide-react dependency; the notification styling is original.
 
-The opt-in overlay helper uses direct `objc2-app-kit` bindings (Zlib OR Apache-2.0 OR MIT)
-for its macOS window adapter, as a package dependency. No tauri-nspanel or browser-engine
-implementation source was copied. CSS and helper protocol code are project-owned.
+The game displays notifications in its own ImGui overlay using a copy of the reviewed public
+catalog. The launcher keeps the unlock history and trophy list; no separate notification
+window or helper is packaged.

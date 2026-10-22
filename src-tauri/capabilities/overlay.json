@@ -1,1 +1,0 @@
-{"identifier":"overlay","description":"Trophy notification display only","windows":["overlay"],"permissions":["core:event:allow-listen","core:event:allow-unlisten"]}

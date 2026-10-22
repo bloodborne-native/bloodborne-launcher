@@ -10,5 +10,5 @@ export default defineConfig({
   resolve: { alias: { "@": path.resolve(import.meta.dirname, "src") } },
   clearScreen: false,
   server: { port: 5173, strictPort: true },
-  build: { rollupOptions: { input: { main: path.resolve(import.meta.dirname, "index.html"), overlay: path.resolve(import.meta.dirname, "overlay.html") } }, target: "safari16", outDir: "dist", emptyOutDir: true, chunkSizeWarningLimit: 2000 },
+  build: { rollupOptions: { input: { main: path.resolve(import.meta.dirname, "index.html") } }, target: "safari16", outDir: "dist", emptyOutDir: true, chunkSizeWarningLimit: 2000 },
 });

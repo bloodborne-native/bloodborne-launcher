@@ -763,13 +763,7 @@ fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, St
     let user=selected_user_dir(p)?;
     set("BB_TROPHIES_ELIGIBLE", if trophies::eligible(&user) { "1" } else { "0" }.into());
     set("BB_USER_DIR", user.to_string_lossy().into());
-    #[cfg(target_os = "macos")]
-    if let Ok(exe)=std::env::current_exe() {
-        if let Some(dir)=exe.parent() {
-            let helper=dir.join("bloodborne-overlay");
-            if helper.is_file() { set("BB_OVERLAY_HELPER",helper.to_string_lossy().into()); }
-        }
-    }
+
     set("BB_GPU_USER_DIR", profiles::require(&p.data)?.original_user_dir.to_string_lossy().into());
     set("BB_USER_NAME", guest_profile_name(&profiles::selected(&p.data)?.name));
     Ok(env)

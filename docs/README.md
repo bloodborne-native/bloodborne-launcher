@@ -10,7 +10,7 @@ These pages are for working on the launcher.
 - [Profiles, saves and the database](SAVE_MANAGER.md): ownership, storage, backups, recovery,
   trophies, edited saves and the save-editor roadmap.
 - [The launcher while the game runs](LAUNCHER_LIFECYCLE.md): hiding to the menu bar, the tray menu.
-- [Trophy notifications](OVERLAY.md): the notification helper.
+- [Trophy notifications](OVERLAY.md): the game's overlay and the launcher's tracking role.
 - [New-version notifications](UPDATES.md)
 - [Credits and license](CREDITS.md)
 

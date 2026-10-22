@@ -417,6 +417,6 @@
     "base": "Bloodborne",
     "old_hunters": "The Old Hunters",
     "notifications": "Trophy notifications",
-    "notificationsHint": "Show new trophies above the game. Tracking continues when off. Applies next launch."
+    "notificationsHint": "Show new trophies in the game overlay. Tracking continues when off. Applies next launch."
   }
 }

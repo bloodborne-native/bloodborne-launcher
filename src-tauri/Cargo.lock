@@ -346,10 +346,6 @@ dependencies = [
 name = "bloodborne-launcher"
 version = "0.8.2"
 dependencies = [
- "core-foundation",
- "core-graphics",
- "objc2",
- "objc2-app-kit",
  "reqwest",
  "semver",
  "serde",
