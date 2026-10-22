@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit } from "@/lib/types";
+import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -69,6 +69,7 @@ let patches: Patch[] = [
   },
 ];
 
+let fsr411Files = false;
 const wait = <T,>(value: T) => new Promise<T>((resolve) => setTimeout(() => resolve(value), 120));
 
 let nextProfile = 0;
@@ -167,6 +168,8 @@ export const mockApi = {
       { name: "Built-in Retina Display", size: "1728x1117", primary: true },
       { name: "LG UltraFine", size: "2560x1440", primary: false },
     ]),
+  fsr411Support: () => wait<Fsr411Support>({ supported: fsr411Files, reason: fsr411Files ? "" : "AMD's FSR 4.1.1 initializers.bin is missing" }),
+  addFsr411Files: (_dll: string) => wait(void (fsr411Files = true)),
   readInput: (kind: "key" | "pad") => wait(kind === "pad" ? "rightshoulder" : "G"),
   openLauncherData: () => wait(undefined),
   openPath: () => wait(undefined),

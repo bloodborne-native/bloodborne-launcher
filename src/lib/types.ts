@@ -82,6 +82,8 @@ export type Patch = {
 export type Gamepad = { guid: string; name: string };
 /** A monitor as the game sees it (bb-gpu-capabilities --displays). */
 export type Display = { name: string; size: string; primary: boolean };
+/** Whether FSR 4.1.1 on Metal can run here (bb-gpu-capabilities --fsr411), and why not. */
+export type Fsr411Support = { supported: boolean; reason: string };
 
 export type GameState = { running: boolean; code?: number | null };
 

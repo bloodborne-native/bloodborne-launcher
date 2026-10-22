@@ -690,6 +690,61 @@ async fn list_displays(state: State<'_, AppState>) -> Result<Vec<Display>, Strin
         .collect())
 }
 
+#[derive(Serialize)]
+struct Fsr411Support {
+    supported: bool,
+    /// Why not, as bb-gpu-capabilities says it ("" when supported).
+    reason: String,
+}
+
+/// The FSR 4.1.1 Metal files the runtime's build made: the app's game/fsr4_metal, or out/ in a
+/// checkout.
+fn fsr4_metal_dir(p: &Paths) -> PathBuf {
+    if p.bundled { p.game_root.join("fsr4_metal") } else { p.game_root.join("out/fsr4_metal") }
+}
+
+/// FSR 4.1.1 on Metal can run on this Mac: bb-gpu-capabilities --fsr411 checks the GPU, the
+/// built files and AMD's two files in the data folder's fsr4_411 (run.sh gives that folder to
+/// the game as BB_FSR411_DIR). "1", or "0<TAB>reason".
+#[tauri::command]
+async fn fsr411_support(state: State<'_, AppState>) -> Result<Fsr411Support, String> {
+    let out = Command::new(&state.paths.capabilities)
+        .arg("--fsr411")
+        .arg(fsr4_metal_dir(&state.paths))
+        .env("BB_DATA_DIR", &state.paths.data)
+        .output()
+        .map_err(|e| e.to_string())?;
+    let text = String::from_utf8_lossy(&out.stdout);
+    let line = text.lines().next().unwrap_or_default();
+    Ok(match line.split_once('\t') {
+        Some((_, reason)) => Fsr411Support { supported: false, reason: reason.to_string() },
+        None => Fsr411Support { supported: line == "1", reason: String::new() },
+    })
+}
+
+/// Takes AMD's two FSR 4.1.1 files from the player's own upscaler DLL into the data folder's
+/// fsr4_411, with the runtime's tools/fsr4_metal_initializers.sh (it checks the DLL and the files
+/// by SHA-256). Nothing of AMD's ships with the app.
+#[tauri::command]
+async fn add_fsr411_files(state: State<'_, AppState>, dll: String) -> Result<(), String> {
+    let p = state.paths.clone();
+    let out = tauri::async_runtime::spawn_blocking(move || {
+        Command::new(&p.bash)
+            .arg(p.game_root.join("tools/fsr4_metal_initializers.sh"))
+            .arg(&dll)
+            .arg(p.data.join("fsr4_411"))
+            .output()
+    })
+    .await
+    .map_err(|e| e.to_string())?
+    .map_err(|e| e.to_string())?;
+    if out.status.success() {
+        Ok(())
+    } else {
+        Err(String::from_utf8_lossy(&out.stderr).trim().to_string())
+    }
+}
+
 /// One key or button for a control: bb-gpu-capabilities opens a small window and prints
 /// "key <name>" or "pad <name>"; None when cancelled.
 #[tauri::command]
@@ -968,7 +1023,7 @@ fn main() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, read_input, open_path, open_launcher_data, launch, stop, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

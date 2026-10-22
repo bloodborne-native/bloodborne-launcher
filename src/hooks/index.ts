@@ -1,5 +1,6 @@
 export * from "@/hooks/useConfig";
 export * from "@/hooks/useDisplays";
+export * from "@/hooks/useFsr411";
 export * from "@/hooks/useGameCheck";
 export * from "@/hooks/useGameConnection";
 export * from "@/hooks/useGamepads";

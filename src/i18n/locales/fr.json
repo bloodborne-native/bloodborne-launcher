@@ -42,6 +42,12 @@
     "metalHud": "HUD de performances Metal",
     "metalHudHint": "La superposition de statistiques d'Apple pour Metal : temps d'image, temps GPU et mémoire. S'applique au lancement du jeu.",
     "upscalingHint": "Le jeu effectue son rendu sous la résolution de sortie et FSR reconstruit l'image : le meilleur levier de performance sur Apple Silicon.",
+    "fsr411Files": "Fichiers AMD FSR 4.1.1",
+    "fsr411FilesReady": "Trouvés : AMD FSR 4.1.1 (Metal) est disponible dans Mise à l’échelle.",
+    "fsr411FilesMissing": "FSR 4.1.1 a besoin de deux fichiers du modèle d’AMD, tirés de votre propre copie de la DLL de mise à l’échelle d’AMD (amd_fidelityfx_upscaler_dx12.dll 4.1.1, d’OptiScaler ou d’un jeu).",
+    "fsr411ChooseDll": "Choisir la DLL AMD…",
+    "fsr411Added": "Fichiers FSR 4.1.1 ajoutés",
+    "fsr411Failed": "Impossible de tirer les fichiers FSR 4.1.1 de cette DLL",
     "upscaler": "Upscaler", "preset": "Préréglage de qualité", "presetRender": "{{name}} · rendu en {{size}}",
     "sharpen": "Netteté (RCAS)", "sharpness": "Intensité de la netteté", "objectMotion": "Vecteurs de mouvement des personnages",
     "objectMotionHint": "Moins de traînées sur les personnages en mouvement avec FSR. Coûte environ 5 ms par image sur les GPU Apple.",
@@ -113,7 +119,7 @@
     "openFolder": "Dossier des journaux", "empty": "Rien pour l'instant", "emptyHint": "Lancez le jeu pour voir sa sortie ici.", "follow": "Suivre"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Rendu sous la sortie, image reconstruite", "metalfx": "MetalFX (Apple)", "metalfxHint": "Upscaler temporel d'Apple", "off": "Désactivé", "offHint": "Résolution native" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "Rendu sous la sortie, image reconstruite", "metalfx": "MetalFX (Apple)", "metalfxHint": "Upscaler temporel d'Apple", "fsr411": "AMD FSR 4.1.1 (Metal)", "fsr411Hint": "Mise à l’échelle neuronale FSR 4.1.1 sur Apple Metal", "off": "Désactivé", "offHint": "Résolution native" },
     "preset": { "0": "Native AA", "1": "Qualité", "2": "Équilibré", "3": "Performance", "4": "Ultra performance" },
     "fps": { "uncap": "Illimitée", "uncapHint": "Le temps réel de chaque image : toute fréquence, physique correcte", "60": "60", "90": "90", "30": "30", "30Hint": "Comme sur PS4" },
     "fpsSize": { "small": "Petit", "big": "Grand" },

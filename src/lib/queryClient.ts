@@ -20,4 +20,5 @@ export const queryKeys = {
   patches: ["patches"] as const,
   gamepads: ["gamepads"] as const,
   displays: ["displays"] as const,
+  fsr411: ["fsr411"] as const,
 };

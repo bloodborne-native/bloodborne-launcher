@@ -42,6 +42,12 @@
     "metalHud": "Metal 性能 HUD",
     "metalHudHint": "Apple 的 Metal 统计叠加层：帧时间、GPU 时间和内存。游戏启动时生效。",
     "upscalingHint": "游戏以低于输出分辨率的分辨率渲染，由 FSR 重建图像：这是在 Apple Silicon 上提升性能最大的设置。",
+    "fsr411Files": "AMD FSR 4.1.1 文件",
+    "fsr411FilesReady": "已找到：可在“超分辨率”中选择 AMD FSR 4.1.1 (Metal)。",
+    "fsr411FilesMissing": "FSR 4.1.1 需要 AMD 模型的两个文件，从你自己的 AMD 超分辨率 DLL（amd_fidelityfx_upscaler_dx12.dll 4.1.1，来自 OptiScaler 或游戏）中提取。",
+    "fsr411ChooseDll": "选择 AMD DLL…",
+    "fsr411Added": "已添加 FSR 4.1.1 文件",
+    "fsr411Failed": "无法从此 DLL 提取 FSR 4.1.1 文件",
     "upscaler": "超分辨率", "preset": "质量预设", "presetRender": "{{name}} · 以 {{size}} 渲染",
     "sharpen": "锐化（RCAS）", "sharpness": "锐化强度", "objectMotion": "角色运动矢量",
     "objectMotionHint": "使用 FSR 时减少移动角色的拖影。在 Apple GPU 上每帧约耗时 5 毫秒。",
@@ -113,7 +119,7 @@
     "openFolder": "日志文件夹", "empty": "暂无内容", "emptyHint": "启动游戏后会在这里显示它的输出。", "follow": "跟随"
   },
   "options": {
-    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "以低于输出的分辨率渲染并重建图像", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apple 的时域超分辨率", "off": "关", "offHint": "原生分辨率" },
+    "upscaler": { "fsr3": "AMD FSR 3.1", "fsr3Hint": "以低于输出的分辨率渲染并重建图像", "metalfx": "MetalFX (Apple)", "metalfxHint": "Apple 的时域超分辨率", "fsr411": "AMD FSR 4.1.1 (Metal)", "fsr411Hint": "在 Apple Metal 上运行的 FSR 4.1.1 神经超分辨率", "off": "关", "offHint": "原生分辨率" },
     "preset": { "0": "Native AA", "1": "质量", "2": "平衡", "3": "性能", "4": "极致性能" },
     "fps": { "uncap": "不限", "uncapHint": "按每帧的实际时间推进：任意帧率，物理保持正确", "60": "60", "90": "90", "30": "30", "30Hint": "与 PS4 相同" },
     "fpsSize": { "small": "小", "big": "大" },
