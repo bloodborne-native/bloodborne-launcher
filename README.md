@@ -7,6 +7,8 @@ macOS game integration works today; Windows and Linux integration are planned.
 Player guides are in the app's [docs](https://github.com/bloodborne-native/bloodborne-mac/tree/main/docs/guide);
 the launcher's own design is in [docs](docs/README.md).
 
+**Community:** the project's [Discord](https://discord.gg/EyyQ23sTBg) (`#bloodborne-launcher` for this repository).
+
 The launcher inside `Bloodborne.app`. It has a game folder check, graphics, controls (controller
 choice and button mapping), game options, user profiles, saves and backups, mods, patches, advanced options and the game's log. It
 starts the game with the app's own bash and Python ([bloodborne-mac packaging](https://github.com/bloodborne-native/bloodborne-mac/blob/main/packaging/macos.sh) builds the app around it).
