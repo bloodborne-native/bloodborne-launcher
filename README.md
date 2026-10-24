@@ -1,13 +1,13 @@
 # bloodborne-launcher
 
+[![Discord](https://img.shields.io/badge/Discord-join%20the%20server-5865F2?logo=discord&logoColor=white)](https://discord.gg/EyyQ23sTBg)
+
 The independent launcher for [bloodborne-native](https://github.com/bloodborne-native).
 Its source is included as the `launcher/` submodule of
 [bloodborne-mac](https://github.com/bloodborne-native/bloodborne-mac), which packages it as the macOS app.
 macOS game integration works today; Windows and Linux integration are planned.
 Player guides are in the app's [docs](https://github.com/bloodborne-native/bloodborne-mac/tree/main/docs/guide);
 the launcher's own design is in [docs](docs/README.md).
-
-**Community:** the project's [Discord](https://discord.gg/EyyQ23sTBg) (`#bloodborne-launcher` for this repository).
 
 The launcher inside `Bloodborne.app`. It has a game folder check, graphics, controls (controller
 choice and button mapping), game options, user profiles, saves and backups, mods, patches, advanced options and the game's log. It
