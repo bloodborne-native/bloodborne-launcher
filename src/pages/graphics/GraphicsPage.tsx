@@ -14,7 +14,11 @@ export function GraphicsPage() {
   const setIni = useIni();
   const setSetting = useSetting();
   const flag = (key: string, fallback: boolean) => (key in ini ? ini[key] === "1" : fallback);
-  const upscaler = ini.upscaler ?? "fsr3";
+  // The Metal renderer offers MetalFX only (the runtime's docs/RENDER_ADAPTER.md, decision 5): a
+  // saved FSR choice runs as MetalFX there, and shows as MetalFX.
+  const metal = settings.renderer === "metal";
+  const saved = ini.upscaler ?? "off";
+  const upscaler = metal && saved !== "off" && saved !== "metalfx" ? "metalfx" : saved;
   const output = ini.output_res ?? "1920x1080";
   const aspect = ini.aspect_ratio ?? "16:9";
   const preset = Number(ini.preset ?? 2);
@@ -26,7 +30,8 @@ export function GraphicsPage() {
   const fsr411Ready = fsr411.data?.supported ?? false;
   const fsr411NeedsFiles = !fsr411Ready && (fsr411.data?.reason.includes("initializers") ?? false);
   const upscalers = UPSCALERS.filter((o) =>
-    o.value === "metalfx" ? macos : o.value === "fsr411" ? macos && (fsr411Ready || upscaler === "fsr411") : true,
+    metal ? o.value === "metalfx" || o.value === "off"
+      : o.value === "metalfx" ? macos : o.value === "fsr411" ? macos && (fsr411Ready || upscaler === "fsr411") : true,
   );
   const presets: Option<number>[] = PRESETS.map((p) => ({
     value: p.value,
@@ -80,7 +85,7 @@ export function GraphicsPage() {
       </SettingsSection>
       <SettingsSection title={t("graphics.upscaling")} description={t("graphics.upscalingHint")}>
         <SelectRow title={t("graphics.upscaler")} value={upscaler} options={upscalers} onChange={(v) => setIni("upscaler", v)} />
-        {macos && (fsr411Ready || fsr411NeedsFiles) && <Fsr411FilesRow ready={fsr411Ready} />}
+        {macos && !metal && (fsr411Ready || fsr411NeedsFiles) && <Fsr411FilesRow ready={fsr411Ready} />}
         <SelectRow
           title={t("graphics.preset")}
           description={t("common.restartNote")}

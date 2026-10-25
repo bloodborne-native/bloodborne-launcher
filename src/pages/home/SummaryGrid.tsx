@@ -11,7 +11,7 @@ export function SummaryGrid() {
   const { settings, ini } = useSettingsData();
   const mods = useMods();
   const setTab = useUiStore((s) => s.setTab);
-  const upscaler = ini.upscaler ?? "fsr3";
+  const upscaler = ini.upscaler ?? "off";
   const preset = Number(ini.preset ?? 2);
   const fps = FPS_MODES.find((f) => f.value === settings.fps_mode);
   const activeMods = mods.data?.mods.filter((m) => m.enabled).length ?? 0;

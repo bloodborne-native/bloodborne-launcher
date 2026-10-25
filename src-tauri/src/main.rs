@@ -145,7 +145,7 @@ fn default_settings() -> Map<String, Value> {
 /// bbport.ini values the launcher shows before the file has them (macOS defaults).
 fn default_ini() -> BTreeMap<String, String> {
     [
-        ("upscaler", "fsr3"),
+        ("upscaler", "off"),
         ("preset", "2"),
         ("sharpen", "1"),
         ("sharpness", "0.50"),

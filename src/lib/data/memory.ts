@@ -12,7 +12,7 @@ const NATIVE = [1920, 1080] as const;
 export function sceneSize(ini: Record<string, string>): { size: [number, number]; patched: boolean } {
   const [w, h] = (ini.output_res ?? "1920x1080").split("x").map(Number);
   const out: [number, number] = w > 0 && h > 0 ? [w, h] : [NATIVE[0], NATIVE[1]];
-  const upscaler = ini.upscaler ?? "fsr3";
+  const upscaler = ini.upscaler ?? "off";
   const live = ini.live_resolution === "1";
   if (upscaler === "taa" || live) return { size: out, patched: false };
   const scale = upscaler === "off" ? 1 : (PRESETS.find((p) => p.value === Number(ini.preset ?? 0))?.scale ?? 1);
