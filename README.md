@@ -1,6 +1,6 @@
 # bloodborne-launcher
 
-[![Discord](https://img.shields.io/badge/Discord-join%20the%20server-5865F2?logo=discord&logoColor=white)](https://discord.gg/EyyQ23sTBg)
+[![Discord](https://img.shields.io/badge/Discord-join%20the%20server-5865F2?logo=discord&logoColor=white)](https://discord.gg/QS6vHz45xA)
 
 The independent launcher for [bloodborne-native](https://github.com/bloodborne-native).
 Its source is included as the `launcher/` submodule of
