@@ -848,6 +848,8 @@ fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, St
     #[cfg(target_os = "macos")]
     set("BB_METAL_FRAME", if str_setting(s, "renderer") == "moltenvk" { "0" } else { "1" }.into());
     #[cfg(target_os = "macos")]
+    set("BB_METAL_NATIVE_BOOT", if str_setting(s, "renderer") == "moltenvk" { "0" } else { "1" }.into());
+    #[cfg(target_os = "macos")]
     if bool_setting(s, "metal_hud") {
         set("MTL_HUD_ENABLED", "1".into());
     }
