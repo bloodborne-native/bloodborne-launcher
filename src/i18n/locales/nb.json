@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "Øverst til venstre", "top_center": "Øverst i midten", "top_right": "Øverst til høyre", "bottom_left": "Nederst til venstre", "bottom_center": "Nederst i midten", "bottom_right": "Nederst til høyre" },
     "lod": { "-2": "Høyest", "0": "Som i spillet", "1": "Lavere", "2": "Lavest" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "Adaptiv V-Sync", "Mailbox": "Mailbox", "Immediate": "Umiddelbar (med tearing)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan via MoltenVK (standard)", "metal": "Metal (eksperimentell)", "metalHint": "Native Metal, vanligvis raskere" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan via MoltenVK", "metal": "Metal", "metalHint": "Native Metal, vanligvis raskere" },
     "drawPipe": { "auto": "Automatisk", "autoHint": "På med 8 eller flere prosessortråder", "on": "På", "off": "Av", "offHint": "Mer stabil, tregere" },
     "readbacks": { "relaxed": "Avslappet (standard)", "precise": "Nøyaktig", "off": "Av" },
     "preupload": { "normal": "Normal", "full": "Full", "fullHint": "Omtrent 3 GB mer GPU-minne", "off": "Av" },

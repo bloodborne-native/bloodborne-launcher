@@ -299,7 +299,7 @@
       "Mailbox": "Mailbox",
       "Immediate": "Immediate (tearing)"
     },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan through MoltenVK (default)", "metal": "Metal (experimental)", "metalHint": "Native Metal, usually faster" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan through MoltenVK", "metal": "Metal", "metalHint": "Native Metal, usually faster" },
     "drawPipe": {
       "auto": "Auto",
       "autoHint": "On with 8 or more CPU threads",

@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "Sol üst", "top_center": "Üst orta", "top_right": "Sağ üst", "bottom_left": "Sol alt", "bottom_center": "Alt orta", "bottom_right": "Sağ alt" },
     "lod": { "-2": "En yüksek", "0": "Oyundaki gibi", "1": "Daha düşük", "2": "En düşük" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "Uyarlanabilir V-Sync", "Mailbox": "Mailbox", "Immediate": "Anında (yırtılmalı)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "MoltenVK üzerinden Vulkan (varsayılan)", "metal": "Metal (deneysel)", "metalHint": "Yerel Metal, genellikle daha hızlı" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "MoltenVK üzerinden Vulkan", "metal": "Metal", "metalHint": "Yerel Metal, genellikle daha hızlı" },
     "drawPipe": { "auto": "Otomatik", "autoHint": "8 veya daha fazla CPU iş parçacığında açık", "on": "Açık", "off": "Kapalı", "offHint": "Daha kararlı, daha yavaş" },
     "readbacks": { "relaxed": "Esnek (varsayılan)", "precise": "Kesin", "off": "Kapalı" },
     "preupload": { "normal": "Normal", "full": "Tam", "fullHint": "Yaklaşık 3 GB daha fazla GPU belleği", "off": "Kapalı" },

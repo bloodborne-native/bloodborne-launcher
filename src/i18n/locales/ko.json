@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "왼쪽 위", "top_center": "가운데 위", "top_right": "오른쪽 위", "bottom_left": "왼쪽 아래", "bottom_center": "가운데 아래", "bottom_right": "오른쪽 아래" },
     "lod": { "-2": "최고", "0": "게임 기본", "1": "낮음", "2": "최저" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "적응형 V-Sync", "Mailbox": "Mailbox", "Immediate": "즉시(티어링 발생)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "MoltenVK를 통한 Vulkan (기본값)", "metal": "Metal (실험적)", "metalHint": "네이티브 Metal, 보통 더 빠름" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "MoltenVK를 통한 Vulkan", "metal": "Metal", "metalHint": "네이티브 Metal, 보통 더 빠름" },
     "drawPipe": { "auto": "자동", "autoHint": "CPU 스레드가 8개 이상이면 켬", "on": "켬", "off": "끔", "offHint": "더 안정적이지만 느림" },
     "readbacks": { "relaxed": "Relaxed(기본값)", "precise": "Precise", "off": "끔" },
     "preupload": { "normal": "보통", "full": "전체", "fullHint": "GPU 메모리를 약 3GB 더 사용", "off": "끔" },

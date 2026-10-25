@@ -30,7 +30,7 @@ default or effect; translations move with it in all 20 locales.
 | Game | Game language, skipping intro videos, the active profile's save folder |
 | Profiles | Profiles, each with Saves · Backups and Trophies |
 | Mods, Patches | Mods and their order; third-party patches |
-| Advanced | Launcher language and hiding during gameplay, updates, trophy notifications; the renderer (MoltenVK or experimental Metal) and other performance options, live resolution; free camera, debug menu, logs, profiling, extra environment variables; data folders |
+| Advanced | Launcher language and hiding during gameplay, updates, trophy notifications; the renderer (Metal, the default, or MoltenVK; the launcher sets `BB_METAL_FRAME` either way) and other performance options, live resolution; free camera, debug menu, logs, profiling, extra environment variables; data folders |
 | Log | The game's output |
 
 The memory estimate (`src/lib/data/memory.ts`) computes what the game will use as `run.sh` sizes

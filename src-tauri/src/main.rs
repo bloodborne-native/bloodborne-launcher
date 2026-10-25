@@ -132,7 +132,7 @@ fn default_settings() -> Map<String, Value> {
         "hide_launcher": true,
         "trophy_notifications": true,
         "metal_hud": false,
-        "renderer": "moltenvk",
+        "renderer": "metal",
         "check_updates": true,
         "crash_diag": false,
         "gpu_profile": false,
@@ -843,11 +843,10 @@ fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, St
     }
     set("BB_TROPHY_OVERLAY", if bool_setting(s,"trophy_notifications") {"1"} else {"0"}.into());
     // Apple's Metal Performance HUD (frame time, GPU time, memory), drawn by macOS over the game.
-    // The Metal backend's frame path (runtime renderer_metal/), experimental: MoltenVK otherwise.
+    // The renderer: the Metal backend's frame path (runtime renderer_metal/, the default), or
+    // MoltenVK. Set either way: run.sh defaults to Metal.
     #[cfg(target_os = "macos")]
-    if str_setting(s, "renderer") == "metal" {
-        set("BB_METAL_FRAME", "1".into());
-    }
+    set("BB_METAL_FRAME", if str_setting(s, "renderer") == "moltenvk" { "0" } else { "1" }.into());
     #[cfg(target_os = "macos")]
     if bool_setting(s, "metal_hud") {
         set("MTL_HUD_ENABLED", "1".into());

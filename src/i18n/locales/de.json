@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "Oben links", "top_center": "Oben Mitte", "top_right": "Oben rechts", "bottom_left": "Unten links", "bottom_center": "Unten Mitte", "bottom_right": "Unten rechts" },
     "lod": { "-2": "Höchste", "0": "Wie im Spiel", "1": "Niedriger", "2": "Niedrigste" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "Adaptives V-Sync", "Mailbox": "Mailbox", "Immediate": "Sofort (mit Tearing)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan über MoltenVK (Standard)", "metal": "Metal (experimentell)", "metalHint": "Natives Metal, meist schneller" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan über MoltenVK", "metal": "Metal", "metalHint": "Natives Metal, meist schneller" },
     "drawPipe": { "auto": "Automatisch", "autoHint": "An ab 8 CPU-Threads", "on": "An", "off": "Aus", "offHint": "Stabiler, langsamer" },
     "readbacks": { "relaxed": "Locker (Standard)", "precise": "Genau", "off": "Aus" },
     "preupload": { "normal": "Normal", "full": "Vollständig", "fullHint": "Etwa 3 GB mehr GPU-Speicher", "off": "Aus" },

@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "左上", "top_center": "顶部居中", "top_right": "右上", "bottom_left": "左下", "bottom_center": "底部居中", "bottom_right": "右下" },
     "lod": { "-2": "最高", "0": "游戏默认", "1": "较低", "2": "最低" },
     "present": { "Fifo": "垂直同步", "FifoRelaxed": "自适应垂直同步", "Mailbox": "Mailbox", "Immediate": "立即（会撕裂）" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "通过 MoltenVK 的 Vulkan（默认）", "metal": "Metal（实验性）", "metalHint": "原生 Metal，通常更快" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "通过 MoltenVK 的 Vulkan", "metal": "Metal", "metalHint": "原生 Metal，通常更快" },
     "drawPipe": { "auto": "自动", "autoHint": "CPU 线程数为 8 或以上时开启", "on": "开", "off": "关", "offHint": "更稳定，但更慢" },
     "readbacks": { "relaxed": "宽松（默认）", "precise": "精确", "off": "关" },
     "preupload": { "normal": "普通", "full": "完整", "fullHint": "多占用约 3 GB GPU 内存", "off": "关" },

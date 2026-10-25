@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "Linksboven", "top_center": "Midden boven", "top_right": "Rechtsboven", "bottom_left": "Linksonder", "bottom_center": "Midden onder", "bottom_right": "Rechtsonder" },
     "lod": { "-2": "Hoogst", "0": "Zoals in het spel", "1": "Lager", "2": "Laagst" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "Adaptieve V-Sync", "Mailbox": "Mailbox", "Immediate": "Direct (met tearing)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan via MoltenVK (standaard)", "metal": "Metal (experimenteel)", "metalHint": "Native Metal, meestal sneller" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan via MoltenVK", "metal": "Metal", "metalHint": "Native Metal, meestal sneller" },
     "drawPipe": { "auto": "Automatisch", "autoHint": "Aan bij 8 of meer CPU-threads", "on": "Aan", "off": "Uit", "offHint": "Stabieler, trager" },
     "readbacks": { "relaxed": "Ruim (standaard)", "precise": "Precies", "off": "Uit" },
     "preupload": { "normal": "Normaal", "full": "Volledig", "fullHint": "Ongeveer 3 GB extra GPU-geheugen", "off": "Uit" },

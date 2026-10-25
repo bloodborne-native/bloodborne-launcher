@@ -46,7 +46,7 @@ export function AdvancedPage() {
           <SelectRow
             title={t("advanced.renderer")}
             description={`${t("advanced.rendererHint")} ${t("common.restartNote")}`}
-            value={settings.renderer ?? "moltenvk"}
+            value={settings.renderer ?? "metal"}
             options={RENDERERS}
             onChange={(v) => setSetting("renderer", v)}
           />

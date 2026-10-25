@@ -16,7 +16,7 @@ export function GraphicsPage() {
   const flag = (key: string, fallback: boolean) => (key in ini ? ini[key] === "1" : fallback);
   // The Metal renderer offers MetalFX only (the runtime's docs/RENDER_ADAPTER.md, decision 5): a
   // saved FSR choice runs as MetalFX there, and shows as MetalFX.
-  const metal = settings.renderer === "metal";
+  const metal = (settings.renderer ?? "metal") === "metal";
   const saved = ini.upscaler ?? "off";
   const upscaler = metal && saved !== "off" && saved !== "metalfx" ? "metalfx" : saved;
   const output = ini.output_res ?? "1920x1080";

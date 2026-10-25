@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "Слева вверху", "top_center": "По центру вверху", "top_right": "Справа вверху", "bottom_left": "Слева внизу", "bottom_center": "По центру внизу", "bottom_right": "Справа внизу" },
     "lod": { "-2": "Максимальная", "0": "Как в игре", "1": "Ниже", "2": "Минимальная" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "Адаптивный V-Sync", "Mailbox": "Mailbox", "Immediate": "Немедленно (с разрывами)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan через MoltenVK (по умолчанию)", "metal": "Metal (экспериментальный)", "metalHint": "Нативный Metal, обычно быстрее" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan через MoltenVK", "metal": "Metal", "metalHint": "Нативный Metal, обычно быстрее" },
     "drawPipe": { "auto": "Авто", "autoHint": "Включён при 8 и более потоках процессора", "on": "Вкл.", "off": "Выкл.", "offHint": "Стабильнее, но медленнее" },
     "readbacks": { "relaxed": "Relaxed (по умолчанию)", "precise": "Precise", "off": "Выкл." },
     "preupload": { "normal": "Обычная", "full": "Полная", "fullHint": "Около 3 ГБ видеопамяти сверху", "off": "Выкл." },

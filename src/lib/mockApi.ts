@@ -27,7 +27,7 @@ const config: Config = {
     hide_launcher: true,
     trophy_notifications: true,
     metal_hud: false,
-    renderer: "moltenvk",
+    renderer: "metal",
     check_updates: true,
     crash_diag: false,
     gpu_profile: false,

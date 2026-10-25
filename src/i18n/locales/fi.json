@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "Ylhäällä vasemmalla", "top_center": "Ylhäällä keskellä", "top_right": "Ylhäällä oikealla", "bottom_left": "Alhaalla vasemmalla", "bottom_center": "Alhaalla keskellä", "bottom_right": "Alhaalla oikealla" },
     "lod": { "-2": "Korkein", "0": "Kuten pelissä", "1": "Matalampi", "2": "Matalin" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "Mukautuva V-Sync", "Mailbox": "Mailbox", "Immediate": "Välitön (repeilyä)" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan MoltenVK:n kautta (oletus)", "metal": "Metal (kokeellinen)", "metalHint": "Natiivi Metal, yleensä nopeampi" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "Vulkan MoltenVK:n kautta", "metal": "Metal", "metalHint": "Natiivi Metal, yleensä nopeampi" },
     "drawPipe": { "auto": "Automaattinen", "autoHint": "Päällä, kun suoritinsäikeitä on 8 tai enemmän", "on": "Päällä", "off": "Pois", "offHint": "Vakaampi, hitaampi" },
     "readbacks": { "relaxed": "Joustava (oletus)", "precise": "Tarkka", "off": "Pois" },
     "preupload": { "normal": "Normaali", "full": "Täysi", "fullHint": "Noin 3 Gt enemmän GPU-muistia", "off": "Pois" },

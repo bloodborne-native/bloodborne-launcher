@@ -126,7 +126,7 @@
     "fpsPosition": { "top_left": "左上", "top_center": "中央上", "top_right": "右上", "bottom_left": "左下", "bottom_center": "中央下", "bottom_right": "右下" },
     "lod": { "-2": "最高", "0": "ゲームのまま", "1": "低め", "2": "最低" },
     "present": { "Fifo": "V-Sync", "FifoRelaxed": "アダプティブ V-Sync", "Mailbox": "Mailbox", "Immediate": "即時（ティアリングあり）" },
-    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "MoltenVK 経由の Vulkan（既定）", "metal": "Metal（実験的）", "metalHint": "ネイティブ Metal、通常はより高速" },
+    "renderer": { "moltenvk": "MoltenVK", "moltenvkHint": "MoltenVK 経由の Vulkan", "metal": "Metal", "metalHint": "ネイティブ Metal、通常はより高速" },
     "drawPipe": { "auto": "自動", "autoHint": "CPU スレッドが 8 以上のときオン", "on": "オン", "off": "オフ", "offHint": "安定するが遅い" },
     "readbacks": { "relaxed": "Relaxed（既定）", "precise": "Precise", "off": "オフ" },
     "preupload": { "normal": "標準", "full": "フル", "fullHint": "GPU メモリを約 3 GB 多く使用", "off": "オフ" },
