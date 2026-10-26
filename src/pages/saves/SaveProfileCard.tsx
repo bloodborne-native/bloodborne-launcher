@@ -27,7 +27,7 @@ export function SaveProfileCard({ profile, disabled, onChange }: {
         </div>
         <Button size="sm" variant="secondary" disabled={disabled || !profile.bytes}
           onClick={() => onChange({ action: "backup", id: profile.id }).catch(() => {})}>{t("saves.backup")}</Button>
-        <Button variant="ghost" size="icon-sm" aria-label={t("common.showInFinder")} title={t("common.showInFinder")}
+        <Button variant="ghost" size="icon-sm" aria-label={t("common.showFolder")} title={t("common.showFolder")}
           onClick={() => api.openPath(profile.path)}><FolderOpen aria-hidden="true" /></Button>
       </div>
     </SettingsSection>

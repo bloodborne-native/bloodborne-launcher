@@ -18,7 +18,7 @@ type Props = {
   onReset?: () => void;
 };
 
-/** A folder: its path, a chooser, Reveal in Finder, and back to the default. */
+/** A folder: its path, a chooser, showing it in the file manager, and back to the default. */
 export function FolderRow({ title, description, path, custom, onChoose, onReset }: Props) {
   const { t } = useTranslation();
   const choose = async () => {
@@ -46,7 +46,7 @@ export function FolderRow({ title, description, path, custom, onChoose, onReset 
         <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => api.openPath(path)} disabled={!path} />}>
           <FolderOpen />
         </TooltipTrigger>
-        <TooltipContent>{t("common.showInFinder")}</TooltipContent>
+        <TooltipContent>{t("common.showFolder")}</TooltipContent>
       </Tooltip>
       {onReset && custom && (
         <Tooltip>

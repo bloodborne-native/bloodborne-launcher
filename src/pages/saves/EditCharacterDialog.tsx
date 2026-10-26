@@ -38,7 +38,7 @@ export function EditCharacterDialog({ profileId, character, disabled }: { profil
     setError(undefined);
   }}>
     <DialogTrigger render={<Button variant="secondary" size="sm" disabled={disabled || !character.stats_consistent} />}>{t("saves.editCharacter")}</DialogTrigger>
-    <DialogContent showCloseButton={!pending} className="max-h-[calc(100vh-2rem)] overflow-y-auto sm:max-w-lg">
+    <DialogContent showCloseButton={!pending} className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg">
       <DialogHeader>
         <DialogTitle>{t("saves.editCharacter")}: {character.name}</DialogTitle>
         <DialogDescription>{t("saves.editWarning")}</DialogDescription>

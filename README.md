@@ -16,8 +16,8 @@ starts the game with the app's own bash and Python ([bloodborne-mac packaging](h
 - **Interface:** React 19, TypeScript, Tailwind CSS 4, [shadcn/ui](https://ui.shadcn.com)
   (Base UI), lucide icons, react-i18next.
 - **Backend:** [Tauri 2](https://tauri.app) (`src-tauri/src/main.rs`). It keeps the settings in its
-  SQLite database (`settings_store.rs`; `launcher.json` and `bbport.ini` in
-  `~/Library/Application Support/bloodborne_mac` are imported once and still written for the
+  SQLite database (`settings_store.rs`; `launcher.json` and `bbport.ini` in the data folder
+  are imported once and still written for the
   scripts and older launchers) and in sync with the in-game menu while the game runs, lists mods
   and patches through `runtime/scripts/launcher_api.py`, controllers through `bb-gpu-capabilities`, and
   runs `run.sh`.
@@ -29,6 +29,25 @@ BB_REPO=/path/to/bloodborne-runtime npm run tauri dev  # standalone: runtime bui
 npm run check        # TypeScript, ESLint and the locales' keys
 npx tauri build      # Bloodborne.app (packaging/macos.sh adds the game to it)
 ```
+
+## Platforms and screen sizes
+
+The launcher is meant for macOS, Windows and Linux, and later Android and iOS. Only the macOS game
+integration exists today.
+
+- **System differences** live in `src-tauri/src/platform.rs`: the data folder (macOS
+  `~/Library/Application Support/bloodborne_mac`; Linux `$XDG_DATA_HOME/bloodborne-native`, by
+  default `~/.local/share/bloodborne-native`; Windows `%APPDATA%\bloodborne-native`), the
+  package's layout, program names (`.exe`), the online module's file, opening a folder, finding
+  and stopping the game, and the system language. The rest of the backend is the same everywhere;
+  CI checks it on macOS, Ubuntu and Windows (`.github/workflows/checks.yml`).
+- **Texts** never name a system ("this computer", "Show the folder"). Options that exist on one
+  system only (Metal, MetalFX, the Metal HUD, MoltenVK) appear only there (`config.platform`).
+- **Layout:** from Tailwind's `md` width (768 px) up, the sidebar with the tabs and Play; below it
+  (phones, small windows) a tab strip at the top (`components/mobile/MobileHeader`) and the profile
+  and Play in a bar at the bottom (`MobileBar`), inside the screen's safe areas. Setting rows put
+  their control under the text below `sm` (640 px). The macOS title-bar strip is drawn only on
+  macOS. `npm run dev` shows both layouts when the browser window is resized.
 
 ## Conventions
 

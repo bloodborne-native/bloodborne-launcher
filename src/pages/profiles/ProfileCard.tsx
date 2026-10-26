@@ -13,9 +13,9 @@ export function ProfileCard({ profile, active, disabled, busy, onChange, onOpen 
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile.name);
-  return (<div className="px-5 py-4">
+  return (<div className="px-4 py-4 sm:px-5">
     <div className="flex flex-wrap items-center gap-3">
-      <h2 className="min-w-0 flex-1">
+      <h2 className="min-w-0 basis-full sm:basis-auto sm:flex-1">
         <Button variant="ghost" className="h-auto max-w-full justify-start whitespace-normal px-0 text-base hover:bg-transparent hover:text-parchment" onClick={onOpen}>
           <span className="break-words text-left">{profile.name}</span><ChevronRight aria-hidden="true" />
         </Button>

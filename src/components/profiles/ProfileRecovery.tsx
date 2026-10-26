@@ -32,7 +32,7 @@ export function ProfileRecovery({ error }: { error: unknown }) {
                 {t("profiles.retry")}
               </Button>
               <Button variant="outline" onClick={() => api.openLauncherData().catch((failure: unknown) => toast.error(String(failure)))}>
-                {t("common.showInFinder")}
+                {t("common.showFolder")}
               </Button>
             </div>
           </CardContent>

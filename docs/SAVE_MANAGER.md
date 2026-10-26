@@ -41,7 +41,7 @@ folders are never adopted again.
 
 | Where | What |
 |---|---|
-| `~/Library/Application Support/bloodborne_mac/launcher.db` | SQLite: profiles, save sets, the active profile, backups, trophy unlocks, settings, the file-operation journal |
+| `launcher.db` in the data folder (macOS: `~/Library/Application Support/bloodborne_mac`; see the README's platforms) | SQLite: profiles, save sets, the active profile, backups, trophy unlocks, settings, the file-operation journal |
 | `user/` (the original folder) | The first profile's saves, and the shared shader and pipeline caches |
 | `save-profiles/<id>/user/` | Other profiles' saves, with a metadata manifest for recovery |
 | `database-backups/` | A snapshot of the database before each schema upgrade |

@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { LoaderCircle, Play, Square } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
+import { OnlinePasswordDialog } from "@/components/sidebar/OnlinePasswordDialog";
 import { useConfig, useProfiles, useGameCheck } from "@/hooks";
 import { cn } from "@/lib";
 import { useGameStore } from "@/stores";
@@ -14,6 +16,11 @@ export function PlayButton({ className }: { className?: string }) {
   const { running, play, stop } = useGameStore();
   const profiles = useProfiles();
   const problem = check.data?.problem;
+  const [askPassword, setAskPassword] = useState(false);
+  // Seamless Hunt's password, when the player did not save it, is asked for each launch.
+  const settings = config?.settings;
+  const passwordNeeded = !!settings?.online && settings.online_pool !== "huntersdream" && !config?.online_password_saved;
+  const start = () => (passwordNeeded ? setAskPassword(true) : void play());
 
   if (running) {
     return (
@@ -32,7 +39,7 @@ export function PlayButton({ className }: { className?: string }) {
   const button = (
     <button
       type="button"
-      onClick={play}
+      onClick={start}
       disabled={check.isPending || !!problem || profiles.busy || !profiles.data || profiles.data.setup_required}
       className={cn(
         "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-blood-500 to-blood-700 py-3 font-display text-sm font-semibold tracking-[0.25em] text-parchment shadow-lg shadow-blood-700/40 transition hover:from-blood-400 hover:to-blood-600 disabled:cursor-not-allowed disabled:from-night-700 disabled:to-night-700 disabled:text-muted-foreground disabled:shadow-none",
@@ -42,7 +49,9 @@ export function PlayButton({ className }: { className?: string }) {
       {check.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Play className="size-4 fill-current" />} {t("play.play").toUpperCase()}
     </button>
   );
-  if (!problem) return button;
+  const prompt = <OnlinePasswordDialog open={askPassword} account={settings?.online_npid ?? ""}
+    onPlay={(password) => { setAskPassword(false); void play(password); }} onCancel={() => setAskPassword(false)} />;
+  if (!problem) return <>{button}{prompt}</>;
   return (
     <Tooltip>
       <TooltipTrigger render={<span className="block w-full" />}>{button}</TooltipTrigger>

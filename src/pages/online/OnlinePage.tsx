@@ -1,0 +1,84 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui";
+import { PageHeader, SelectRow, SettingsSection, SwitchRow, TextRow } from "@/components/settings";
+import { useConfig, useProfiles, useSetting, useSettingsData } from "@/hooks";
+import { api, queryKeys } from "@/lib";
+import { SavePasswordDialog } from "@/pages/online/SavePasswordDialog";
+
+/** Accounts belong to the selected save profile; the backend blocks edited saves at launch. */
+export function OnlinePage() {
+  const { t } = useTranslation();
+  const { settings } = useSettingsData();
+  const set = useSetting();
+  const { data: profiles } = useProfiles();
+  const active = profiles?.profiles.find((profile) => profile.id === profiles.active);
+  const edited = active && !active.trophies_eligible;
+  const thd = settings.online_pool === "huntersdream";
+  const { data: config } = useConfig();
+  const client = useQueryClient();
+  const [confirmSave, setConfirmSave] = useState(false);
+  const savePassword = (password: string) => api.saveOnlinePassword(password)
+    .catch((error) => toast.error(t("common.saveFailed"), { description: String(error) }))
+    .finally(() => client.invalidateQueries({ queryKey: queryKeys.config }));
+  const switchSaving = (save: boolean) => {
+    if (save) { setConfirmSave(true); return; }
+    set("online_save_password", false); // the backend deletes the saved password
+    void client.invalidateQueries({ queryKey: queryKeys.config });
+  };
+  return <>
+    <PageHeader title={t("online.title")} subtitle={t("online.subtitle")} />
+    {edited && <p role="alert" className="mb-4 text-sm text-blood-400">{t("online.editedSave")}</p>}
+    <SettingsSection title={t("online.play") }>
+      <SwitchRow title={t("online.enable")} description={t("online.enableHint")}
+        checked={settings.online} onChange={(value) => set("online", value)} />
+      <SelectRow title={t("online.pool")} description={t("online.poolHint")}
+        value={settings.online_pool}
+        options={[{ value: "seamless", label: t("online.seamless"), literal: true },
+                  { value: "huntersdream", label: t("online.huntersDream"), literal: true }]}
+        onChange={(value) => set("online_pool", value)} />
+    </SettingsSection>
+    {/* BBSC is not carried: its code is built on knowledge of the game's own program. */}
+    <Alert className="mb-5">
+      <AlertTitle>{t("online.seamlessCoop")}</AlertTitle>
+      <AlertDescription>{t("online.seamlessCoopUnsupported")}</AlertDescription>
+    </Alert>
+    {thd ? <>
+      <SettingsSection title={t("online.thdAccount")} description={t("online.thdAccountHint")}>
+        <TextRow title={t("online.onlineId")} value={settings.thd_online_id}
+          onChange={(value) => set("thd_online_id", value)} />
+        <TextRow title={t("online.token")} type="password" value={settings.thd_token}
+          onChange={(value) => set("thd_token", value)} />
+        <TextRow title={t("online.thdServer")} value={settings.thd_server}
+          onChange={(value) => set("thd_server", value)} />
+      </SettingsSection>
+    </> : <>
+      <SettingsSection title={t("online.seamlessAccount")} description={t("online.seamlessAccountHint")}>
+        <TextRow title={t("online.onlineId")} value={settings.online_npid}
+          onChange={(value) => set("online_npid", value)} />
+        <SwitchRow title={t("online.savePassword")}
+          description={settings.online_save_password ? t("online.savePasswordOn") : t("online.savePasswordOff")}
+          checked={settings.online_save_password} onChange={switchSaving} />
+        {settings.online_save_password &&
+          <TextRow title={t("online.password")} type="password" value=""
+            placeholder={config?.online_password_saved ? t("online.passwordSaved") : undefined}
+            onChange={(value) => void savePassword(value)} />}
+      </SettingsSection>
+      <SettingsSection title={t("online.coop")} description={t("online.coopHint")}>
+        <SwitchRow title={t("online.upnp")} description={t("online.upnpHint")}
+          checked={settings.online_upnp} onChange={(value) => set("online_upnp", value)} />
+        <TextRow title={t("online.server")} value={settings.online_server}
+          onChange={(value) => set("online_server", value)} />
+        <TextRow title={t("online.webapi")} value={settings.online_webapi}
+          onChange={(value) => set("online_webapi", value)} />
+        <TextRow title={t("online.gameServer")} value={settings.online_community}
+          onChange={(value) => set("online_community", value)} />
+      </SettingsSection>
+    </>}
+    <SavePasswordDialog open={confirmSave}
+      onAccept={() => { setConfirmSave(false); set("online_save_password", true); }}
+      onDecline={() => setConfirmSave(false)} />
+  </>;
+}

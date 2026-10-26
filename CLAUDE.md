@@ -1,8 +1,9 @@
 # bloodborne-launcher
 
 The launcher for bloodborne-native. Tauri (Rust), React and TypeScript, with 20 languages.
-macOS packaging and runtime integration work today; Windows and Linux game integration are
-planned. Keep profile/save logic independent of the platform and renderer.
+macOS packaging and runtime integration work today; Windows, Linux, Android and iOS are planned.
+Keep profile/save logic independent of the platform and renderer; system differences go in
+`src-tauri/src/platform.rs`, texts never name a system, and layouts work from phone width up.
 
 ## Layout and checks
 
@@ -63,9 +64,9 @@ Playing an edited save must not unlock trophies: enforce this in the runtime and
 ineligible session events in the launcher. Copies/backups retain the edited marker; existing
 profile trophies remain. See docs/SAVE_MANAGER.md for eligibility and recovery requirements.
 Runtime generation and launcher import gates exist for marked saves; the first editor fields
-(all six attributes, Blood Echoes and Insight) and confirmation are implemented. Online access
-policy for edited saves is undecided; only
-trophies are blocked. Do not claim external-edit detection or PSN synchronization.
+(all six attributes, Blood Echoes and Insight) and confirmation are implemented. Edited saves
+play offline only (maintainer, 2026-10-26): the launcher refuses online play for a marked save
+set, and the runtime's online module checks the marker again; trophies are blocked too. Do not claim external-edit detection or PSN synchronization.
 
 Public trophy names/grades may be used, per the maintainer. Keep their source per locale in
 `trophy_catalog.json`; use English fallback until a translation is verified. Descriptions are

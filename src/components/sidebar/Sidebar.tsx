@@ -1,25 +1,12 @@
-import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Users, Gamepad2, House, MonitorCog, Package, ScrollText, Settings2, Swords, Wrench } from "lucide-react";
 import { Moon } from "@/components/brand";
 import { ActiveProfile } from "@/components/profiles";
+import { NAV_TABS } from "@/components/sidebar/navTabs";
 import { PlayButton } from "@/components/sidebar/PlayButton";
 import { SidebarNavItem } from "@/components/sidebar/SidebarNavItem";
 import { useConfig } from "@/hooks";
+import { cn } from "@/lib";
 import { useGameStore, useUiStore } from "@/stores";
-import type { Tab } from "@/stores";
-
-const TABS: { id: Tab; icon: ReactNode }[] = [
-  { id: "home", icon: <House /> },
-  { id: "graphics", icon: <MonitorCog /> },
-  { id: "controls", icon: <Gamepad2 /> },
-  { id: "game", icon: <Swords /> },
-  { id: "profiles", icon: <Users /> },
-  { id: "mods", icon: <Package /> },
-  { id: "patches", icon: <Wrench /> },
-  { id: "advanced", icon: <Settings2 /> },
-  { id: "log", icon: <ScrollText /> },
-];
 
 export function Sidebar() {
   const { t } = useTranslation();
@@ -28,7 +15,9 @@ export function Sidebar() {
   const { data: config } = useConfig();
   return (
     <aside
-      className="drag flex w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 px-3 pb-4 pt-11"
+      // Wide windows only (narrow ones: MobileHeader). macOS draws its window buttons over the top.
+      className={cn("drag hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 px-3 pb-4 md:flex",
+        config?.platform === "macos" ? "pt-11" : "pt-5")}
       data-tauri-drag-region
     >
       <div className="mb-7 flex items-center gap-3 px-2">
@@ -39,7 +28,7 @@ export function Sidebar() {
         </div>
       </div>
       <nav className="no-drag flex flex-col gap-0.5">
-        {TABS.map((item) => (
+        {NAV_TABS.map((item) => (
           <SidebarNavItem
             key={item.id}
             label={t(`nav.${item.id}`)}

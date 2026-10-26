@@ -9,7 +9,7 @@ export function SettingsSection({ title, description, children, className }: Pro
   return (
     <Card className={cn("mb-5 gap-0 border-border bg-card/70 py-0 shadow-lg shadow-black/30", className)}>
       {(title || description) && (
-        <CardHeader className="border-b border-border px-5 pb-3 pt-4">
+        <CardHeader className="border-b border-border px-4 pb-3 pt-4 sm:px-5">
           {title && (
             <CardTitle className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-blood-400">
               {title}

@@ -28,6 +28,17 @@ const config: Config = {
     trophy_notifications: true,
     metal_hud: false,
     renderer: "metal",
+    online: false,
+    online_pool: "seamless",
+    online_server: "play.seamlesshunt.com:31313",
+    online_webapi: "http://play.seamlesshunt.com:31315",
+    online_community: "http://play.seamlesshunt.com",
+    online_npid: "",
+    online_save_password: false,
+    online_upnp: true,
+    thd_server: "https://thehuntersdream.com",
+    thd_online_id: "",
+    thd_token: "",
     check_updates: true,
     crash_diag: false,
     gpu_profile: false,
@@ -48,6 +59,7 @@ const config: Config = {
   platform: "macos",
   memory_mb: 18432,
   running: false,
+  online_password_saved: false,
 };
 
 let mods: Mod[] = [
@@ -137,7 +149,8 @@ export const mockApi = {
     : { version: "0.8.0", tag: "v0.8.0", newer: false, notes: "" }),
   openRelease: (_tag: string) => wait(undefined),
   loadConfig: () => wait(structuredClone(config)),
-  saveSettings: (settings: Partial<Settings>) => wait(void Object.assign(config.settings, settings)),
+  saveSettings: (settings: Partial<Settings>) => wait(void (Object.assign(config.settings, settings),
+    config.settings.online_save_password || (config.online_password_saved = false))),
   saveIni: (values: Record<string, string | null>) =>
     wait(
       void Object.entries(values).forEach(([k, v]) => {
@@ -173,7 +186,8 @@ export const mockApi = {
   readInput: (kind: "key" | "pad") => wait(kind === "pad" ? "rightshoulder" : "G"),
   openLauncherData: () => wait(undefined),
   openPath: () => wait(undefined),
-  launch: () => wait(undefined),
+  launch: (_password?: string) => wait(undefined),
+  saveOnlinePassword: (password: string) => wait(void (config.online_password_saved = password !== "")),
   stop: () => wait(undefined),
   onOutput: (_handler: (line: string) => void) => Promise.resolve(() => {}),
   onState: (_handler: (state: GameState) => void) => Promise.resolve(() => {}),

@@ -30,6 +30,18 @@ export type Settings = {
   metal_hud: boolean;
   /** macOS: "moltenvk" (default) or "metal" (the Metal backend's frame path). */
   renderer: string;
+  online: boolean;
+  online_pool: "seamless" | "huntersdream";
+  online_server: string;
+  online_webapi: string;
+  online_community: string;
+  online_npid: string;
+  /** The player accepted saving the password unencrypted on this computer; else asked at each launch. */
+  online_save_password: boolean;
+  online_upnp: boolean;
+  thd_server: string;
+  thd_online_id: string;
+  thd_token: string;
   check_updates: boolean;
   crash_diag: boolean;
   gpu_profile: boolean;
@@ -65,6 +77,8 @@ export type Config = {
   /** The computer's memory in MiB (0 when unknown). */
   memory_mb?: number;
   running: boolean;
+  /** A password is saved (online_save_password on and the file present). */
+  online_password_saved?: boolean;
 };
 
 export type Mod = { name: string; enabled: boolean };

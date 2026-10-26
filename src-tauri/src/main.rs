@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 //! bloodborne_mac launcher: the Tauri backend behind the React interface (src/).
 //!
-//! It keeps two files in the data directory (~/Library/Application Support/bloodborne_mac):
+//! It keeps two files in the data directory (platform::data_dir; on macOS
+//! ~/Library/Application Support/bloodborne_mac):
 //! launcher.json (start-up options passed to run.sh as environment variables) and bbport.ini
 //! (the port's settings, shared with the in-game menu; lines it does not change are kept).
 //! Mods, third-party patches and the game check come from scripts/launcher_api.py (the same code
@@ -20,6 +21,8 @@ mod tray;
 mod game_lifecycle;
 mod updates;
 mod settings_store;
+mod online_password;
+mod platform;
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
@@ -34,37 +37,36 @@ use tauri::{AppHandle, Emitter, Manager, State};
 /// Where the launcher finds the game's programs and scripts.
 #[derive(Clone, Serialize)]
 struct Paths {
-    /// run.sh, scripts/, patches/ (Contents/Resources/game, or a source checkout).
+    /// run.sh, scripts/, patches/ (the package's game/, or a source checkout).
     game_root: PathBuf,
     bash: PathBuf,
     python: PathBuf,
     probe: PathBuf,
     capabilities: PathBuf,
     data: PathBuf,
-    /// Packaged in an app bundle (else a development run from a checkout).
+    /// Packaged (platform::package; else a development run from a checkout).
     bundled: bool,
 }
 
 impl Paths {
     fn find(data: PathBuf) -> Paths {
         let exe = std::env::current_exe().unwrap_or_default();
-        let macos = exe.parent().map(Path::to_path_buf).unwrap_or_default();
-        let resources = macos.parent().map(|c| c.join("Resources")).unwrap_or_default();
-        if resources.join("game/run.sh").is_file() {
+        let exe_dir = exe.parent().map(Path::to_path_buf).unwrap_or_default();
+        if let Some(package) = platform::package(&exe_dir) {
             return Paths {
-                game_root: resources.join("game"),
-                bash: macos.join("bash"),
-                python: resources.join("python/bin/python3"),
-                probe: macos.join("bb-probe"),
-                capabilities: macos.join("bb-gpu-capabilities"),
+                game_root: package.resources.join("game"),
+                bash: platform::bash(Some(&package.programs)),
+                python: platform::packaged_python(&package.resources),
+                probe: package.programs.join(platform::exe("bb-probe")),
+                capabilities: package.programs.join(platform::exe("bb-gpu-capabilities")),
                 data,
                 bundled: true,
             };
         }
         // Development (npm run tauri dev): the checkout's build (the runtime/ submodule,
-        // bloodborne-runtime, or BB_REPO), Homebrew's bash, any Python 3.
+        // bloodborne-runtime, or BB_REPO), the system's bash, any Python 3.
         let root = std::env::var_os("BB_REPO").map(PathBuf::from).unwrap_or_else(|| {
-            let mut dir = macos.clone();
+            let mut dir = exe_dir.clone();
             loop {
                 if dir.join("runtime/run.sh").is_file() {
                     return dir.join("runtime");
@@ -74,27 +76,16 @@ impl Paths {
                 }
             }
         });
-        let bash = ["/opt/homebrew/bin/bash", "/usr/local/bin/bash"]
-            .iter()
-            .map(PathBuf::from)
-            .find(|p| p.is_file())
-            .unwrap_or_else(|| PathBuf::from("/bin/bash"));
         Paths {
-            probe: root.join("out/bb-probe"),
-            capabilities: root.join("out/bb-gpu-capabilities"),
+            probe: root.join("out").join(platform::exe("bb-probe")),
+            capabilities: root.join("out").join(platform::exe("bb-gpu-capabilities")),
             game_root: root,
-            bash,
-            python: PathBuf::from("python3"),
+            bash: platform::bash(None),
+            python: PathBuf::from(if cfg!(windows) { "python" } else { "python3" }),
             data,
             bundled: false,
         }
     }
-}
-
-fn dirs_data() -> PathBuf {
-    std::env::var_os("HOME")
-        .map(|h| PathBuf::from(h).join("Library/Application Support"))
-        .unwrap_or_else(|| PathBuf::from("."))
 }
 
 /// QA can select synthetic data without changing HOME or touching player files.
@@ -102,7 +93,7 @@ fn launcher_data_dir(override_path: Option<PathBuf>) -> Result<PathBuf, String> 
     match override_path {
         Some(path) if path.is_absolute() => Ok(path),
         Some(_) => Err("BB_LAUNCHER_DATA_DIR must be an absolute path.".into()),
-        None => Ok(dirs_data().join("bloodborne_mac")),
+        None => Ok(platform::data_dir()),
     }
 }
 
@@ -133,6 +124,17 @@ fn default_settings() -> Map<String, Value> {
         "trophy_notifications": true,
         "metal_hud": false,
         "renderer": "metal",
+        "online": false,
+        "online_pool": "seamless",
+        "online_server": "play.seamlesshunt.com:31313",
+        "online_webapi": "http://play.seamlesshunt.com:31315",
+        "online_community": "http://play.seamlesshunt.com",
+        "online_npid": "",
+        "online_save_password": false,
+        "online_upnp": true,
+        "thd_server": "https://thehuntersdream.com",
+        "thd_online_id": "",
+        "thd_token": "",
         "check_updates": true,
         "crash_diag": false,
         "gpu_profile": false,
@@ -142,7 +144,7 @@ fn default_settings() -> Map<String, Value> {
     v.as_object().cloned().unwrap_or_default()
 }
 
-/// bbport.ini values the launcher shows before the file has them (macOS defaults).
+/// bbport.ini values the launcher shows before the file has them.
 fn default_ini() -> BTreeMap<String, String> {
     [
         ("upscaler", "off"),
@@ -211,6 +213,8 @@ fn load_settings(p: &Paths) -> Map<String, Value> {
             }
         }
     }
+    // The password lives in its own file (online_password.rs), never among the settings.
+    settings.remove("online_password");
     settings
 }
 
@@ -262,8 +266,8 @@ fn bool_setting(s: &Map<String, Value>, key: &str) -> bool {
 
 fn expand(path: &str) -> PathBuf {
     if let Some(rest) = path.strip_prefix("~/") {
-        if let Some(home) = std::env::var_os("HOME") {
-            return PathBuf::from(home).join(rest);
+        if let Some(home) = platform::home() {
+            return home.join(rest);
         }
     }
     PathBuf::from(path)
@@ -330,6 +334,7 @@ async fn load_config(state: State<'_ , AppState>) -> Result<Value, String> {
         "platform": std::env::consts::OS,
         "memory_mb": system_memory_mb(),
         "running": state.game.lock().map(|g| g.child.is_some()).unwrap_or(false),
+        "online_password_saved": bool_setting(&s, "online_save_password") && online_password::saved(&p.data).is_some(),
     }))
     }).await
 }
@@ -372,6 +377,17 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
     if settings.get("renderer").is_some_and(|v| !matches!(v.as_str(), Some("moltenvk" | "metal"))) {
         return Err("renderer must be moltenvk or metal.".into());
     }
+    if settings.get("online_pool").is_some_and(|v| !matches!(v.as_str(), Some("seamless" | "huntersdream"))) {
+        return Err("online_pool must be seamless or huntersdream.".into());
+    }
+    if settings.contains_key("online_password") {
+        return Err("The password is saved with save_online_password.".into());
+    }
+    for key in ["online", "online_upnp", "online_save_password"] {
+        if settings.get(key).is_some_and(|v| !v.is_boolean()) {
+            return Err(format!("{key} must be a boolean."));
+        }
+    }
     if settings.get("metal_hud").is_some_and(|v| !v.is_boolean()) {
         return Err("metal_hud must be a boolean.".into());
     }
@@ -387,6 +403,9 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
         .map(|(key, value)| format!("BBSET launcher:{key}={}\n", settings_store::launcher_text(value)))
         .collect();
     merged.extend(settings);
+    if !bool_setting(&merged, "online_save_password") {
+        online_password::forget(&state.paths.data)?;
+    }
     let auto_hide = bool_setting(&merged, "hide_launcher");
     write_settings(&state.paths, merged)?;
     send_to_game(&mut game, &sent);
@@ -394,9 +413,21 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
     Ok(())
 }
 
+/// Saves the online password, only after the player accepted saving it unencrypted on this computer.
+#[tauri::command]
+fn save_online_password(state: State<AppState>, password: String) -> Result<(), String> {
+    let _game = state.game.lock().map_err(|e| e.to_string())?;
+    if !bool_setting(&load_settings(&state.paths), "online_save_password") {
+        return Err("Saving the password is off.".into());
+    }
+    online_password::save(&state.paths.data, &password)
+}
+
 fn write_settings(p: &Paths, settings: Map<String, Value>) -> Result<(), String> {
-    let values: Vec<(String, Option<String>)> =
+    let mut values: Vec<(String, Option<String>)> =
         settings.iter().map(|(k, v)| (k.clone(), Some(v.to_string()))).collect();
+    // A password stored among the settings by a development build is dropped.
+    values.push(("online_password".into(), None));
     settings_store::put(&p.data, settings_store::LAUNCHER, &values)?;
     write_launcher_json(p, settings)
 }
@@ -433,9 +464,7 @@ fn selected_user_dir(p: &Paths) -> Result<PathBuf, String> {
 fn saves_idle(game: &Game) -> Result<(), String> {
     if game.child.is_some() { return Err("Stop the game before changing or copying saves.".into()); }
     // Also exclude games started outside this launcher, including isolated benchmark runs.
-    let status = Command::new("pgrep").args(["-x", "bb-probe"]).stdout(Stdio::null()).status().map_err(|e| e.to_string())?;
-    if status.success() { return Err("Stop the running game before changing or copying saves.".into()); }
-    if status.code() != Some(1) { return Err("Could not check whether the game is running.".into()); }
+    if platform::running("bb-probe")? { return Err("Stop the running game before changing or copying saves.".into()); }
     Ok(())
 }
 #[tauri::command]
@@ -774,7 +803,7 @@ fn open_launcher_data(state: State<'_, AppState>) -> Result<(), String> {
 fn open_path(path: String) -> Result<(), String> {
     let path = expand(&path);
     let _ = fs::create_dir_all(&path);
-    Command::new("open").arg(path).spawn().map(|_| ()).map_err(|e| e.to_string())
+    platform::open_folder(&path)
 }
 
 // GUI names may be long; keep the guest value within a 16-byte caller buffer including NUL.
@@ -783,12 +812,11 @@ fn guest_profile_name(name: &str) -> String {
     name[..end].to_string()
 }
 
-fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, String)>, String> {
+/// `password`: the online password typed at launch when it is not saved.
+fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -> Result<Vec<(String, String)>, String> {
     let mut env: Vec<(String, String)> = Vec::new();
     let mut set = |k: &str, v: String| env.push((k.to_string(), v));
-    let path_dirs = [p.bash.parent().map(|d| d.to_string_lossy().to_string()).unwrap_or_default(),
-                     "/usr/bin:/bin:/usr/sbin:/sbin".to_string()];
-    set("PATH", path_dirs.join(":"));
+    set("PATH", platform::game_path(&p.bash).to_string_lossy().into());
     set("BB_PREBUILT", "1".into());
     set("BB_PROBE", p.probe.to_string_lossy().into());
     set("BB_DATA_DIR", p.data.to_string_lossy().into());
@@ -804,7 +832,7 @@ fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, St
     // The in-game menu follows the launcher's language; the game matches regional codes the
     // way the launcher does (gpu/shim/bbport_text.cpp).
     let ui = str_setting(s, "ui_language");
-    set("BB_UI_LANGUAGE", if ui.is_empty() { system_language() } else { ui });
+    set("BB_UI_LANGUAGE", if ui.is_empty() { platform::system_language() } else { ui });
     set("BB_FULLSCREEN", (if bool_setting(s, "fullscreen") { "1" } else { "0" }).into());
     set("BB_PRESENT_MODE", str_setting(s, "present_mode"));
     // display: the monitor's name (BB_DISPLAY matches part of it), so it survives a new order.
@@ -859,36 +887,63 @@ fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, St
     set("BB_TROPHIES_ELIGIBLE", if trophies::eligible(&user) { "1" } else { "0" }.into());
     set("BB_USER_DIR", user.to_string_lossy().into());
 
+    // The selected profile controls online eligibility. Extra environment cannot bypass this
+    // launcher check, and the runtime repeats it against the save marker at import resolution.
+    let online = bool_setting(s, "online");
+    if online && !trophies::eligible(&user) {
+        return Err("This profile has an edited save set and cannot play online. Restore a backup from before its first edit.".into());
+    }
+    set("BB_ONLINE", if online { "1" } else { "0" }.into());
+    if online {
+        let module = platform::net_module(&p.game_root, p.bundled);
+        if !module.is_file() {
+            return Err("The online module is missing from this build.".into());
+        }
+        set("BB_NET_MODULE", module.to_string_lossy().into());
+        set("BB_NET_GEN", "20".into());
+        let pool = str_setting(s, "online_pool");
+        if pool == "huntersdream" {
+            let name = str_setting(s, "thd_online_id");
+            let token = str_setting(s, "thd_token");
+            if name.is_empty() || token.is_empty() {
+                return Err("Sign in to The Hunter's Dream before starting online play.".into());
+            }
+            set("BB_NET_BACKEND", "thd".into());
+            set("BB_BBSC", "0".into());
+            set("BB_COMMUNITY_SERVER", str_setting(s, "thd_server"));
+            set("BB_THD_ONLINE_ID", name);
+            set("BB_THD_TOKEN", token);
+        } else {
+            let name = str_setting(s, "online_npid");
+            let saved = if bool_setting(s, "online_save_password") { online_password::saved(&p.data) } else { None };
+            let password = saved.or_else(|| password.map(str::to_string)).unwrap_or_default();
+            if name.is_empty() || password.is_empty() {
+                return Err("Enter your Seamless Hunt account name and password before starting online play.".into());
+            }
+            set("BB_NET_BACKEND", "".into());
+            // Seamless co-op (BBSC) is not supported yet (the Online page says why).
+            set("BB_BBSC", "0".into());
+            set("BB_SHADNET_NPID", name);
+            set("BB_SHADNET_PASSWORD", password);
+            set("BB_SHADNET_SERVER", str_setting(s, "online_server"));
+            set("BB_SHADNET_WEBAPI", str_setting(s, "online_webapi"));
+            set("BB_COMMUNITY_SERVER", str_setting(s, "online_community"));
+            set("BB_UPNP", if bool_setting(s, "online_upnp") { "1" } else { "0" }.into());
+        }
+    }
+
     set("BB_GPU_USER_DIR", profiles::require(&p.data)?.original_user_dir.to_string_lossy().into());
     set("BB_USER_NAME", guest_profile_name(&profiles::selected(&p.data)?.name));
     Ok(env)
 }
 
-/// The system's preferred language ("pt-BR"): an app started from Finder has no LANG.
-fn system_language() -> String {
-    Command::new("defaults")
-        .args(["read", "-g", "AppleLanguages"])
-        .output()
-        .ok()
-        .and_then(|o| {
-            // "(\n    \"pt-BR\",\n    en\n)": the first item, quoted or not
-            String::from_utf8_lossy(&o.stdout)
-                .lines()
-                .map(|l| l.trim().trim_end_matches(',').trim_matches('"'))
-                .find(|l| !l.is_empty() && *l != "(" && *l != ")")
-                .map(str::to_string)
-        })
-        .or_else(|| std::env::var("LANG").ok())
-        .unwrap_or_default()
-}
-
 #[tauri::command]
-async fn launch(app: AppHandle, state: State<'_, AppState>) -> Result<(), String> {
+async fn launch(app: AppHandle, state: State<'_, AppState>, password: Option<String>) -> Result<(), String> {
     let state=state.inner().clone();
-    blocking(move || start_game(&app, &state)).await
+    blocking(move || start_game(&app, &state, password.as_deref())).await
 }
 
-fn start_game(app: &AppHandle, state: &AppState) -> Result<(), String> {
+fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Result<(), String> {
     let app = app.clone();
     let p = state.paths.clone();
     let mut game = state.game.lock().map_err(|e| e.to_string())?;
@@ -912,7 +967,7 @@ fn start_game(app: &AppHandle, state: &AppState) -> Result<(), String> {
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
-    for (k, v) in game_environment(&p, &s)? {
+    for (k, v) in game_environment(&p, &s, password)? {
         cmd.env(k, v);
     }
     // The in-game menu and the launcher keep each other's settings (BBSET lines both ways).
@@ -986,8 +1041,8 @@ fn start_game(app: &AppHandle, state: &AppState) -> Result<(), String> {
 fn stop(state: State<AppState>) -> Result<(), String> {
     let game = state.game.lock().map_err(|e| e.to_string())?;
     if let Some(child) = game.child.as_ref() {
-        // SIGTERM: run.sh execs the game, which quits cleanly on it.
-        let _ = Command::new("kill").arg(child.id().to_string()).status();
+        // run.sh execs the game, which quits cleanly when asked.
+        platform::stop(child.id());
     }
     Ok(())
 }
@@ -1006,7 +1061,8 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(AppState { paths, game: Arc::new(Mutex::new(Game { child: None, input: None })) })
-        // `open Bloodborne.app --args --play`: start the game at once (shortcuts, scripted tests).
+        // `--play` (macOS: `open Bloodborne.app --args --play`): start the game at once (shortcuts,
+        // scripted tests).
         .setup(|app| {
             if let Err(error) = tray::setup(app.handle(), |app| {
                 if let Err(error) = stop(app.state::<AppState>()) { eprintln!("Stop game: {error}"); }
@@ -1020,7 +1076,7 @@ fn main() {
             if std::env::args().any(|a| a == "--play") {
                 let handle = app.handle().clone();
                 let state = app.state::<AppState>();
-                if let Err(e) = start_game(&handle, &state) {
+                if let Err(e) = start_game(&handle, &state, None) {
                     eprintln!("--play: {e}");
                 }
             }
@@ -1030,7 +1086,7 @@ fn main() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {
@@ -1047,7 +1103,7 @@ fn main() {
                 if let Some(state) = window.app_handle().try_state::<AppState>() {
                     if let Ok(game) = state.game.lock() {
                         if let Some(child) = game.child.as_ref() {
-                            let _ = Command::new("kill").arg(child.id().to_string()).status();
+                            platform::stop(child.id());
                         }
                     }
                 }
@@ -1067,7 +1123,7 @@ fn main() {
 mod save_tests {
     #[test]
     fn launcher_data_defaults_and_absolute_override_are_explicit() {
-        assert_eq!(super::launcher_data_dir(None).unwrap(), super::dirs_data().join("bloodborne_mac"));
+        assert_eq!(super::launcher_data_dir(None).unwrap(), super::platform::data_dir());
         let synthetic = std::env::temp_dir().join("bloodborne-launcher-data-test");
         assert_eq!(super::launcher_data_dir(Some(synthetic.clone())).unwrap(), synthetic);
     }
@@ -1087,6 +1143,7 @@ mod save_tests {
         assert!(long.len() < 16);
         assert!("日本語の長いプロフィール名".starts_with(&long));
     }
+    #[cfg(unix)]
     #[test]
     fn save_changes_are_rejected_while_launcher_child_runs() {
         let child = Command::new("sleep").arg("30").spawn().unwrap();
@@ -1125,7 +1182,7 @@ mod save_tests {
         save_operation(&p, &id, "backup", None).unwrap();
         assert_eq!(profiles::selected(&root).unwrap().backups.len(), 3);
         settings.insert("extra_env".into(), json!("BB_USER_DIR=/wrong BB_GPU_USER_DIR=/wrong BB_USER_NAME=wrong BB_TROPHIES_ELIGIBLE=1"));
-        let env: BTreeMap<_,_> = game_environment(&p, &settings).unwrap().into_iter().collect();
+        let env: BTreeMap<_,_> = game_environment(&p, &settings, None).unwrap().into_iter().collect();
         assert_eq!(env["BB_USER_DIR"], root.join("save-profiles").join(&id).join("user").to_string_lossy());
         assert_eq!(env["BB_GPU_USER_DIR"], root.join("user").to_string_lossy());
         assert_eq!(env["BB_USER_NAME"], "Synthetic");
@@ -1133,12 +1190,12 @@ mod save_tests {
         let user=selected_user_dir(&p).unwrap();
         fs::create_dir_all(user.join("savedata")).unwrap();
         fs::write(user.join("savedata/.bb-edited"),"edited-v1\n").unwrap();
-        let env: BTreeMap<_,_> = game_environment(&p, &settings).unwrap().into_iter().collect();
+        let env: BTreeMap<_,_> = game_environment(&p, &settings, None).unwrap().into_iter().collect();
         assert_eq!(env["BB_TROPHIES_ELIGIBLE"], "0");
         // Configuration and original save files are never moved by profile creation/selection.
         assert!(!root.join("user").exists());
         fs::remove_dir_all(root.join("save-profiles").join(&id)).unwrap();
-        assert!(game_environment(&p, &settings).is_err());
+        assert!(game_environment(&p, &settings, None).is_err());
         fs::remove_dir_all(&root).unwrap();
     }
 }
