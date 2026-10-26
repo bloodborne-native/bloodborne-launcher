@@ -40,7 +40,8 @@ integration exists today.
   default `~/.local/share/bloodborne-native`; Windows `%APPDATA%\bloodborne-native`), the
   package's layout, program names (`.exe`), the online module's file, opening a folder, finding
   and stopping the game, and the system language. The rest of the backend is the same everywhere;
-  CI checks it on macOS, Ubuntu and Windows (`.github/workflows/checks.yml`).
+  CI checks it on macOS at every push, and also on Ubuntu and Windows when run by hand
+  (`gh workflow run checks.yml`; releases are macOS-only for now).
 - **Texts** never name a system ("this computer", "Show the folder"). Options that exist on one
   system only (Metal, MetalFX, the Metal HUD, MoltenVK) appear only there (`config.platform`).
 - **Layout:** from Tailwind's `md` width (768 px) up, the sidebar with the tabs and Play; below it

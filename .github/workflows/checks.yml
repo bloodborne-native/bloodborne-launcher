@@ -19,12 +19,14 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
-  # The backend on every desktop system the launcher is meant for (platform.rs holds what differs).
+  # The backend. Releases are macOS-only for now, so pushes check macOS; a manual run (Actions →
+  # Checks → Run workflow, or gh workflow run checks.yml) also checks Linux and Windows
+  # (platform.rs holds what differs).
   native:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, ubuntu-24.04, windows-latest]
+        os: ${{ github.event_name == 'workflow_dispatch' && fromJSON('["macos-15", "ubuntu-24.04", "windows-latest"]') || fromJSON('["macos-15"]') }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
