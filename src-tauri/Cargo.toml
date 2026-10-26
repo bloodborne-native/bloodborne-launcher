@@ -1,7 +1,7 @@
 [package]
 name = "bloodborne-launcher"
 default-run = "bloodborne-launcher"
-version = "0.8.3"
+version = "0.9.0"
 edition = "2021"
 license = "GPL-2.0-or-later"
 description = "Launcher for bloodborne_mac"
