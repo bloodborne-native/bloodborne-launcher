@@ -103,6 +103,8 @@ const previewCatalog: CatalogItem[] = [
   { id: 1100, name: "Sample remedy", category: "consumable", max: 20, icon: 3, description: null },
   { id: 3000, name: "Sample material", category: "material", max: 99, icon: 4, description: null },
   { id: 6100, name: "Sample chalice", category: "chalice", max: 1, icon: 5, description: null },
+  { id: 3000000, name: "Another sample weapon", category: "weapon", max: 1, icon: 6, description: "A sample weapon for the preview." },
+  { id: 10000, name: "Sample cap", category: "armor", max: 1, icon: 7, description: null },
 ];
 // Made-up numbers per level and imprint for the preview's weapon (7000000 + imprint × 10000 + level × 100).
 function previewWeaponVariants() {
@@ -176,6 +178,14 @@ export const mockApi = {
         const item = previewCatalog.find((i) => i.id === change.id);
         previewInventory.entries.push({ location: change.location, index: 100 + previewInventory.entries.length, kind: "item", id: change.id, amount: change.amount,
           name: item?.name ?? null, description: item?.description ?? null, caption: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: item?.max ?? 1, icon: item?.icon ?? null, stats: { max: item?.max ?? 1 }, variants: {}, slots: [] });
+        continue;
+      }
+      if (change.type === "add_equipment") {
+        const item = previewCatalog.find((i) => i.id === change.id);
+        const weapon = item?.category === "weapon";
+        previewInventory.entries.push({ location: change.location, index: 100 + previewInventory.entries.length, kind: weapon ? "weapon" : "armor", id: change.id, amount: 1,
+          name: item?.name ?? null, description: null, caption: item?.description ?? null, level: 0, imprint: 0, levels: weapon ? [0] : [], imprints: weapon ? [0] : [],
+          imprint_names: weapon && item ? [item.name] : [], max: 0, icon: item?.icon ?? null, stats: null, variants: {}, slots: [] });
         continue;
       }
       if (change.type === "effect") {

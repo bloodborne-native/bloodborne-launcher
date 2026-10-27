@@ -63,13 +63,14 @@ export function SaveEditor({ profileId, character, disabled, onClose }: SaveEdit
     switch (section) {
       case "item": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "inventory" && e.kind === "item")} edits={edits} addTo={named ? "inventory" : undefined} disabled={locked} /></>;
       case "weapon": return <>{notice}<WeaponsSection weapons={entries.filter((e) => e.kind === "weapon")} gems={gems} edits={edits} disabled={locked} /></>;
-      case "armor": return <>{notice}
-        <ItemsSection entries={entries.filter((e) => e.location === "inventory" && e.kind === "armor")} edits={edits} disabled={locked} /></>;
+      case "armor": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "inventory" && e.kind === "armor")} edits={edits}
+        addTo={named ? "inventory" : undefined} categories={["armor"]} addLabel={t("inventory.addArmor")} disabled={locked} /></>;
       case "gems": return gems.length ? <div className="own-scroll rounded-2xl surface py-1">{gems.map((gem) => <GemRow key={gem.index} gem={gem}
         chosen={edits.effects[gem.index] ?? {}} disabled={locked}
         onChoose={(slot, effect) => edits.setEffects((all) => ({ ...all, [gem.index]: { ...all[gem.index], [slot]: effect } }))} />)}</div>
         : <p className="text-sm text-muted-foreground">{t("inventory.empty")}</p>;
-      case "storage": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "storage" && e.kind !== "upgrade")} edits={edits} addTo={named ? "storage" : undefined} disabled={locked} /></>;
+      case "storage": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "storage" && e.kind !== "upgrade")} edits={edits} addTo={named ? "storage" : undefined}
+        categories={["consumable", "material", "chalice", "weapon", "armor"]} disabled={locked} /></>;
     }
   };
   // A page of the Saves tab: back to the saves, the character, its sections as tabs, the section

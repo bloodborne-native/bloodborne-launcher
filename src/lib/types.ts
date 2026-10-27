@@ -148,7 +148,7 @@ export type InventoryStats = {
   attack?: Record<string, number>; scaling?: Record<string, number>; requirements?: Record<string, number>;
   defense?: Record<string, number>; max?: number;
 };
-export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice"; max: number; icon: number | null; description: string | null };
+export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice" | "weapon" | "armor"; max: number; icon: number | null; description: string | null };
 export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[]; upgrades: Gem[] };
 /** A gem or rune (inventory.rs): its shape, effects with their alternatives, and where it is. */
 export type Gem = {
@@ -162,6 +162,7 @@ export type InventoryChange =
   | { type: "amount"; location: InventoryLocation; index: number; amount: number }
   | { type: "weapon"; location: InventoryLocation; index: number; level: number; imprint: number }
   | { type: "add"; location: InventoryLocation; id: number; amount: number }
+  | { type: "add_equipment"; location: InventoryLocation; id: number }
   | { type: "effect"; upgrade: number; slot: number; effect: number }
   | { type: "equip"; upgrade: number; location: InventoryLocation; index: number; slot: number }
   | { type: "unequip"; upgrade: number };

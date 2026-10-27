@@ -79,7 +79,10 @@ export function useSaveEdits(character: Character, inventory: Inventory | undefi
     const chosen = effects[gem.index]?.[effect.slot];
     return chosen !== undefined && chosen !== effect.id ? [{ type: "effect", upgrade: gem.index, slot: effect.slot, effect: chosen }] : [];
   }));
-  const additionChanges = additions.map(({ item, location, amount }): InventoryChange => ({ type: "add", location, id: item.id, amount }));
+  const isEquipment = (addition: Addition) => addition.item.category === "weapon" || addition.item.category === "armor";
+  const additionChanges = additions.map((addition): InventoryChange => isEquipment(addition)
+    ? { type: "add_equipment", location: addition.location, id: addition.item.id }
+    : { type: "add", location: addition.location, id: addition.item.id, amount: addition.amount });
   const changes = [...entryChanges, ...slotChanges, ...effectChanges, ...additionChanges];
   const amountsValid = entries.every((entry) => {
     const value = amounts[entryKey(entry)];
@@ -91,9 +94,10 @@ export function useSaveEdits(character: Character, inventory: Inventory | undefi
   const counts = {
     character: characterChanged ? 1 : 0,
     item: entries.filter((e) => e.location === "inventory" && e.kind === "item" && changed(e)).length
-      + additions.filter((a) => a.location === "inventory").length,
-    weapon: entries.filter((e) => e.kind === "weapon" && changed(e)).length,
-    armor: 0,
+      + additions.filter((a) => a.location === "inventory" && !isEquipment(a)).length,
+    weapon: entries.filter((e) => e.kind === "weapon" && changed(e)).length
+      + additions.filter((a) => a.location === "inventory" && a.item.category === "weapon").length,
+    armor: additions.filter((a) => a.location === "inventory" && a.item.category === "armor").length,
     gems: new Set(effectChanges.map((change) => change.type === "effect" && change.upgrade)).size,
     storage: entries.filter((e) => e.location === "storage" && e.kind === "item" && changed(e)).length
       + additions.filter((a) => a.location === "storage").length,

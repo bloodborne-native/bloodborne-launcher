@@ -30,6 +30,7 @@ const STORAGE_FROM_INVENTORY: usize = 34268;
 const FREE_ID: u32 = 0xFFFF_FFFF;
 const BARE_FISTS: u32 = 1_000_000; // the empty hand slots the game keeps as weapons
 const RUNE_SLOTS: u32 = 1000; // the blocks that hold the equipped runes, keyed like weapons
+const NO_ARMOR: u32 = 900_000; // armor from here up is the bare body's placeholders ("NOT NEEDED")
 const UPGRADES_START: usize = 84; // gems and runes, before the weapon table
 const SLOT_BLOCK: usize = 60;
 const SLOT_CLOSED: u32 = 0x8000_0000;
@@ -108,6 +109,7 @@ pub struct WeaponSlot {
 pub struct CatalogItem {
     pub id: u32,
     pub name: String,
+    /// consumable, material, chalice (items), weapon or armor.
     pub category: &'static str,
     pub max: u32,
     pub icon: Option<u32>,
@@ -136,8 +138,40 @@ pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
             })
         })
         .collect();
+    // Weapons at +0 without an imprint, and armor pieces: one each per addition.
+    items.extend(params.weapons.ids().filter(|&id| addable_weapon(id, text, params)).map(|id| CatalogItem {
+        id,
+        name: text.weapons[&id].clone(),
+        category: "weapon",
+        max: 1,
+        icon: icon_of(Kind::Weapon, id, params),
+        description: text.weapon_caption.get(&id).cloned(),
+    }));
+    items.extend(params.armor.ids().filter(|&id| addable_armor(id, text, params)).map(|id| CatalogItem {
+        id,
+        name: text.armor[&id].clone(),
+        category: "armor",
+        max: 1,
+        icon: icon_of(Kind::Armor, id, params),
+        description: text.armor_caption.get(&id).cloned(),
+    }));
     items.sort_by(|a, b| (a.category, a.id).cmp(&(b.category, b.id)));
     items
+}
+
+/// A weapon the editor can add: a named base weapon (+0, no imprint), not the empty hand or a
+/// placeholder (named like the rune slots' block, "*").
+fn addable_weapon(id: u32, text: &ItemText, params: &GameParams) -> bool {
+    let placeholder = text.weapons.get(&RUNE_SLOTS);
+    id >= 100_000 && id.is_multiple_of(100_000) && id != BARE_FISTS && params.weapons.has(id)
+        && text.weapons.get(&id).is_some_and(|name| Some(name) != placeholder)
+}
+
+/// An armor piece the editor can add: a named one, not the bare body or a placeholder (named like
+/// the bare body's, "NOT NEEDED" in English).
+fn addable_armor(id: u32, text: &ItemText, params: &GameParams) -> bool {
+    let placeholder = text.armor.get(&NO_ARMOR);
+    id < NO_ARMOR && params.armor.has(id) && text.armor.get(&id).is_some_and(|name| Some(name) != placeholder)
 }
 
 fn stat(params: &crate::game_data::Param, id: u32, fields: &[(&str, &str)]) -> serde_json::Value {
@@ -252,11 +286,31 @@ type Record = (usize, u32, bool, u8, [u32; 6]);
 /// (shape, gem handle)).
 type SlotBlock = (usize, u32, [(u32, u32); 5]);
 
-/// The gem and rune records, until the first record that is not one (the list has no length).
+/// The table before the character: 4,096 entries from byte 84, each a gem or rune record (40 bytes,
+/// handle 0xC0...), a weapon's or armor piece's block (60 bytes, handle 0x8080... or 0x9080...) or a
+/// free entry (8 bytes), in any order (Noxde/Bloodborne-save-editor d8d0365 walks it the same way).
+/// Returns (offset, the handle's high byte) of every entry that is not free, and the table's end.
+fn table(bytes: &[u8]) -> Result<(Vec<(usize, u8)>, usize)> {
+    const ENTRIES: usize = 4096;
+    let mut used = Vec::new();
+    let mut at = UPGRADES_START;
+    for _ in 0..ENTRIES {
+        let kind = *bytes.get(at + 3).ok_or("Unrecognized weapon table.")?;
+        match kind {
+            0x80 | 0x90 => { used.push((at, kind)); at += SLOT_BLOCK; }
+            0xC0 => { used.push((at, kind)); at += UPGRADE; }
+            0x00 => at += 8,
+            _ => return Err("Unrecognized weapon table.".into()),
+        }
+    }
+    Ok((used, at))
+}
+
+/// The gem and rune records, in table order (what an edit's gem index refers to).
 fn upgrade_records(bytes: &[u8]) -> Result<Vec<Record>> {
     let mut found = Vec::new();
-    let mut at = UPGRADES_START;
-    while let Some(record) = bytes.get(at..at + UPGRADE) {
+    for (at, _) in table(bytes)?.0.into_iter().filter(|&(_, kind)| kind == 0xC0) {
+        let record = &bytes[at..at + UPGRADE];
         let (kind, shape) = (record[8], record[12]);
         let valid = match kind {
             1 => GEM_SHAPES.contains(&shape),
@@ -264,55 +318,37 @@ fn upgrade_records(bytes: &[u8]) -> Result<Vec<Record>> {
             _ => false,
         };
         if !valid || record[9..12] != [0, 0, 0] || record[13..16] != [0, 0, 0] {
-            break;
+            return Err("Unrecognized gem record.".into());
         }
         let mut effects = [0u32; 6];
         for (i, effect) in effects.iter_mut().enumerate() {
             *effect = word(record, 16 + i * 4)?;
         }
         found.push((at, word(record, 0)?, kind == 2, shape, effects));
-        at += UPGRADE;
-        if found.len() > 4096 {
-            return Err("Unrecognized gem list.".into());
-        }
     }
     Ok(found)
 }
 
-/// The weapons' and armor's slot blocks after the gem list: (block offset, its weapon or armor ID,
-/// the five slots' (shape, gem handle)).
-fn slot_blocks(bytes: &[u8], end: usize) -> Result<Vec<SlotBlock>> {
-    let start = UPGRADES_START + upgrade_records(bytes)?.len() * UPGRADE;
+/// The weapons' and armor's blocks: (block offset, its weapon or armor ID, the five slots' (shape,
+/// gem handle)). Equipped runes sit in blocks too (the character's rune slots).
+fn slot_blocks(bytes: &[u8]) -> Result<Vec<SlotBlock>> {
     let mut blocks = Vec::new();
-    let mut at = start;
-    while at + SLOT_BLOCK <= end {
-        let handle = word(bytes, at)?;
-        // A block starts with its weapon's (0x8080...) or armor piece's (0x9080...) handle; a closed
-        // slot's shape (0x80000000) and fillers do not match, and are stepped over 4 bytes at a time.
-        if matches!(handle >> 16, 0x8080 | 0x9080) {
-            let mut slots = [(0u32, 0u32); 5];
-            for (i, slot) in slots.iter_mut().enumerate() {
-                *slot = (word(bytes, at + 20 + i * 8)?, word(bytes, at + 24 + i * 8)?);
-            }
-            blocks.push((at, word(bytes, at + 4)?, slots));
-            at += SLOT_BLOCK;
-        } else {
-            at += 4;
+    for (at, _) in table(bytes)?.0.into_iter().filter(|&(_, kind)| kind != 0xC0) {
+        let mut slots = [(0u32, 0u32); 5];
+        for (i, slot) in slots.iter_mut().enumerate() {
+            *slot = (word(bytes, at + 20 + i * 8)?, word(bytes, at + 24 + i * 8)?);
         }
+        blocks.push((at, word(bytes, at + 4)?, slots));
     }
     Ok(blocks)
 }
 
 fn upgrades(bytes: &[u8], entries: &[Entry], text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Vec<Upgrade>> {
-    let base = character_base(bytes)?.ok_or("The character slot is empty.")?;
-    let blocks_end = base.saturating_sub(147);
-    let blocks = slot_blocks(bytes, blocks_end)?;
-    let blocks_start = UPGRADES_START + upgrade_records(bytes)?.len() * UPGRADE;
-    // Every handle a slot holds: weapons' and armor's blocks, and the rune slots, which are not in
-    // a block of either.
-    let slotted: std::collections::HashSet<u32> = (blocks_start..blocks_end.saturating_sub(4))
-        .step_by(4)
-        .filter_map(|at| word(bytes, at).ok())
+    let blocks = slot_blocks(bytes)?;
+    // Every handle a slot holds: weapons' and armor's blocks, and the rune slots' blocks.
+    let slotted: std::collections::HashSet<u32> = blocks
+        .iter()
+        .flat_map(|(_, _, slots)| slots.iter().map(|&(_, gem)| gem))
         .filter(|handle| handle >> 24 == 0xC0)
         .collect();
     let mut held = std::collections::HashMap::new();
@@ -373,6 +409,8 @@ pub enum Change {
     Equip { upgrade: u16, location: Location, index: u16, slot: u8 },
     /// A gem out of its weapon's slot, back into the inventory.
     Unequip { upgrade: u16 },
+    /// A weapon (+0, no imprint) or armor piece into the inventory or storage.
+    AddEquipment { location: Location, id: u32 },
 }
 
 #[derive(Deserialize)]
@@ -574,8 +612,7 @@ fn gem_entry(bytes: &[u8], handle: u32) -> Result<Option<u16>> {
 
 /// The weapon slot that holds a gem: (block offset, slot), from the weapons' blocks only.
 fn gem_slot(bytes: &[u8], handle: u32) -> Result<Option<(usize, u8)>> {
-    let base = character_base(bytes)?.ok_or("The character slot is empty.")?;
-    let blocks = slot_blocks(bytes, base.saturating_sub(147))?;
+    let blocks = slot_blocks(bytes)?;
     let mut found = blocks.iter().filter(|(at, id, _)| word(bytes, *at).map(|h| h >> 16 == 0x8080).unwrap_or(false) && *id != RUNE_SLOTS)
         .flat_map(|(at, _, slots)| slots.iter().enumerate().filter(|(_, (_, gem))| *gem == handle).map(move |(i, _)| (*at, i as u8)));
     match (found.next(), found.next()) {
@@ -646,6 +683,79 @@ fn add_entry(bytes: &mut [u8], location: Location, new_handle: u32, new_id: u32,
     bytes[count_at..count_at + 4].copy_from_slice(&(count + 1).to_le_bytes());
     bytes[next_at..next_at + 4].copy_from_slice(&(next + 1).to_le_bytes());
     Ok(index as u16)
+}
+
+/// A block of the given kind (0x80 weapon, 0x90 armor) the game no longer uses: no inventory or
+/// storage entry holds its handle and nothing else in the file refers to it (the equipped empty
+/// hands and bare body do). Characters keep many (blocks of weapons and armor long gone); reusing
+/// one adds a weapon or armor piece without moving anything in the file.
+fn free_block(bytes: &[u8], kind: u8) -> Result<usize> {
+    let (used, end) = table(bytes)?;
+    let mut held = std::collections::HashSet::new();
+    let mut lists = Vec::new();
+    for location in [Location::Inventory, Location::Storage] {
+        let start = section(bytes, location)?;
+        lists.push((start, start + capacity(location) * ENTRY));
+        for index in 0..capacity(location) {
+            let at = start + index * ENTRY;
+            if word(bytes, at + 8)? != FREE_ID {
+                held.insert(word(bytes, at + 4)?);
+            }
+        }
+    }
+    let candidates: Vec<(usize, u32)> = used
+        .into_iter()
+        .filter(|&(_, k)| k == kind)
+        .map(|(at, _)| (at, u32::from_le_bytes(bytes[at..at + 4].try_into().unwrap())))
+        .filter(|(_, handle)| !held.contains(handle))
+        .collect();
+    let wanted: std::collections::HashSet<u32> = candidates.iter().map(|&(_, handle)| handle).collect();
+    let skip = [(UPGRADES_START, end), lists[0], lists[1]];
+    let mut referenced = std::collections::HashSet::new();
+    let mut at = 0;
+    while at + 4 <= bytes.len() {
+        if let Some(&(_, to)) = skip.iter().find(|&&(from, to)| (from..to).contains(&at)) {
+            at = to;
+            continue;
+        }
+        let value = u32::from_le_bytes(bytes[at..at + 4].try_into().unwrap());
+        if wanted.contains(&value) {
+            referenced.insert(value);
+        }
+        at += 1;
+    }
+    candidates
+        .into_iter()
+        .find(|(_, handle)| !referenced.contains(handle))
+        .map(|(at, _)| at)
+        .ok_or_else(|| "This character has no free weapon or armor slot left.".into())
+}
+
+/// Adds a weapon (+0, no imprint) or armor piece: a free block of its kind gets its ID, full
+/// durability (weapons; armor has none) and five closed gem slots, as the game writes a new one,
+/// and the inventory or storage an entry for its handle. Returns the entry's index and ID word.
+fn add_equipment(bytes: &mut [u8], location: Location, id: u32, text: &ItemText, params: &GameParams) -> Result<(u16, u32)> {
+    if crate::save_editor::copy_count(bytes)? != 1 {
+        return Err("This save holds two copies of the character; weapons and armor cannot be added to it yet.".into());
+    }
+    let (kind, id_word, durability) = if addable_weapon(id, text, params) {
+        (0x80, id, params.weapons.get(id, "durabilityMax").unwrap_or(0.0) as u32)
+    } else if addable_armor(id, text, params) {
+        (0x90, 0x1000_0000 | id, 0)
+    } else {
+        return Err("Only the game's weapons and armor can be added.".into());
+    };
+    let block = free_block(bytes, kind)?;
+    let handle = word(bytes, block)?;
+    let mut fields = vec![id_word, durability, 0, 1];
+    for _ in 0..5 {
+        fields.extend([SLOT_CLOSED, NO_GEM]);
+    }
+    for (i, value) in fields.into_iter().enumerate() {
+        bytes[block + 4 + i * 4..block + 8 + i * 4].copy_from_slice(&value.to_le_bytes());
+    }
+    let index = add_entry(bytes, location, handle, id_word, 1)?;
+    Ok((index, id_word))
 }
 
 /// Applies the changes to one character file in a staged save set, then checks the result.
@@ -761,6 +871,10 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                 expected_effects.push((field, NO_GEM));
                 expected.push((Location::Inventory, index, source, 1));
             }
+            Change::AddEquipment { location, id } => {
+                let (index, id_word) = add_equipment(&mut bytes, location, id, text, params)?;
+                expected.push((location, index, id_word, 1));
+            }
             Change::Add { location, id, amount } => {
                 let kind = params.goods.get(id, "goodsType").ok_or("This item is not in the game's tables.")? as u32;
                 if !GOODS_ADDABLE.iter().any(|(k, _)| *k == kind) || id > 0x00FF_FFFF {
@@ -835,6 +949,8 @@ mod tests {
     use std::collections::HashMap;
 
     const BASE: usize = 0xc000;
+    /// The sample's weapon block: in the table, after the one gem record.
+    const SAMPLE_BLOCK: usize = UPGRADES_START + UPGRADE;
 
     fn put(bytes: &mut [u8], at: usize, value: u32) {
         bytes[at..at + 4].copy_from_slice(&value.to_le_bytes());
@@ -879,13 +995,22 @@ mod tests {
         entry(&mut bytes, 5, 0xC080_0041, 0x8001_E460, 1);
         put(&mut bytes, BASE + INVENTORY_COUNTERS.0, 5);
         put(&mut bytes, BASE + INVENTORY_COUNTERS.1, 0x70);
-        let block = BASE - 400;
-        put(&mut bytes, block, 0x8080_0050);
-        put(&mut bytes, block + 4, 2_000_000);
-        // Its slots: radial, triangle, then closed.
-        for (slot, shape) in [1, 2, SLOT_CLOSED, SLOT_CLOSED, SLOT_CLOSED].into_iter().enumerate() {
-            put(&mut bytes, block + 20 + slot * 8, shape);
+        // The table after the gem: the weapon's block (radial, triangle, then closed slots), a
+        // free weapon block and a free armor block nobody refers to, and an empty hand's block the
+        // character's equipment refers to; the rest of the table is free entries.
+        let blocks = [(SAMPLE_BLOCK, 0x8080_0050, 2_000_000), (SAMPLE_BLOCK + 60, 0x8080_0060, BARE_FISTS),
+            (SAMPLE_BLOCK + 120, 0x9080_0061, 0x1000_0000 | NO_ARMOR), (SAMPLE_BLOCK + 180, 0x8080_0062, BARE_FISTS)];
+        for (at, handle, id) in blocks {
+            put(&mut bytes, at, handle);
+            put(&mut bytes, at + 4, id);
+            put(&mut bytes, at + 16, 1);
+            for slot in 0..5 {
+                put(&mut bytes, at + 20 + slot * 8, SLOT_CLOSED);
+            }
         }
+        put(&mut bytes, SAMPLE_BLOCK + 20, 1);
+        put(&mut bytes, SAMPLE_BLOCK + 28, 2);
+        put(&mut bytes, BASE + 0x100, 0x8080_0062);
         bytes
     }
 
@@ -897,7 +1022,7 @@ mod tests {
                 (3000, &[("goodsType", 2.0), ("maxNum", 99.0), ("iconId", 83.0)]),
                 (4000, &[("goodsType", 1.0), ("maxNum", 1.0), ("iconId", 1.0)]),
             ]),
-            weapons: Param::synthetic(&[(2_000_000, &[("attackBasePhysics", 90.0), ("properStrength", 8.0), ("iconId", 7.0)])]),
+            weapons: Param::synthetic(&[(2_000_000, &[("attackBasePhysics", 90.0), ("properStrength", 8.0), ("iconId", 7.0), ("durabilityMax", 150.0)])]),
             armor: Param::synthetic(&[(230000, &[("defensePhysics", 20.0), ("iconIdM", 9.0)])]),
             gem_effects: Param::synthetic(&[
                 (126201, &[("categoryId", 1.0), ("effectRank", 1.0)]),
@@ -919,6 +1044,40 @@ mod tests {
             ]),
             ..Default::default()
         }
+    }
+
+    #[test]
+    fn adds_weapons_and_armor_into_free_blocks() {
+        let bytes = sample();
+        let (root, savedata) = staged(bytes);
+        let path = savedata.join("1/CUSA03173/SPRJ0005/userdata0000");
+        let edit = |changes| Edit {
+            title_id: "CUSA03173".into(),
+            slot: 0,
+            fingerprint: format!("{:x}", Sha256::digest(fs::read(&path).unwrap())),
+            changes,
+        };
+        // Not a weapon or armor piece the game names: refused.
+        assert!(rewrite(&savedata, &edit(vec![Change::AddEquipment { location: Location::Inventory, id: 3_000_000 }]), &text(), &params()).is_err());
+        rewrite(&savedata, &edit(vec![
+            Change::AddEquipment { location: Location::Inventory, id: 2_000_000 },
+            Change::AddEquipment { location: Location::Storage, id: 230000 },
+        ]), &text(), &params()).unwrap();
+        let after = fs::read(&path).unwrap();
+        assert_eq!(after.len(), 0x140000);
+        // The free weapon block holds the weapon with full durability and closed slots; the free
+        // armor block the armor; the equipped empty hand's block is untouched.
+        let free = SAMPLE_BLOCK + 60;
+        assert_eq!((word(&after, free).unwrap(), word(&after, free + 4).unwrap(), word(&after, free + 8).unwrap()), (0x8080_0060, 2_000_000, 150));
+        assert!((0..5).all(|slot| word(&after, free + 20 + slot * 8).unwrap() == SLOT_CLOSED));
+        assert_eq!(word(&after, SAMPLE_BLOCK + 124).unwrap(), 0x1000_0000 | 230000);
+        assert_eq!(word(&after, SAMPLE_BLOCK + 184).unwrap(), BARE_FISTS);
+        let found = entries(&after, Some(&text()), Some(&params())).unwrap();
+        assert!(found.iter().any(|e| e.location == Location::Inventory && e.kind == Kind::Weapon && e.id == 2_000_000 && e.index != 2));
+        assert!(found.iter().any(|e| e.location == Location::Storage && e.kind == Kind::Armor && e.id == 230000));
+        // No free weapon block is left (the empty hand's is in use): refused.
+        assert!(rewrite(&savedata, &edit(vec![Change::AddEquipment { location: Location::Inventory, id: 2_000_000 }]), &text(), &params()).is_err());
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]
@@ -961,7 +1120,7 @@ mod tests {
         let found = entries(&after, Some(&text()), None).unwrap();
         assert_eq!(found[0].amount, 20);
         assert_eq!((found[1].id, found[1].level), (2_001_000, 10));
-        assert_eq!(word(&after, BASE - 400 + 4).unwrap(), 2_001_000);
+        assert_eq!(word(&after, SAMPLE_BLOCK + 4).unwrap(), 2_001_000);
         // A stale preview and an ID the game does not have are refused.
         assert!(rewrite(&savedata, &edit, &text(), &params()).is_err());
         let bad = Edit {
@@ -1100,7 +1259,7 @@ mod tests {
     #[test]
     fn gems_equip_into_fitting_slots_and_back() {
         let bytes = sample();
-        let block = BASE - 400;
+        let block = SAMPLE_BLOCK;
         let (root, savedata) = staged(bytes.clone());
         let path = savedata.join("1/CUSA03173/SPRJ0005/userdata0000");
         let edit = |changes| Edit {
@@ -1155,6 +1314,41 @@ mod tests {
         assert_eq!((parsed.echoes, parsed.insight), (5000, 3));
         assert_eq!(word(&after, BASE + INVENTORY_FROM_NAME + ENTRY + 12).unwrap(), 9);
         fs::remove_dir_all(root).unwrap();
+    }
+
+    /// A weapon into the inventory and an armor piece into storage, from the catalog, on a scratch
+    /// copy (never the player's own):
+    /// BB_TEST_SAVE_USER=<copy> BB_CHECK_GAME=<dump> cargo test real_add_equipment -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn real_add_equipment() {
+        let user = std::path::PathBuf::from(std::env::var("BB_TEST_SAVE_USER").expect("BB_TEST_SAVE_USER"));
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
+        let before = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let owned: std::collections::HashSet<u32> = before.entries.iter().map(|e| weapon_parts(e.id).0).collect();
+        let items = catalog(&text, &params);
+        let weapon = items.iter().find(|i| i.category == "weapon" && !owned.contains(&i.id)).unwrap();
+        let armor = items.iter().find(|i| i.category == "armor" && !before.entries.iter().any(|e| e.id == i.id)).unwrap();
+        println!("catalog: {} weapons, {} armor; first armor {:?}", items.iter().filter(|i| i.category == "weapon").count(),
+            items.iter().filter(|i| i.category == "armor").count(), items.iter().filter(|i| i.category == "armor").take(4).map(|i| (i.id, &i.name)).collect::<Vec<_>>());
+        println!("adding {} ({}) to the inventory and {} ({}) to storage", weapon.name, weapon.id, armor.name, armor.id);
+        let edit = Edit {
+            title_id: title.clone(),
+            slot: 0,
+            fingerprint: before.fingerprint.clone(),
+            changes: vec![
+                Change::AddEquipment { location: Location::Inventory, id: weapon.id },
+                Change::AddEquipment { location: Location::Storage, id: armor.id },
+            ],
+        };
+        rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
+        let after = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        for e in after.entries.iter().filter(|e| e.id == weapon.id || e.id == armor.id) {
+            println!("after: {:?} {:?} {:?} slots {:?}", e.location, e.kind, e.name, e.slots);
+        }
     }
 
     /// A gem taken out of its weapon, and an inventory gem put in another weapon's fitting slot,
@@ -1212,3 +1406,4 @@ mod tests {
         rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
     }
 }
+

@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { InventoryEntry, InventoryLocation } from "@/lib";
 import { Button, Input } from "@/components/ui";
-import { AddItemPanel } from "@/pages/saves/editor/AddItemPanel";
+import { AddItemPanel, type CatalogCategory } from "@/pages/saves/editor/AddItemPanel";
+import { PendingAdditions } from "@/pages/saves/editor/PendingAdditions";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { ItemStats } from "@/pages/saves/editor/ItemStats";
 import { entryKey, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
@@ -12,11 +13,14 @@ type Props = {
   edits: SaveEdits;
   /** Where added items go; none: this list takes no additions. */
   addTo?: InventoryLocation;
+  /** What can be added here, and the button's text. */
+  categories?: CatalogCategory[];
+  addLabel?: string;
   disabled: boolean;
 };
 
 /** A list of entries: items with their amounts, anything else as it is; and items to add. */
-export function ItemsSection({ entries, edits, addTo, disabled }: Props) {
+export function ItemsSection({ entries, edits, addTo, categories = ["consumable", "material", "chalice"], addLabel, disabled }: Props) {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
   const [adding, setAdding] = useState(false);
@@ -31,24 +35,18 @@ export function ItemsSection({ entries, edits, addTo, disabled }: Props) {
     for (const addition of additions) sets[addition.location].add(addition.item.id);
     return sets;
   }, [entries, additions]);
-  const added = additions.map((addition, at) => ({ addition, at })).filter(({ addition }) => addition.location === addTo);
   const label = (entry: InventoryEntry) => entry.name ?? t("inventory.unnamed", { id: entry.id });
   return <div className="grid gap-3">
     <div className="flex flex-wrap gap-2">
       <Input className="min-w-40 flex-1" type="search"
         placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
-      {addTo && <Button size="sm" variant={adding ? "default" : "outline"} disabled={disabled} onClick={() => setAdding((on) => !on)}>{t("inventory.add")}</Button>}
+      {addTo && <Button size="sm" variant={adding ? "default" : "outline"} disabled={disabled} onClick={() => setAdding((on) => !on)}>{addLabel ?? t("inventory.add")}</Button>}
     </div>
-    {addTo && adding && <AddItemPanel held={held} location={addTo} disabled={disabled}
+    {addTo && adding && <AddItemPanel held={held} location={addTo} categories={categories} disabled={disabled}
       onAdd={(item, amount) => setAdditions((all) => [...all, { item, location: addTo, amount }])} />}
     <div className="own-scroll rounded-2xl surface py-1">
-      {added.map(({ addition, at }) => <div key={`added:${at}`} className="flex items-center gap-3 bg-primary/10 px-3 py-2">
-        <ItemIcon icon={addition.item.icon} />
-        <p className="min-w-0 flex-1 text-sm">{addition.item.name} <span className="text-xs text-muted-foreground">· {t("inventory.added")}</span></p>
-        <span className="text-sm tabular-nums">×{addition.amount}</span>
-        <Button size="sm" variant="ghost" disabled={disabled} onClick={() => setAdditions((all) => all.filter((_, other) => other !== at))}>{t("inventory.remove")}</Button>
-      </div>)}
-      {!shown.length && !added.length ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
+      {addTo && <PendingAdditions edits={edits} location={addTo} categories={categories} disabled={disabled} />}
+      {!shown.length && !additions.some((a) => a.location === addTo && categories.includes(a.item.category)) ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
         : shown.map((entry) => <div key={entryKey(entry)}
           className={`flex items-center gap-3 px-3 py-2 ${changed(entry) ? "bg-primary/10" : ""}`}>
           <ItemStats name={label(entry)} description={entry.description} caption={entry.caption} icon={entry.icon} stats={entry.stats}>

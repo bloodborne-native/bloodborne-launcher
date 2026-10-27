@@ -143,6 +143,11 @@ fn copies(bytes: &[u8], faces: &[usize]) -> Result<Vec<usize>> {
     Ok(anchored)
 }
 
+/// How many copies of the character the file holds (the game sometimes keeps the previous one).
+pub(crate) fn copy_count(bytes: &[u8]) -> Result<usize> {
+    Ok(copies(bytes, &faces(bytes))?.len())
+}
+
 fn playtime_at(bytes: &[u8], copy: usize) -> Result<u32> {
     Ok(u32::from_le_bytes(
         bytes.get(copy + 8..copy + 12).ok_or("Truncated playtime.")?.try_into().unwrap(),
