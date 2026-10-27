@@ -1,23 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { Droplet, Eye } from "lucide-react";
-import { HunterFigure } from "@/pages/saves/HunterFigure";
 import type { Character } from "@/lib";
 import { Message } from "@/components/common";
 import { EditCharacterButton } from "@/pages/saves/editor";
 
 const ATTRIBUTES = ["vitality", "endurance", "strength", "skill", "bloodtinge", "arcane"] as const;
 
-/** One character: a portrait (a hunter drawn like the launcher's icons; no game art), its name and where it is, its
+/** One character: its name and where it is, its
  * level, playtime and journey, the six attributes, Insight and Blood Echoes, and the editor. */
 export function CharacterCard({ character, disabled }: { character: Character; disabled: boolean }) {
   const { t, i18n } = useTranslation();
   const number = (value: number) => value.toLocaleString(i18n.language);
   const hours = (character.playtime_ms / 3_600_000).toLocaleString(i18n.language, { maximumFractionDigits: 1 });
   return (
-    <div className="flex flex-col gap-5 rounded-2xl surface p-4 sm:flex-row sm:p-5">
-      <div className="hidden w-32 shrink-0 items-end justify-center overflow-hidden rounded-xl bg-gradient-to-b from-night-700/70 to-night-950/80 sm:flex" aria-hidden="true">
-        <HunterFigure className="mb-[-8%] size-36 text-parchment opacity-25" />
-      </div>
+    <div className="rounded-2xl surface p-4 sm:p-5">
       <div className="min-w-0 flex-1 space-y-4">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <h2 className="font-display text-2xl font-semibold tracking-wide text-gold-300">{character.name}</h2>
