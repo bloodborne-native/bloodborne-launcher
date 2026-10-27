@@ -3,12 +3,16 @@ import { useTranslation } from "react-i18next";
 import type { SaveProfile } from "@/lib";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
 
-type Props = { profile: SaveProfile; className?: string; iconClassName: string };
+type Props = {
+  profile: SaveProfile; className?: string; iconClassName: string;
+  /** Keep the count's place when there is none (lists that line up); off for a single one. */
+  keepSlot?: boolean;
+};
 
 /** A profile's recorded trophies: the icon and the count, laid out the same way in every state so
  * lists line up. When its trophies are off (edited save) or failed to import: the trophy greyed and
  * slashed (in the style of lucide's "-off" icons), no count, and the reason on hover. */
-export function TrophyCount({ profile, className, iconClassName }: Props) {
+export function TrophyCount({ profile, className, iconClassName, keepSlot = true }: Props) {
   const { t } = useTranslation();
   const off = !profile.trophies_eligible || profile.trophy_error;
   const reason = profile.trophy_error ? `${t("trophies.error")} ${profile.trophy_error}` : t("trophies.edited");
@@ -28,7 +32,6 @@ export function TrophyCount({ profile, className, iconClassName }: Props) {
   return <span className={`flex shrink-0 items-center gap-1 tabular-nums ${className ?? ""}`}
     title={off ? undefined : t("trophies.recordedCount", { count: profile.trophy_unlocks.length })}>
     {icon}
-    {/* The count's place is kept when there is none. */}
-    <span className="min-w-[2ch] text-left">{off ? "" : profile.trophy_unlocks.length}</span>
+    {(!off || keepSlot) && <span className={keepSlot ? "min-w-[2ch] text-left" : undefined}>{off ? "" : profile.trophy_unlocks.length}</span>}
   </span>;
 }

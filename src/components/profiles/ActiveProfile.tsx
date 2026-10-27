@@ -29,7 +29,8 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
             {!compact && <span className="block text-[11px] leading-tight text-muted-foreground">{t("profiles.active")}</span>}
             <span className="block truncate text-sm font-medium">{active?.name ?? "—"}</span>
           </span>
-          {active && <TrophyCount profile={active} className="text-sm text-parchment/80" iconClassName="size-5" />}
+          {/* On the name's line (not centred on the two lines), apart from it. */}
+          {active && <TrophyCount profile={active} keepSlot={false} className={`pl-1 text-sm text-parchment/70 ${compact ? "" : "self-end pb-px"}`} iconClassName="size-4" />}
           <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </MenuTrigger>
         <MenuContent className="w-64">
