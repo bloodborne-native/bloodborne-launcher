@@ -16,7 +16,7 @@ export function Sidebar() {
   return (
     <aside
       // Wide windows only (narrow ones: MobileHeader). macOS draws its window buttons over the top.
-      className={cn("drag hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 px-3 pb-4 md:flex",
+      className={cn("drag hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/45 px-3 backdrop-blur-sm pb-4 md:flex",
         config?.platform === "macos" ? "pt-11" : "pt-5")}
       data-tauri-drag-region
     >
