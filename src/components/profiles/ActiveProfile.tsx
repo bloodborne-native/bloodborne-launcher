@@ -30,7 +30,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
             <span className="block truncate text-sm font-medium">{active?.name ?? "—"}</span>
           </span>
           {active && <span title={t("trophies.recordedCount", { count: active.trophy_unlocks.length })}>
-            <TrophyCount profile={active} className="text-sm text-parchment/80" iconClassName="size-4" />
+            <TrophyCount profile={active} className="text-parchment/80" iconClassName="size-5" numberClassName="text-xl font-medium" />
           </span>}
           <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </MenuTrigger>
@@ -39,7 +39,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
           <MenuRadioGroup value={data?.active ?? ""} onValueChange={(id: string) => id !== data?.active && change({ action: "select", id }).catch(() => {})}>
             {data?.profiles.map((profile) => <MenuRadioItem key={profile.id} value={profile.id} disabled={locked}>
               <span className="min-w-0 flex-1 truncate">{profile.name}</span>
-              <TrophyCount profile={profile} className="text-xs text-muted-foreground" iconClassName="size-3.5" />
+              <TrophyCount profile={profile} className="text-muted-foreground" iconClassName="size-4" numberClassName="text-base" />
             </MenuRadioItem>)}
           </MenuRadioGroup>
           {active && !active.trophies_eligible && <p className="px-2 py-1 text-xs text-blood-400">{t("trophies.edited")}</p>}
