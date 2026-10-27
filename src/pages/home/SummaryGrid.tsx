@@ -18,7 +18,7 @@ export function SummaryGrid() {
   const activeMods = mods.data?.mods.filter((m) => m.enabled).length ?? 0;
   const presetLabel = PRESETS.find((p) => p.value === preset)?.label;
   return (
-    <nav aria-label={t("home.summary")} className="flex flex-wrap gap-2">
+    <nav aria-label={t("home.summary")} className="flex flex-wrap gap-2 md:flex-nowrap">
       <SummaryTile
         icon={<MonitorCog />}
         label={t("home.upscaler")}

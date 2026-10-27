@@ -9,8 +9,8 @@ export function SummaryTile({ icon, label, value, detail, onClick }: Props) {
   return (
     <Tooltip>
       <TooltipTrigger render={<Button variant="secondary" size="sm" onClick={onClick} aria-label={`${label}: ${String(value)}`}
-        className="backdrop-blur-sm" />}>
-        {icon} {value}
+        className="min-w-0 max-w-56 shrink backdrop-blur-sm" />}>
+        {icon} <span className="truncate">{value}</span>
       </TooltipTrigger>
       <TooltipContent>{label}{detail && <> · {detail}</>}</TooltipContent>
     </Tooltip>
