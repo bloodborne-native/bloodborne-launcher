@@ -112,12 +112,12 @@ const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprin
   { index: 1, handle: 2, rune: false, shape: 63, location: null, equipped: true, weapon: "Sample weapon", effects: [
     { slot: 0, id: 4, text: "Another sample effect +2%", options: [{ id: 4, text: "Another sample effect +2%" }] }] },
 ], entries: [
-  { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
-  { location: "inventory", index: 2, kind: "item", id: 1230, amount: 18, name: "Sample ammunition", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
-  { location: "inventory", index: 3, kind: "weapon", id: 7000200, amount: 1, name: "Sample weapon +2", description: null, level: 2, imprint: 0, levels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], imprints: [0, 1, 2], imprint_names: ["Sample weapon", "Sample weapon (variant 1)", "Sample weapon (variant 2)"], max: 0, icon: 2, stats: { attack: { physical: 90, arcane: 0, fire: 0, bolt: 0 }, scaling: { strength: 40, skill: 20, bloodtinge: 0, arcane: 0 }, requirements: { strength: 8, skill: 7, bloodtinge: 0, arcane: 0 } },
+  { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", caption: "A longer sample text, as the game describes an item.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
+  { location: "inventory", index: 2, kind: "item", id: 1230, amount: 18, name: "Sample ammunition", description: null, caption: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
+  { location: "inventory", index: 3, kind: "weapon", id: 7000200, amount: 1, name: "Sample weapon +2", description: null, caption: "A longer sample text, as the game describes a weapon.", level: 2, imprint: 0, levels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], imprints: [0, 1, 2], imprint_names: ["Sample weapon", "Sample weapon (variant 1)", "Sample weapon (variant 2)"], max: 0, icon: 2, stats: { attack: { physical: 90, arcane: 0, fire: 0, bolt: 0 }, scaling: { strength: 40, skill: 20, bloodtinge: 0, arcane: 0 }, requirements: { strength: 8, skill: 7, bloodtinge: 0, arcane: 0 } },
     variants: previewWeaponVariants(), slots: [{ slot: 0, shape: 1, gem: 1 }, { slot: 1, shape: 2, gem: null }] },
-  { location: "inventory", index: 4, kind: "armor", id: 230000, amount: 1, name: "Sample hood", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
-  { location: "storage", index: 1, kind: "item", id: 1200, amount: 4, name: "Sample stored item", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
+  { location: "inventory", index: 4, kind: "armor", id: 230000, amount: 1, name: "Sample hood", description: null, caption: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
+  { location: "storage", index: 1, kind: "item", id: 1200, amount: 4, name: "Sample stored item", description: null, caption: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [] },
 ] };
 let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
@@ -168,7 +168,7 @@ export const mockApi = {
       if (change.type === "add") {
         const item = previewCatalog.find((i) => i.id === change.id);
         previewInventory.entries.push({ location: change.location, index: 100 + previewInventory.entries.length, kind: "item", id: change.id, amount: change.amount,
-          name: item?.name ?? null, description: item?.description ?? null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: item?.max ?? 1, icon: item?.icon ?? null, stats: { max: item?.max ?? 1 }, variants: {}, slots: [] });
+          name: item?.name ?? null, description: item?.description ?? null, caption: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: item?.max ?? 1, icon: item?.icon ?? null, stats: { max: item?.max ?? 1 }, variants: {}, slots: [] });
         continue;
       }
       if (change.type === "effect") {

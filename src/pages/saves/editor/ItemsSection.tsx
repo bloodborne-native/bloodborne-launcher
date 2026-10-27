@@ -51,7 +51,7 @@ export function ItemsSection({ entries, edits, addTo, disabled }: Props) {
       {!shown.length && !added.length ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
         : shown.map((entry) => <div key={entryKey(entry)}
           className={`flex items-center gap-3 border-t border-border px-3 py-2 first:border-t-0 ${changed(entry) ? "bg-primary/5" : ""}`}>
-          <ItemStats name={label(entry)} description={entry.description} icon={entry.icon} stats={entry.stats}>
+          <ItemStats name={label(entry)} description={entry.description} caption={entry.caption} icon={entry.icon} stats={entry.stats}>
             <ItemIcon icon={entry.icon} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm">{label(entry)}</p>

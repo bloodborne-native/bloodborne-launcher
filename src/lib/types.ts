@@ -129,6 +129,8 @@ export type InventoryLocation = "inventory" | "storage";
 export type InventoryEntry = {
   location: InventoryLocation; index: number; kind: "item" | "weapon" | "armor" | "upgrade";
   id: number; amount: number; name: string | null; description: string | null;
+  /** The game's long description (lore) of the item, weapon or armor piece. */
+  caption: string | null;
   level: number; imprint: number; levels: number[]; imprints: number[]; imprint_names: string[];
   /** Items: the most this section holds. */
   max: number;

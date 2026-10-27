@@ -69,7 +69,11 @@ pub struct Entry {
     pub id: u32,
     pub amount: u32,
     pub name: Option<String>,
+    /// Items: the short description the game lists them with.
     pub description: Option<String>,
+    /// The game's long description (its lore), for the item, the weapon at its level and imprint,
+    /// or the armor piece.
+    pub caption: Option<String>,
     /// Weapons: +0 to +10, and 0 none, 1 Uncanny, 2 Lost.
     pub level: u8,
     pub imprint: u8,
@@ -442,6 +446,7 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                 amount,
                 name: None,
                 description: None,
+                caption: None,
                 level: 0,
                 imprint: 0,
                 levels: Vec::new(),
@@ -465,8 +470,12 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                     Kind::Item => {
                         entry.name = text.goods.get(&item).cloned();
                         entry.description = text.goods_info.get(&item).cloned();
+                        entry.caption = text.goods_caption.get(&item).cloned();
                     }
-                    Kind::Armor => entry.name = text.armor.get(&item).cloned(),
+                    Kind::Armor => {
+                        entry.name = text.armor.get(&item).cloned();
+                        entry.caption = text.armor_caption.get(&item).cloned();
+                    }
                     Kind::Weapon => {
                         let (base, level, imprint) = weapon_parts(item);
                         entry.level = level;
@@ -474,6 +483,7 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                         // The game's name for the full ID ("Uncanny Saw Cleaver +10"): the base ID's
                         // can differ (pt-BR's 7000000 has a typo the upgraded names do not).
                         entry.name = text.weapons.get(&item).or_else(|| text.weapons.get(&base)).cloned();
+                        entry.caption = text.weapon_caption.get(&item).or_else(|| text.weapon_caption.get(&base)).cloned();
                         entry.levels = (0..=10)
                             .filter(|&l| text.weapons.contains_key(&weapon_id(base, l, imprint)))
                             .collect();

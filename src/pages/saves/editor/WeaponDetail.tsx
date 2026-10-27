@@ -50,6 +50,7 @@ export function WeaponDetail({ entry, gems, edits, disabled }: Props) {
       </div>
       {changed && <Button size="sm" variant="ghost" disabled={disabled} onClick={() => set({ level: entry.level, imprint: entry.imprint })}>{t("inventory.undo")}</Button>}
     </div>
+    {entry.caption && <p className="whitespace-pre-line text-sm text-muted-foreground">{entry.caption}</p>}
     {entry.levels.length > 1 && <div className={section}>
       <p className="text-sm font-medium">{t("inventory.level")}</p>
       <div className="flex flex-wrap gap-1">
