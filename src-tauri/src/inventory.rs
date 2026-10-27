@@ -327,7 +327,7 @@ fn upgrades(bytes: &[u8], entries: &[Entry], text: Option<&ItemText>, params: Op
             let block = blocks.iter().find(|(_, _, slots)| slots.iter().any(|(_, gem)| *gem == handle));
             let weapon = block.and_then(|(_, weapon, _)| {
                 let (base, _, _) = weapon_parts(*weapon);
-                text.and_then(|t| t.weapons.get(&base).cloned())
+                text.and_then(|t| t.weapons.get(weapon).or_else(|| t.weapons.get(&base)).cloned())
             });
             Upgrade {
                 index: index as u16,
@@ -471,17 +471,26 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                         let (base, level, imprint) = weapon_parts(item);
                         entry.level = level;
                         entry.imprint = imprint;
-                        entry.name = text.weapons.get(&base).cloned();
+                        // The game's name for the full ID ("Uncanny Saw Cleaver +10"): the base ID's
+                        // can differ (pt-BR's 7000000 has a typo the upgraded names do not).
+                        entry.name = text.weapons.get(&item).or_else(|| text.weapons.get(&base)).cloned();
                         entry.levels = (0..=10)
                             .filter(|&l| text.weapons.contains_key(&weapon_id(base, l, imprint)))
                             .collect();
                         entry.imprints = (0..=2)
                             .filter(|&i| text.weapons.contains_key(&weapon_id(base, level, i)))
                             .collect();
+                        // Each imprint's name without a level: its +1 name less " +1" where it has one.
                         entry.imprint_names = entry
                             .imprints
                             .iter()
-                            .map(|&i| text.weapons[&weapon_id(base, 0, i)].clone())
+                            .map(|&i| {
+                                text.weapons
+                                    .get(&weapon_id(base, 1, i))
+                                    .and_then(|name| name.strip_suffix(" +1"))
+                                    .map(str::to_string)
+                                    .unwrap_or_else(|| text.weapons[&weapon_id(base, 0, i)].clone())
+                            })
                             .collect();
                         if let Some(params) = params {
                             entry.variants = (0..=2)

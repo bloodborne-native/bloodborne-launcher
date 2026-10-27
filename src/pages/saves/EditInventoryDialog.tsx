@@ -138,7 +138,7 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
             <ItemStats name={label(entry)} description={entry.description} icon={entry.icon} stats={entry.stats} preview={preview(entry)}>
               <ItemIcon icon={entry.icon} />
               <div className="min-w-0 flex-1">
-                <p className="text-sm">{label(entry)}{entry.kind === "weapon" && entry.level > 0 ? ` +${entry.level}` : ""}</p>
+                <p className="text-sm">{label(entry)}</p>
                 {entry.description && <p className="line-clamp-1 text-xs text-muted-foreground">{entry.description}</p>}
               </div>
             </ItemStats>
