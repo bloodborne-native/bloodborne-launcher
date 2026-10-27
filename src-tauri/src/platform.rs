@@ -10,10 +10,13 @@ pub fn home() -> Option<PathBuf> {
     std::env::var_os(if cfg!(windows) { "USERPROFILE" } else { "HOME" }).map(PathBuf::from)
 }
 
-/// The launcher's data folder. macOS keeps the name its players already have.
+/// The launcher's data folder. macOS keeps the name its players already have; on iOS it is the
+/// app's Documents, which the Files app shows (the game files and saves are copied in there).
 pub fn data_dir() -> PathBuf {
     let here = || PathBuf::from(".");
-    if cfg!(target_os = "macos") {
+    if cfg!(target_os = "ios") {
+        home().map_or_else(here, |h| h.join("Documents"))
+    } else if cfg!(target_os = "macos") {
         home().map_or_else(here, |h| h.join("Library/Application Support")).join("bloodborne_mac")
     } else if cfg!(windows) {
         std::env::var_os("APPDATA").map(PathBuf::from).or_else(home).unwrap_or_else(here).join("bloodborne-native")
@@ -115,6 +118,11 @@ pub fn open_folder(path: &Path) -> Result<(), String> {
 
 /// Whether a program of this name runs (the game, also when started outside the launcher).
 pub fn running(name: &str) -> Result<bool, String> {
+    // iOS: no other programs; the game can only run inside this app, and then the launcher's
+    // interface is gone.
+    if cfg!(target_os = "ios") {
+        return Ok(false);
+    }
     if cfg!(windows) {
         let out = Command::new("tasklist")
             .args(["/FI", &format!("IMAGENAME eq {}", exe(name)), "/NH"])
@@ -135,6 +143,9 @@ pub fn running(name: &str) -> Result<bool, String> {
 
 /// Asks a process to quit (SIGTERM; a close request on Windows): the game saves and exits.
 pub fn stop(pid: u32) {
+    if cfg!(target_os = "ios") {
+        return;
+    }
     let _ = if cfg!(windows) {
         Command::new("taskkill").args(["/PID", &pid.to_string()]).status()
     } else {
@@ -204,4 +215,35 @@ mod tests {
             assert!(net_module(root, true).ends_with("Frameworks/libbbnet20.dylib"));
         }
     }
+}
+
+/// iOS: the game runs in the launcher's own process (no other programs can be started). The app
+/// around the launcher (bloodborne-ios) provides `int bb_ios_start_game(const char *data_dir)`,
+/// called on the main thread: it starts the game, which takes over the app's window, and returns
+/// only if the game could not start (its error code). A launcher built without it (development)
+/// reports that the game is not in this build.
+#[cfg(target_os = "ios")]
+pub fn start_in_app(app: &tauri::AppHandle, data: &Path) -> Result<(), String> {
+    use std::ffi::{c_char, c_int, c_void, CString};
+    extern "C" {
+        fn dlsym(handle: *mut c_void, symbol: *const c_char) -> *mut c_void;
+    }
+    const RTLD_DEFAULT: *mut c_void = -2isize as *mut c_void;
+    let symbol = unsafe { dlsym(RTLD_DEFAULT, c"bb_ios_start_game".as_ptr()) };
+    if symbol.is_null() {
+        return Err("The game is not in this build of the launcher.".into());
+    }
+    let start: extern "C" fn(*const c_char) -> c_int = unsafe { std::mem::transmute(symbol) };
+    let data = CString::new(data.as_os_str().as_encoded_bytes()).map_err(|e| e.to_string())?;
+    app.run_on_main_thread(move || {
+        let code = start(data.as_ptr());
+        eprintln!("Game: could not start ({code})");
+    })
+    .map_err(|e| e.to_string())
+}
+
+/// Other systems start the game as its own program (lib.rs, start_game).
+#[cfg(not(target_os = "ios"))]
+pub fn start_in_app(_app: &tauri::AppHandle, _data: &Path) -> Result<(), String> {
+    Err("The game runs as its own program on this system.".into())
 }
