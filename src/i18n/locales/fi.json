@@ -189,7 +189,6 @@
     "amount": "Määrä",
     "level": "Taso",
     "imprint": "Leima",
-    "armorReadOnly": "Ei vielä muokattavissa",
     "changes": "Muutokset: {{count}}",
     "inventory": "Tavaraluettelo",
     "add": "Lisää esine",

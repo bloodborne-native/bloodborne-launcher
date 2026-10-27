@@ -189,7 +189,6 @@
     "amount": "Anzahl",
     "level": "Stufe",
     "imprint": "Prägung",
-    "armorReadOnly": "Noch nicht bearbeitbar",
     "changes": "Änderungen: {{count}}",
     "inventory": "Inventar",
     "add": "Gegenstand hinzufügen",

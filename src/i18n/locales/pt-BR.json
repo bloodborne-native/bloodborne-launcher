@@ -376,7 +376,6 @@
     "amount": "Quantidade",
     "level": "Nível",
     "imprint": "Marca",
-    "armorReadOnly": "Ainda não editável",
     "changes": "Alterações: {{count}}",
     "inventory": "Inventário",
     "add": "Adicionar item",

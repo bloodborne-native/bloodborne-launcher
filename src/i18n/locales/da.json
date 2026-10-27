@@ -189,7 +189,6 @@
     "amount": "Antal",
     "level": "Niveau",
     "imprint": "Prægning",
-    "armorReadOnly": "Kan ikke redigeres endnu",
     "changes": "Ændringer: {{count}}",
     "inventory": "Inventar",
     "add": "Tilføj genstand",

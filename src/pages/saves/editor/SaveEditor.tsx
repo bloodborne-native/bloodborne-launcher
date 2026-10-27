@@ -63,7 +63,7 @@ export function SaveEditor({ profileId, character, disabled, onClose }: SaveEdit
     switch (section) {
       case "item": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "inventory" && e.kind === "item")} edits={edits} addTo={named ? "inventory" : undefined} disabled={locked} /></>;
       case "weapon": return <>{notice}<WeaponsSection weapons={entries.filter((e) => e.kind === "weapon")} gems={gems} edits={edits} disabled={locked} /></>;
-      case "armor": return <>{notice}<p className="mb-3 text-xs text-muted-foreground">{t("inventory.armorReadOnly")}</p>
+      case "armor": return <>{notice}
         <ItemsSection entries={entries.filter((e) => e.location === "inventory" && e.kind === "armor")} edits={edits} disabled={locked} /></>;
       case "gems": return gems.length ? <div className="own-scroll rounded-2xl surface py-1">{gems.map((gem) => <GemRow key={gem.index} gem={gem}
         chosen={edits.effects[gem.index] ?? {}} disabled={locked}

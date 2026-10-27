@@ -189,7 +189,6 @@
     "amount": "Antall",
     "level": "Nivå",
     "imprint": "Preg",
-    "armorReadOnly": "Kan ikke redigeres ennå",
     "changes": "Endringer: {{count}}",
     "inventory": "Inventar",
     "add": "Legg til gjenstand",

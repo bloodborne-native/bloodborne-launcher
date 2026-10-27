@@ -390,7 +390,6 @@
     "amount": "Amount",
     "level": "Level",
     "imprint": "Imprint",
-    "armorReadOnly": "Not editable yet",
     "changes": "Changes: {{count}}",
     "inventory": "Inventory",
     "add": "Add item",

@@ -189,7 +189,6 @@
     "amount": "Antal",
     "level": "Nivå",
     "imprint": "Prägel",
-    "armorReadOnly": "Kan inte redigeras än",
     "changes": "Ändringar: {{count}}",
     "inventory": "Inventarie",
     "add": "Lägg till föremål",

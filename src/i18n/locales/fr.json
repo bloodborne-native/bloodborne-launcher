@@ -189,7 +189,6 @@
     "amount": "Quantité",
     "level": "Niveau",
     "imprint": "Empreinte",
-    "armorReadOnly": "Pas encore modifiable",
     "changes": "Modifications : {{count}}",
     "inventory": "Inventaire",
     "add": "Ajouter un objet",

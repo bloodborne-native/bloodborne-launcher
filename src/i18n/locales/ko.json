@@ -189,7 +189,6 @@
     "amount": "수량",
     "level": "강화 수치",
     "imprint": "각인",
-    "armorReadOnly": "아직 편집할 수 없습니다",
     "changes": "변경: {{count}}",
     "inventory": "소지품",
     "add": "아이템 추가",

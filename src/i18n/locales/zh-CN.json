@@ -189,7 +189,6 @@
     "amount": "数量",
     "level": "强化等级",
     "imprint": "印记",
-    "armorReadOnly": "暂不可编辑",
     "changes": "更改：{{count}}",
     "inventory": "物品栏",
     "add": "添加道具",

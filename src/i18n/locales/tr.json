@@ -189,7 +189,6 @@
     "amount": "Miktar",
     "level": "Seviye",
     "imprint": "Damga",
-    "armorReadOnly": "Henüz düzenlenemez",
     "changes": "Değişiklikler: {{count}}",
     "inventory": "Envanter",
     "add": "Eşya ekle",

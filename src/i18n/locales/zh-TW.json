@@ -189,7 +189,6 @@
     "amount": "數量",
     "level": "強化等級",
     "imprint": "印記",
-    "armorReadOnly": "暫不可編輯",
     "changes": "變更：{{count}}",
     "inventory": "物品欄",
     "add": "新增道具",
