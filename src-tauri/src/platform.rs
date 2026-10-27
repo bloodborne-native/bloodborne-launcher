@@ -198,32 +198,6 @@ fn locale_tag(value: &str) -> Option<String> {
     (!first.is_empty() && first != "C" && first != "POSIX").then(|| first.replace('_', "-"))
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn posix_locales_become_language_tags() {
-        assert_eq!(locale_tag("pt_BR.UTF-8").as_deref(), Some("pt-BR"));
-        assert_eq!(locale_tag("de_DE@euro").as_deref(), Some("de-DE"));
-        assert_eq!(locale_tag("zh_TW:en").as_deref(), Some("zh-TW"));
-        assert_eq!(locale_tag("C.UTF-8"), None);
-        assert_eq!(locale_tag("POSIX"), None);
-        assert_eq!(locale_tag(""), None);
-    }
-
-    #[test]
-    fn programs_and_modules_are_named_for_this_system() {
-        let root = Path::new("/game");
-        let module = net_module(root, false);
-        assert!(module.starts_with("/game/out"));
-        assert_eq!(exe("bb-probe"), format!("bb-probe{}", std::env::consts::EXE_SUFFIX));
-        if cfg!(target_os = "macos") {
-            assert!(net_module(root, true).ends_with("Frameworks/libbbnet20.dylib"));
-        }
-    }
-}
-
 /// iOS: the game runs in the launcher's own process (no other programs can be started). The app
 /// around the launcher (bloodborne-ios) provides `int bb_ios_start_game(const char *data_dir)`,
 /// called on the main thread: it starts the game, which takes over the app's window, and returns
@@ -253,4 +227,30 @@ pub fn start_in_app(app: &tauri::AppHandle, data: &Path) -> Result<(), String> {
 #[cfg(not(target_os = "ios"))]
 pub fn start_in_app(_app: &tauri::AppHandle, _data: &Path) -> Result<(), String> {
     Err("The game runs as its own program on this system.".into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn posix_locales_become_language_tags() {
+        assert_eq!(locale_tag("pt_BR.UTF-8").as_deref(), Some("pt-BR"));
+        assert_eq!(locale_tag("de_DE@euro").as_deref(), Some("de-DE"));
+        assert_eq!(locale_tag("zh_TW:en").as_deref(), Some("zh-TW"));
+        assert_eq!(locale_tag("C.UTF-8"), None);
+        assert_eq!(locale_tag("POSIX"), None);
+        assert_eq!(locale_tag(""), None);
+    }
+
+    #[test]
+    fn programs_and_modules_are_named_for_this_system() {
+        let root = Path::new("/game");
+        let module = net_module(root, false);
+        assert!(module.starts_with("/game/out"));
+        assert_eq!(exe("bb-probe"), format!("bb-probe{}", std::env::consts::EXE_SUFFIX));
+        if cfg!(target_os = "macos") {
+            assert!(net_module(root, true).ends_with("Frameworks/libbbnet20.dylib"));
+        }
+    }
 }
