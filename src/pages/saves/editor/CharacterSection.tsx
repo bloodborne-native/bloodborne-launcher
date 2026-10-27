@@ -12,7 +12,7 @@ export function CharacterSection({ character, edits, disabled }: { character: Ch
   if (!character.stats_consistent) return <p className="text-sm text-destructive">{t("saves.inconsistentStats")}</p>;
   const set = (field: keyof typeof fields, value: string) => setFields((all) => ({ ...all, [field]: value }));
   return <div className="grid max-w-2xl gap-5">
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-2 gap-4">
       <label className="grid gap-1 text-sm">{t("saves.echoes")}
         <input className={input} type="number" min="0" max="999999999" step="1" value={fields.echoes} disabled={disabled} onChange={(event) => set("echoes", event.target.value)} />
       </label>
@@ -27,7 +27,7 @@ export function CharacterSection({ character, edits, disabled }: { character: Ch
           setFields({ echoes: "999999999", insight: "99", ...Object.fromEntries(ATTRIBUTES.map((field) => [field, "99"])) } as typeof fields)}>
           {t("saves.maxAll")}</Button>
       </div>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {ATTRIBUTES.map((field) => <label key={field} className="grid gap-1 text-sm">{t(`saves.${field}`)}
           <input className={input} type="number" min={field === "vitality" ? "7" : field === "endurance" ? "8" : "1"} max="99" step="1"
             value={fields[field]} disabled={disabled} onChange={(event) => set(field, event.target.value)} />

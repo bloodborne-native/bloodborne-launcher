@@ -68,26 +68,32 @@ export function SaveEditor({ profileId, character, disabled, onBusy, onClose }: 
       case "storage": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "storage" && e.kind !== "upgrade")} edits={edits} addTo={named ? "storage" : undefined} disabled={locked} /></>;
     }
   };
-  return <DialogContent showCloseButton={!pending} className="flex h-[min(56rem,calc(100dvh-2rem))] flex-col gap-0 p-0 sm:max-w-6xl">
-    <DialogHeader className="border-b border-border px-5 py-4">
+  // Full screen on a phone (inside its safe areas), a large window from sm up.
+  return <DialogContent showCloseButton={!pending} className="flex h-dvh max-h-dvh w-full max-w-none flex-col gap-0 rounded-none p-0 ring-0
+    sm:h-[min(56rem,calc(100dvh-2rem))] sm:max-w-6xl sm:rounded-xl sm:ring-1
+    [&>[data-slot=dialog-close]]:top-[calc(0.5rem+env(safe-area-inset-top))] sm:[&>[data-slot=dialog-close]]:top-2">
+    <DialogHeader className="border-b border-border px-4 pt-[calc(1rem+env(safe-area-inset-top))] pr-12 pb-3 sm:px-5 sm:pt-4">
       <DialogTitle>{character.name}</DialogTitle>
       <DialogDescription className="text-xs">
-        {t("saves.level", { level: edits.characterEdit ? edits.level : character.level })} · {t("saves.slot", { slot: character.slot + 1 })} · {t("saves.editWarning")}
+        {t("saves.level", { level: edits.characterEdit ? edits.level : character.level })} · {t("saves.slot", { slot: character.slot + 1 })}
+        {/* On a phone the warning waits for the first change, above the save button. */}
+        <span className="hidden sm:inline"> · {t("saves.editWarning")}</span>
       </DialogDescription>
     </DialogHeader>
     <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-      <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-border p-2 md:w-48 md:flex-col md:border-r md:border-b-0">
+      <nav className="flex shrink-0 gap-1 overflow-x-auto [scrollbar-width:none] border-b border-border p-2 md:w-48 md:flex-col md:border-r md:border-b-0">
         {SECTIONS.map((name) => <button key={name} type="button" onClick={() => setSection(name)}
           className={`flex shrink-0 items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm ${section === name ? "bg-accent font-medium" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"}`}>
           {t(TITLES[name])}
           {edits.counts[name] > 0 && <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground tabular-nums">{edits.counts[name]}</span>}
         </button>)}
       </nav>
-      <div className="min-h-0 flex-1 overflow-y-auto p-5">{body()}</div>
+      <div data-editor-body className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">{body()}</div>
     </div>
-    <DialogFooter className="m-0 items-center border-t border-border px-5 py-3">
-      {error ? <p role="alert" className="mr-auto min-w-0 break-words text-sm text-destructive">{error}</p>
-        : <span className="mr-auto text-xs text-muted-foreground">{t("inventory.changes", { count: edits.total })}</span>}
+    <DialogFooter className="m-0 flex-row flex-wrap items-center justify-end rounded-none border-t border-border px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:rounded-b-xl sm:px-5 sm:pb-3">
+      {edits.total > 0 && !error && <p className="basis-full text-xs text-muted-foreground sm:hidden">{t("saves.editWarning")}</p>}
+      {error ? <p role="alert" className="mr-auto min-w-0 basis-full break-words text-sm text-destructive sm:basis-auto">{error}</p>
+        : <span className="mr-auto basis-full text-xs text-muted-foreground sm:basis-auto">{t("inventory.changes", { count: edits.total })}</span>}
       <Button variant="outline" disabled={pending} onClick={edits.total ? edits.reset : onClose}>{edits.total ? t("inventory.discard") : t("saves.cancel")}</Button>
       <Button disabled={locked || !edits.valid || !edits.total} onClick={save}>{t("saves.saveEditedCharacter")}</Button>
     </DialogFooter>

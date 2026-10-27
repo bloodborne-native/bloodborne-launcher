@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Gem, InventoryEntry } from "@/lib";
+import { Button } from "@/components/ui";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { WeaponDetail, weaponName } from "@/pages/saves/editor/WeaponDetail";
 import { entryKey, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
@@ -17,8 +18,11 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
     return weapons.filter((entry) => !query || (entry.name ?? "").toLocaleLowerCase(i18n.language).includes(query));
   }, [weapons, search, i18n.language]);
   const current = weapons.find((entry) => entryKey(entry) === selected) ?? shown[0];
+  // Wide: the list and the chosen weapon side by side. Narrow: the list, then the weapon tapped
+  // on its own with a way back.
+  const picked = selected !== undefined && current !== undefined;
   return <div className="grid gap-4 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
-    <div className="grid content-start gap-2">
+    <div className={`content-start gap-2 ${picked ? "hidden lg:grid" : "grid"}`}>
       <input className="rounded-md border border-input bg-background px-3 py-1.5 text-sm" type="search"
         placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
       <div className="rounded-md border border-border">
@@ -26,7 +30,11 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
           : shown.map((entry) => {
             const chosen = edits.weapon(entry);
             const active = entry === current;
-            return <button key={entryKey(entry)} type="button" onClick={() => setSelected(entryKey(entry))}
+            return <button key={entryKey(entry)} type="button" onClick={(event) => {
+              setSelected(entryKey(entry));
+              // Narrow: the weapon replaces the list, from its top.
+              event.currentTarget.closest("[data-editor-body]")?.scrollTo({ top: 0 });
+            }}
               className={`flex w-full items-center gap-3 border-t border-border px-3 py-2 text-left first:border-t-0 ${active ? "bg-accent" : "hover:bg-muted/50"}`}>
               <ItemIcon icon={entry.icon} className="size-9" />
               <span className="min-w-0 flex-1">
@@ -42,8 +50,11 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
           })}
       </div>
     </div>
-    {current ? <div className="self-start rounded-md border border-border p-4 lg:sticky lg:top-0">
-      <WeaponDetail key={entryKey(current)} entry={current} gems={gems} edits={edits} disabled={disabled} />
+    {current ? <div className={`self-start ${picked ? "grid" : "hidden lg:grid"} gap-3`}>
+      <Button variant="ghost" size="sm" className="justify-self-start lg:hidden" onClick={() => setSelected(undefined)}>← {t("inventory.weapon")}</Button>
+      <div className="lg:sticky lg:top-0 lg:rounded-md lg:border lg:border-border lg:p-4">
+        <WeaponDetail key={entryKey(current)} entry={current} gems={gems} edits={edits} disabled={disabled} />
+      </div>
     </div> : <p className="text-sm text-muted-foreground">{t("inventory.chooseWeapon")}</p>}
   </div>;
 }

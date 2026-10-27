@@ -15,3 +15,4 @@ export * from "@/hooks/useProfiles";
 export * from "@/hooks/useTrayLabels";
 export * from "@/hooks/useRelease";
 export * from "@/hooks/useOpenRelease";
+export * from "@/hooks/useCanHover";
