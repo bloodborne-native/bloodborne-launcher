@@ -55,7 +55,7 @@
     "eyebrow": "Takaisin Yharnamiin",
     "title": "Metsästä yötä", "subtitle": "Metsästys alkaa jälleen.",
     "gameFolderHint": "Valitse Bloodborne-kopiosi, miltä tahansa alueelta, päivitys 1.09 asennettuna.", "checking": "Tarkistetaan pelitiedostoja…", "ready": "Valmis metsästykseen",
-    "copyGame": "Kopioi pelitiedostot tähän kansioon Finderilla tai jakamalla tiedostoja toiselta laitteelta.",
+    "copyGame": "Kopioi pelitiedostot tähän kansioon tiedostonhallinnalla tai jaa ne toiselta laitteelta.",
     "noFolder": "Valitse pelikansio.", "folder": "Pelikansio", "edition": "{{id}} · versio {{version}}", "region": { "america": "Amerikka", "europe": "Eurooppa", "japan": "Japani", "asia": "Aasia", "unknown": "Tuntematon alue" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Mukana", "dlcMissing": "Ei mukana", "dlcMissingHint": "Tämä versio vaatii The Old Hunters -lisäosan, jota portti ei vielä tue.", "summary": "Yleiskatsaus", "upscaler": "Skaalain", "renderSize": "Renderöidään resoluutiolla {{size}}",
     "frameRate": "Kuvataajuus", "controller": "Ohjain", "mods": "Modit",
     "modsActive": "{{count}} käytössä", "modsActive_one": "{{count}} käytössä", "modsActive_other": "{{count}} käytössä", "modsOff": "Pois",

@@ -55,7 +55,7 @@
     "eyebrow": "Zurück nach Yharnam",
     "title": "Jage die Nacht", "subtitle": "Die Jagd beginnt von Neuem.",
     "gameFolderHint": "Wähle deine Kopie von Bloodborne aus, aus beliebiger Region, mit installiertem Update 1.09.", "checking": "Spieldateien werden geprüft…", "ready": "Bereit zur Jagd",
-    "copyGame": "Kopiere deine Spieldateien mit dem Finder oder über Dateifreigabe von einem anderen Gerät in diesen Ordner.",
+    "copyGame": "Kopiere deine Spieldateien mit deiner Dateiverwaltung in diesen Ordner oder teile sie von einem anderen Gerät.",
     "noFolder": "Wähle deinen Spielordner aus.", "folder": "Spielordner", "edition": "{{id}} · Version {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asien", "unknown": "Unbekannte Region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Enthalten", "dlcMissing": "Nicht enthalten", "dlcMissingHint": "Diese Edition benötigt das Add-on The Old Hunters, das der Port noch nicht unterstützt.", "summary": "Übersicht", "upscaler": "Upscaler", "renderSize": "Rendert in {{size}}",
     "frameRate": "Bildrate", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} aktiv", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktiv", "modsOff": "Aus",

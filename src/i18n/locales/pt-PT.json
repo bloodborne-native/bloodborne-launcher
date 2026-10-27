@@ -55,7 +55,7 @@
     "eyebrow": "De volta a Yharnam",
     "title": "Caça a noite", "subtitle": "A caçada recomeça.",
     "gameFolderHint": "Selecione a sua cópia de Bloodborne, de qualquer região, com a atualização 1.09 aplicada.", "checking": "A verificar os ficheiros do jogo…", "ready": "Pronto para caçar",
-    "copyGame": "Copie os ficheiros do jogo para esta pasta através do Finder ou da partilha de ficheiros a partir de outro dispositivo.",
+    "copyGame": "Copie os ficheiros do jogo para esta pasta com o seu gestor de ficheiros ou partilhe-os a partir de outro dispositivo.",
     "noFolder": "Selecione a pasta do jogo.", "folder": "Pasta do jogo", "edition": "{{id}} · versão {{version}}", "region": { "america": "Américas", "europe": "Europa", "japan": "Japão", "asia": "Ásia", "unknown": "Região desconhecida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluído", "dlcMissing": "Não incluído", "dlcMissingHint": "Esta edição requer o extra The Old Hunters, que o port ainda não suporta.", "summary": "Visão geral", "upscaler": "Upscaler", "renderSize": "A renderizar a {{size}}",
     "frameRate": "Taxa de fotogramas", "controller": "Comando", "mods": "Mods",
     "modsActive": "{{count}} ativos", "modsActive_one": "{{count}} ativo", "modsActive_other": "{{count}} ativos", "modsOff": "Desligados",

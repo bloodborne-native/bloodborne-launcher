@@ -55,7 +55,7 @@
     "eyebrow": "Назад в Ярнам",
     "title": "Охоться в ночи", "subtitle": "Охота начинается снова.",
     "gameFolderHint": "Выберите свою копию Bloodborne любого региона с установленным обновлением 1.09.", "checking": "Проверка файлов игры…", "ready": "Готов к охоте",
-    "copyGame": "Скопируйте файлы игры в эту папку через Finder или общий доступ к файлам с другого устройства.",
+    "copyGame": "Скопируйте файлы игры в эту папку с помощью файлового менеджера или передайте их с другого устройства.",
     "noFolder": "Выберите папку игры.", "folder": "Папка игры", "edition": "{{id}} · версия {{version}}", "region": { "america": "Америка", "europe": "Европа", "japan": "Япония", "asia": "Азия", "unknown": "Неизвестный регион" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Есть", "dlcMissing": "Нет", "dlcMissingHint": "Для этого издания нужно дополнение The Old Hunters, которое порт пока не поддерживает.", "summary": "Обзор", "upscaler": "Апскейлер", "renderSize": "Рендеринг в {{size}}",
     "frameRate": "Частота кадров", "controller": "Контроллер", "mods": "Моды",
     "modsActive": "Активно: {{count}}", "modsActive_one": "{{count}} активен", "modsActive_few": "{{count}} активны", "modsActive_many": "{{count}} активно", "modsActive_other": "Активно: {{count}}", "modsOff": "Выключены",

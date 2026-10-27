@@ -55,7 +55,7 @@
     "eyebrow": "Terug naar Yharnam",
     "title": "Jaag op de nacht", "subtitle": "De jacht begint opnieuw.",
     "gameFolderHint": "Kies je kopie van Bloodborne, uit elke regio, met update 1.09 toegepast.", "checking": "Spelbestanden controleren…", "ready": "Klaar om te jagen",
-    "copyGame": "Kopieer je spelbestanden naar deze map met de Finder of met bestandsdeling vanaf een ander apparaat.",
+    "copyGame": "Kopieer je spelbestanden naar deze map met je bestandsbeheerder, of deel ze vanaf een ander apparaat.",
     "noFolder": "Kies je spelmap.", "folder": "Spelmap", "edition": "{{id}} · versie {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Azië", "unknown": "Onbekende regio" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inbegrepen", "dlcMissing": "Niet inbegrepen", "dlcMissingHint": "Deze editie vereist de uitbreiding The Old Hunters, die de port nog niet ondersteunt.", "summary": "Overzicht", "upscaler": "Upscaler", "renderSize": "Rendert op {{size}}",
     "frameRate": "Framerate", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} actief", "modsActive_one": "{{count}} actief", "modsActive_other": "{{count}} actief", "modsOff": "Uit",

@@ -55,7 +55,7 @@
     "eyebrow": "Tillbaka till Yharnam",
     "title": "Jaga natten", "subtitle": "Jakten börjar igen.",
     "gameFolderHint": "Välj ditt exemplar av Bloodborne, från valfri region, med uppdatering 1.09 installerad.", "checking": "Kontrollerar spelfiler…", "ready": "Redo att jaga",
-    "copyGame": "Kopiera dina spelfiler till den här mappen med Finder eller fildelning från en annan enhet.",
+    "copyGame": "Kopiera spelfilerna till den här mappen med din filhanterare, eller dela dem från en annan enhet.",
     "noFolder": "Välj din spelmapp.", "folder": "Spelmapp", "edition": "{{id}} · version {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asien", "unknown": "Okänd region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Ingår", "dlcMissing": "Ingår inte", "dlcMissingHint": "Den här utgåvan kräver tillägget The Old Hunters, som porten inte stöder ännu.", "summary": "Översikt", "upscaler": "Uppskalare", "renderSize": "Renderar i {{size}}",
     "frameRate": "Bildfrekvens", "controller": "Handkontroll", "mods": "Moddar",
     "modsActive": "{{count}} aktiva", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktiva", "modsOff": "Av",
