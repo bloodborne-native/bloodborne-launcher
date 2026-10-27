@@ -113,7 +113,11 @@ pub struct CatalogItem {
     pub category: &'static str,
     pub max: u32,
     pub icon: Option<u32>,
+    /// Items: the short description; weapons and armor: none.
     pub description: Option<String>,
+    /// The game's long description, and the hover card's numbers.
+    pub caption: Option<String>,
+    pub stats: Option<serde_json::Value>,
 }
 
 /// The items the game has names for and the editor can add: consumables, materials, chalices.
@@ -135,6 +139,8 @@ pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
                 max: params.goods.get(id, "maxNum").unwrap_or(1.0).max(1.0) as u32,
                 icon: params.goods.get(id, "iconId").map(|v| v as u32),
                 description: text.goods_info.get(&id).cloned(),
+                caption: text.goods_caption.get(&id).cloned(),
+                stats: stats_of(Kind::Item, id, params),
             })
         })
         .collect();
@@ -145,7 +151,9 @@ pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
         category: "weapon",
         max: 1,
         icon: icon_of(Kind::Weapon, id, params),
-        description: text.weapon_caption.get(&id).cloned(),
+        description: None,
+        caption: text.weapon_caption.get(&id).cloned(),
+        stats: stats_of(Kind::Weapon, id, params),
     }));
     items.extend(params.armor.ids().filter(|&id| addable_armor(id, text, params)).map(|id| CatalogItem {
         id,
@@ -153,7 +161,9 @@ pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
         category: "armor",
         max: 1,
         icon: icon_of(Kind::Armor, id, params),
-        description: text.armor_caption.get(&id).cloned(),
+        description: None,
+        caption: text.armor_caption.get(&id).cloned(),
+        stats: stats_of(Kind::Armor, id, params),
     }));
     items.sort_by(|a, b| (a.category, a.id).cmp(&(b.category, b.id)));
     items

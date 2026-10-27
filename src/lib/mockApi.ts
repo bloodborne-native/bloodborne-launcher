@@ -99,12 +99,12 @@ if (new URLSearchParams(window.location.search).has("more")) {
 }
 // Placeholder names: the real ones come from the player's game files (no game text here).
 const previewCatalog: CatalogItem[] = [
-  { id: 1000, name: "Sample item", category: "consumable", max: 20, icon: 1, description: "A sample item for the preview." },
-  { id: 1100, name: "Sample remedy", category: "consumable", max: 20, icon: 3, description: null },
-  { id: 3000, name: "Sample material", category: "material", max: 99, icon: 4, description: null },
-  { id: 6100, name: "Sample chalice", category: "chalice", max: 1, icon: 5, description: null },
-  { id: 3000000, name: "Another sample weapon", category: "weapon", max: 1, icon: 6, description: "A sample weapon for the preview." },
-  { id: 10000, name: "Sample cap", category: "armor", max: 1, icon: 7, description: null },
+  { id: 1000, name: "Sample item", category: "consumable", max: 20, icon: 1, description: "A sample item for the preview.", caption: "A longer sample text, as the game describes an item.", stats: { max: 20 } },
+  { id: 1100, name: "Sample remedy", category: "consumable", max: 20, icon: 3, description: null, caption: null, stats: null },
+  { id: 3000, name: "Sample material", category: "material", max: 99, icon: 4, description: null, caption: null, stats: null },
+  { id: 6100, name: "Sample chalice", category: "chalice", max: 1, icon: 5, description: null, caption: null, stats: null },
+  { id: 3000000, name: "Another sample weapon", category: "weapon", max: 1, icon: 6, description: null, caption: "A sample weapon for the preview.", stats: { attack: { physical: 110 }, scaling: { strength: 30, skill: 25 }, requirements: { strength: 12, skill: 10 } } },
+  { id: 10000, name: "Sample cap", category: "armor", max: 1, icon: 7, description: null, caption: null, stats: null },
 ];
 // Made-up numbers per level and imprint for the preview's weapon (7000000 + imprint × 10000 + level × 100).
 function previewWeaponVariants() {

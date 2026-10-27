@@ -148,7 +148,9 @@ export type InventoryStats = {
   attack?: Record<string, number>; scaling?: Record<string, number>; requirements?: Record<string, number>;
   defense?: Record<string, number>; max?: number;
 };
-export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice" | "weapon" | "armor"; max: number; icon: number | null; description: string | null };
+export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice" | "weapon" | "armor"; max: number; icon: number | null; description: string | null;
+  /** The game's long description, and the hover card's numbers. */
+  caption: string | null; stats: InventoryStats | null };
 export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[]; upgrades: Gem[] };
 /** A gem or rune (inventory.rs): its shape, effects with their alternatives, and where it is. */
 export type Gem = {

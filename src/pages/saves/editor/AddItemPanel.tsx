@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { CatalogItem, InventoryLocation } from "@/lib";
 import { Button, Input } from "@/components/ui";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
+import { ItemStats } from "@/pages/saves/editor/ItemStats";
 import { useItemCatalog } from "@/pages/saves/editor/useItemCatalog";
 import { Message } from "@/components/common";
 
@@ -49,17 +50,18 @@ export function AddItemPanel({ held, location, categories, disabled, onAdd }: Pr
     </div>
     <div className="grid max-h-48 grid-cols-[repeat(auto-fill,minmax(3rem,1fr))] gap-1 overflow-y-auto">
       {catalog.error ? <Message tone="error" className="col-span-full">{String(catalog.error)}</Message>
-        : shown.map((item) => <button key={item.id} type="button" title={item.name}
+        : shown.map((item) => <ItemStats key={item.id} hoverOnly className="block" name={item.name} description={item.description}
+          caption={item.caption} icon={item.icon} stats={item.stats}><button type="button" aria-label={item.name}
           className={`rounded-md p-0.5 ${chosen?.id === item.id ? "bg-gold-400/25" : "hover:bg-white/[0.06]"}`}
           onClick={() => { setChosen(item); setAmount(String(Math.min(item.max, 1))); }}>
           <ItemIcon icon={item.icon} className="size-full" />
-        </button>)}
+        </button></ItemStats>)}
     </div>
     {chosen ? <div className="flex flex-wrap items-end gap-3">
       <div className="flex min-w-40 flex-1 items-center gap-2">
         <ItemIcon icon={chosen.icon} />
         <div><p className="text-sm">{chosen.name}</p>
-          {chosen.description && <p className="line-clamp-2 text-xs text-muted-foreground">{chosen.description}</p>}</div>
+          {(chosen.description ?? chosen.caption) && <p className="line-clamp-2 text-xs text-muted-foreground">{chosen.description ?? chosen.caption}</p>}</div>
       </div>
       {!equipment && <label className="grid gap-1 text-xs">{t("inventory.amount")}
         <Input className="w-24" type="number" min="1" max={max}
