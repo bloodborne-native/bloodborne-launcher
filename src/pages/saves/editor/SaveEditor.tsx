@@ -90,7 +90,7 @@ export function SaveEditor({ profileId, character, disabled, onClose }: SaveEdit
       </TabsList>
     </Tabs>
     <div className="pb-4">{body()}</div>
-    <div className="sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center justify-end gap-2 rounded-2xl surface px-4 py-3 md:static md:bottom-4">
+    <div className="sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-10 flex flex-wrap items-center justify-end gap-2 rounded-2xl bg-sidebar/95 px-4 py-3 backdrop-blur md:static md:bottom-4 md:surface">
       {error ? <Message tone="error" className="mr-auto min-w-0 basis-full sm:basis-auto">{error}</Message>
         : <span className="mr-auto basis-full text-xs text-muted-foreground sm:basis-auto">
           {t("inventory.changes", { count: edits.total })}{edits.total > 0 && <> · {t("saves.editWarning")}</>}

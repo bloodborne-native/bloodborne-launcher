@@ -1,8 +1,8 @@
 // Draws the app icon into an .iconset folder: the source of the launcher's icons (src-tauri/icons).
-// a pale crescent moon over a blue-slate night with a gold rim (the launcher's colours, src/index.css),
+// a pale crescent moon with a soft glow over a blue-slate night (the launcher's colours, src/index.css),
 // on the macOS rounded-square shape.
 //   swift scripts/make_icon.swift OUT.iconset [--full-bleed]
-// --full-bleed: the whole square, no margin, corners or rim (iOS, which rounds icons itself).
+// --full-bleed: the whole square, no margin or corners (iOS, which rounds icons itself).
 // then: npx tauri icon OUT.iconset/icon_512x512@2x.png (src-tauri/icons; keep the macOS ones).
 import AppKit
 
@@ -39,11 +39,13 @@ func render(_ size: Int) -> Data {
     let moon = CGRect(x: center.x - r, y: center.y - r, width: 2 * r, height: 2 * r)
     let bite = CGRect(x: center.x - r * 0.55, y: center.y - r * 0.6, width: 2 * r * 0.95,
                       height: 2 * r * 0.95)
-    // A faint glow around the whole disc, then the crescent (the disc minus the bite).
-    ctx.setFillColor(CGColor(red: 0.93, green: 0.89, blue: 0.83, alpha: 0.08))
-    ctx.fillEllipse(in: moon.insetBy(dx: -r * 0.25, dy: -r * 0.25))
-    ctx.setFillColor(CGColor(red: 0.93, green: 0.89, blue: 0.83, alpha: 0.10))
-    ctx.fillEllipse(in: moon.insetBy(dx: -r * 0.12, dy: -r * 0.12))
+    // A faint glow fading out from the disc, with no edge, then the crescent (the disc minus the bite).
+    let glow = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                          colors: [CGColor(red: 0.93, green: 0.89, blue: 0.83, alpha: 0.16),
+                                   CGColor(red: 0.93, green: 0.89, blue: 0.83, alpha: 0)] as CFArray,
+                          locations: [0, 1])!
+    ctx.drawRadialGradient(glow, startCenter: center, startRadius: r, endCenter: center,
+                           endRadius: r * 1.6, options: [])
     ctx.addEllipse(in: moon)
     ctx.clip()
     ctx.addEllipse(in: moon)
@@ -51,16 +53,6 @@ func render(_ size: Int) -> Data {
     ctx.setFillColor(CGColor(red: 0.93, green: 0.89, blue: 0.83, alpha: 1)) // parchment, #ece4d4
     ctx.fillPath(using: .evenOdd)
     ctx.restoreGState()
-
-    // A thin gold rim (#c9a265); not on a full-bleed icon.
-    if fullBleed {
-        NSGraphicsContext.restoreGraphicsState()
-        return rep.representation(using: .png, properties: [:])!
-    }
-    ctx.addPath(shape)
-    ctx.setStrokeColor(CGColor(red: 0.79, green: 0.64, blue: 0.40, alpha: 0.55))
-    ctx.setLineWidth(max(1, s * 0.006))
-    ctx.strokePath()
     NSGraphicsContext.restoreGraphicsState()
     return rep.representation(using: .png, properties: [:])!
 }
