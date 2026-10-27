@@ -47,8 +47,8 @@ pub fn dcx(data: &[u8]) -> Result<Vec<u8>> {
     Ok(out)
 }
 
-/// A BND4 container's files: (id, data).
-pub fn bnd4(data: &[u8]) -> Result<Vec<(u32, &[u8])>> {
+/// A BND4 container's files: (id, name, data). Names are the file names without their path.
+pub fn bnd4(data: &[u8]) -> Result<Vec<(u32, String, &[u8])>> {
     if bytes_at(data, 0, 4)? != b"BND4" {
         return Err("Not a BND4 container".into());
     }
@@ -63,9 +63,24 @@ pub fn bnd4(data: &[u8]) -> Result<Vec<(u32, &[u8])>> {
             let size = i64_le(data, entry + 8)?;
             let offset = i32_le(data, entry + 0x18)?;
             let id = u32_le(data, entry + 0x1C)?;
-            Ok((id, bytes_at(data, offset, size)?))
+            let name = utf16_at(data, i32_le(data, entry + 0x20)?)?;
+            let name = name.rsplit(['\\', '/']).next().unwrap_or_default().to_string();
+            Ok((id, name, bytes_at(data, offset, size)?))
         })
         .collect()
+}
+
+/// A zero-terminated UTF-16 string.
+fn utf16_at(data: &[u8], mut at: usize) -> Result<String> {
+    let mut units = Vec::new();
+    loop {
+        let unit = u16::from_le_bytes(bytes_at(data, at, 2)?.try_into().unwrap());
+        if unit == 0 {
+            return Ok(String::from_utf16_lossy(&units));
+        }
+        units.push(unit);
+        at += 2;
+    }
 }
 
 /// An FMG text table (version 2, 64-bit offsets): id -> text.
@@ -90,17 +105,7 @@ pub fn fmg(data: &[u8]) -> Result<HashMap<u32, String>> {
             if string == 0 {
                 continue;
             }
-            let mut units = Vec::new();
-            let mut at = string;
-            loop {
-                let unit = u16::from_le_bytes(bytes_at(data, at, 2)?.try_into().unwrap());
-                if unit == 0 {
-                    break;
-                }
-                units.push(unit);
-                at += 2;
-            }
-            texts.insert(id, String::from_utf16_lossy(&units));
+            texts.insert(id, utf16_at(data, string)?);
         }
     }
     Ok(texts)
@@ -163,7 +168,7 @@ pub fn item_text(game: &Path, language: &str) -> Result<ItemText> {
     let raw = std::fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
     let container = dcx(&raw)?;
     let mut text = ItemText::default();
-    for (id, data) in bnd4(&container)? {
+    for (id, _, data) in bnd4(&container)? {
         let slot = match id {
             GOODS_NAME => &mut text.goods,
             WEAPON_NAME => &mut text.weapons,
@@ -180,6 +185,208 @@ pub fn item_text(game: &Path, language: &str) -> Result<ItemText> {
         return Err("The game's item names were not found".into());
     }
     Ok(text)
+}
+
+// ---- Parameter tables (gameparam.parambnd), laid out by the game's own definitions -----------
+
+/// One field of a PARAMDEF: its primitive type, byte offset in a row and, for bit fields, the
+/// first bit and the width.
+#[derive(Clone, Copy)]
+struct Field {
+    kind: Primitive,
+    offset: usize,
+    bits: Option<(u8, u8)>,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Primitive {
+    S8,
+    U8,
+    S16,
+    U16,
+    S32,
+    U32,
+    F32,
+    Pad,
+}
+
+impl Primitive {
+    fn parse(name: &str) -> Result<Self> {
+        Ok(match name {
+            "s8" => Self::S8,
+            "u8" => Self::U8,
+            "s16" => Self::S16,
+            "u16" => Self::U16,
+            "s32" => Self::S32,
+            "u32" => Self::U32,
+            "f32" => Self::F32,
+            "dummy8" | "fixstr" | "fixstrW" => Self::Pad,
+            other => return Err(format!("Unknown parameter field type {other}")),
+        })
+    }
+    fn size(self) -> usize {
+        match self {
+            Self::S8 | Self::U8 | Self::Pad => 1,
+            Self::S16 | Self::U16 => 2,
+            Self::S32 | Self::U32 | Self::F32 => 4,
+        }
+    }
+}
+
+fn ascii_at(data: &[u8], offset: usize, size: usize) -> Result<String> {
+    let raw = bytes_at(data, offset, size)?;
+    let end = raw.iter().position(|&b| b == 0).unwrap_or(size);
+    Ok(String::from_utf8_lossy(&raw[..end]).into_owned())
+}
+
+/// A PARAMDEF (version 201, UTF-16 display names): field name -> where it is in a row, and the
+/// row's size. Bit fields share a unit of their type until it is full; padding bits ("dummy8")
+/// share the bytes of the flags before them.
+fn paramdef(data: &[u8]) -> Result<(HashMap<String, Field>, usize)> {
+    let count = u16::from_le_bytes(bytes_at(data, 8, 2)?.try_into().unwrap()) as usize;
+    let size = u16::from_le_bytes(bytes_at(data, 10, 2)?.try_into().unwrap()) as usize;
+    let start = i64_le(data, 0x30)?;
+    if size < 0xB0 {
+        return Err("Unsupported PARAMDEF layout".into());
+    }
+    let mut fields = HashMap::new();
+    let mut offset = 0usize;
+    let mut unit: Option<(Primitive, usize, u8)> = None; // type, start, next bit
+    for i in 0..count {
+        let at = start + i * size;
+        let mut kind = Primitive::parse(&ascii_at(data, at + 0x40, 8)?)?;
+        let bytes = i32_le(data, at + 0x64)?;
+        let name = ascii_at(data, at + 0x90, 0x20)?;
+        if let Some((base, width)) = name.split_once(':') {
+            let width: u8 = width.parse().map_err(|_| "Invalid bit field".to_string())?;
+            if kind == Primitive::Pad {
+                kind = Primitive::U8;
+            }
+            let unit_bits = (kind.size() * 8) as u8;
+            let (start, bit) = match unit {
+                Some((unit_kind, start, bit)) if unit_kind == kind && bit + width <= unit_bits => (start, bit),
+                _ => {
+                    let start = offset;
+                    offset += kind.size();
+                    (start, 0)
+                }
+            };
+            unit = Some((kind, start, bit + width));
+            fields.insert(base.to_string(), Field { kind, offset: start, bits: Some((bit, width)) });
+        } else {
+            unit = None;
+            let base = name.split('[').next().unwrap_or_default().to_string();
+            fields.insert(base, Field { kind, offset, bits: None });
+            offset += bytes;
+        }
+    }
+    Ok((fields, offset))
+}
+
+/// One parameter table with its layout: values by row ID and field name.
+pub struct Param {
+    data: Vec<u8>,
+    rows: HashMap<u32, usize>,
+    fields: HashMap<String, Field>,
+}
+
+impl Param {
+    fn parse(data: Vec<u8>, def: &[u8]) -> Result<Self> {
+        let (fields, row_size) = paramdef(def)?;
+        let count = u16::from_le_bytes(bytes_at(&data, 0x0A, 2)?.try_into().unwrap()) as usize;
+        let mut rows = HashMap::new();
+        let mut offsets = Vec::new();
+        for i in 0..count {
+            let at = 0x40 + i * 24;
+            let id = u32_le(&data, at)?;
+            let offset = i64_le(&data, at + 8)?;
+            bytes_at(&data, offset, row_size)?;
+            rows.insert(id, offset);
+            offsets.push(offset);
+        }
+        offsets.sort_unstable();
+        // The definition must describe these rows: their spacing is the computed row size.
+        if offsets.windows(2).any(|pair| pair[1] - pair[0] != row_size) {
+            return Err("The game's parameter layout does not match its definition".into());
+        }
+        Ok(Self { data, rows, fields })
+    }
+
+    /// A synthetic table of f32 fields (tests: no game data in the repository).
+    #[cfg(test)]
+    pub fn synthetic(rows: &[(u32, &[(&str, f64)])]) -> Self {
+        let mut fields = HashMap::new();
+        let mut data = Vec::new();
+        let mut offsets = HashMap::new();
+        for (id, values) in rows {
+            offsets.insert(*id, data.len());
+            for (name, value) in values.iter() {
+                let next = fields.len() * 4;
+                let field = *fields.entry(name.to_string()).or_insert(Field { kind: Primitive::F32, offset: next, bits: None });
+                let at = offsets[id] + field.offset;
+                if data.len() < at + 4 {
+                    data.resize(at + 4, 0);
+                }
+                data[at..at + 4].copy_from_slice(&(*value as f32).to_le_bytes());
+            }
+            data.resize(offsets[id] + 64, 0);
+        }
+        Self { data, rows: offsets, fields }
+    }
+
+    pub fn has(&self, id: u32) -> bool {
+        self.rows.contains_key(&id)
+    }
+
+    pub fn ids(&self) -> impl Iterator<Item = u32> + '_ {
+        self.rows.keys().copied()
+    }
+
+    /// A field of a row as a number, or None when the row or the field does not exist.
+    pub fn get(&self, id: u32, name: &str) -> Option<f64> {
+        let row = *self.rows.get(&id)?;
+        let field = self.fields.get(name)?;
+        let at = row + field.offset;
+        let raw = |n: usize| self.data.get(at..at + n);
+        let value = match field.kind {
+            Primitive::S8 => f64::from(*raw(1)?.first()? as i8),
+            Primitive::U8 | Primitive::Pad => f64::from(*raw(1)?.first()?),
+            Primitive::S16 => f64::from(i16::from_le_bytes(raw(2)?.try_into().ok()?)),
+            Primitive::U16 => f64::from(u16::from_le_bytes(raw(2)?.try_into().ok()?)),
+            Primitive::S32 => f64::from(i32::from_le_bytes(raw(4)?.try_into().ok()?)),
+            Primitive::U32 => f64::from(u32::from_le_bytes(raw(4)?.try_into().ok()?)),
+            Primitive::F32 => f64::from(f32::from_le_bytes(raw(4)?.try_into().ok()?)),
+        };
+        Some(match field.bits {
+            Some((bit, width)) => f64::from(((value as u32) >> bit) & ((1u32 << width) - 1)),
+            None => value,
+        })
+    }
+}
+
+/// The parameter tables the save editor reads: items, weapons and armor.
+pub struct GameParams {
+    pub goods: Param,
+    pub weapons: Param,
+    pub armor: Param,
+}
+
+pub fn game_params(game: &Path) -> Result<GameParams> {
+    let root = game.join("dvdroot_ps4");
+    let read = |path: &str| -> Result<Vec<u8>> {
+        let raw = std::fs::read(root.join(path)).map_err(|e| format!("{path}: {e}"))?;
+        dcx(&raw)
+    };
+    let params = read("param/gameparam/gameparam.parambnd.dcx")?;
+    let defs = read("paramdef/paramdef.paramdefbnd.dcx")?;
+    let params = bnd4(&params)?;
+    let defs = bnd4(&defs)?;
+    let load = |name: &str| -> Result<Param> {
+        let data = params.iter().find(|(_, n, _)| n == &format!("{name}.param")).ok_or(format!("{name} is missing"))?.2;
+        let def = defs.iter().find(|(_, n, _)| n == &format!("{name}.paramdef")).ok_or(format!("{name}'s definition is missing"))?.2;
+        Param::parse(data.to_vec(), def)
+    };
+    Ok(GameParams { goods: load("EquipParamGoods")?, weapons: load("EquipParamWeapon")?, armor: load("EquipParamProtector")? })
 }
 
 #[cfg(test)]
@@ -227,6 +434,18 @@ mod tests {
         assert_eq!(message_folder("pt-BR"), "porbr");
         assert_eq!(message_folder("ja"), "jpnjp");
         assert_eq!(message_folder("xx"), "engus");
+    }
+
+    /// The player's dump: BB_CHECK_GAME=<dump> cargo test real_game_params -- --ignored --nocapture.
+    #[test]
+    #[ignore]
+    fn real_game_params() {
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let params = game_params(Path::new(&game)).unwrap();
+        // A weapon row per level (+2), and the requirements in their fields.
+        assert!(params.weapons.has(7_000_200));
+        println!("goods {} weapons {} armor {}", params.goods.ids().count(), params.weapons.ids().count(), params.armor.ids().count());
+        println!("item 1000 maxNum {:?}", params.goods.get(1000, "maxNum"));
     }
 
     /// The player's dump: BB_CHECK_GAME=<dump> cargo test real_item_text -- --ignored --nocapture.

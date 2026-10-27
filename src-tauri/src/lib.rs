@@ -520,14 +520,24 @@ async fn list_characters(state: State<'_, AppState>, id: String) -> Result<Vec<s
         save_editor::list(&user)
     }).await
 }
-/// The game's item texts for the save editor, read from the player's dump (game_data.rs).
-fn item_text(p: &Paths, language: &str) -> Result<game_data::ItemText, String> {
-    let s = load_settings(p);
-    let game = str_setting(&s, "game_dir");
+/// The player's game folder, for the save editor's names, stats and icons (game_data.rs).
+fn game_folder(p: &Paths) -> Result<PathBuf, String> {
+    let game = str_setting(&load_settings(p), "game_dir");
     if game.is_empty() {
         return Err("Choose the game folder first: the item names come from your game files.".into());
     }
-    game_data::item_text(&expand(&game), language)
+    Ok(expand(&game))
+}
+fn item_text(p: &Paths, language: &str) -> Result<game_data::ItemText, String> {
+    game_data::item_text(&game_folder(p)?, language)
+}
+#[tauri::command]
+async fn item_catalog(state: State<'_, AppState>, language: String) -> Result<Vec<inventory::CatalogItem>, String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = game_folder(&state.paths)?;
+        Ok(inventory::catalog(&game_data::item_text(&game, &language)?, &game_data::game_params(&game)?))
+    }).await
 }
 #[tauri::command]
 async fn character_inventory(state: State<'_, AppState>, id: String, title_id: String, slot: u8, language: String) -> Result<inventory::Inventory, String> {
@@ -539,7 +549,8 @@ async fn character_inventory(state: State<'_, AppState>, id: String, title_id: S
         let registry = profiles::require(&state.paths.data)?;
         let user = saves::user_dir(&state.paths.data, &registry.original_user_dir, &id)?;
         let text = item_text(&state.paths, &language).ok();
-        inventory::read(&user, &title_id, slot, text.as_ref())
+        let params = game_folder(&state.paths).and_then(|game| game_data::game_params(&game)).ok();
+        inventory::read(&user, &title_id, slot, text.as_ref(), params.as_ref())
     }).await
 }
 #[tauri::command]
@@ -552,10 +563,11 @@ async fn edit_inventory(state: State<'_, AppState>, id: String, edit: inventory:
         let p = &state.paths;
         // Weapon levels are checked against the game's own weapon list (English is enough).
         let text = item_text(p, "en")?;
+        let params = game_data::game_params(&game_folder(p)?)?;
         let registry = profiles::require(&p.data)?;
         let operation = profiles::operation(&p.data, Some(&id), "edit")?;
         let result = (|| {
-            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| inventory::rewrite(stage, &edit, &text))?;
+            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| inventory::rewrite(stage, &edit, &text, &params))?;
             profiles::list(&p.data, &registry.original_user_dir)?;
             Ok(())
         })();
@@ -1145,7 +1157,7 @@ pub fn run() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, character_inventory, edit_inventory, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, character_inventory, edit_inventory, item_catalog, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

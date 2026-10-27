@@ -8,7 +8,7 @@
 //! armor, 0xB0 item, 0xC0 gem or rune), the ID (a weapon's carries its level and imprint) and the
 //! amount. A free entry has the ID 0xFFFFFFFF. Each weapon and armor piece also has a 60-byte block
 //! above the inventory, keyed by the same handle and ID, with its five gem slots.
-use crate::game_data::ItemText;
+use crate::game_data::{GameParams, ItemText};
 use crate::save_editor::{character_base, slot_bytes, slot_path};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -31,6 +31,14 @@ const FREE_ID: u32 = 0xFFFF_FFFF;
 const BARE_FISTS: u32 = 1_000_000; // the empty hand slots the game keeps as weapons
 const UPGRADES_START: usize = 84; // gems and runes, before the weapon table
 const SLOT_BLOCK: usize = 60;
+// The counters of a section, from the character name: (entries ever taken, at least those in use;
+// the next ordering number). Adding an entry moves both on.
+const INVENTORY_COUNTERS: (usize, usize) = (453, 34257);
+const STORAGE_COUNTERS: (usize, usize) = (34737, 68541);
+const STORAGE_MAX: u32 = 99;
+// EquipParamGoods' goodsType: what the save editor may add to the inventory (key items live in a
+// list of their own).
+const GOODS_ADDABLE: [(u32, &str); 3] = [(0, "consumable"), (2, "material"), (6, "chalice")];
 
 #[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug)]
 #[serde(rename_all = "lowercase")]
@@ -67,6 +75,88 @@ pub struct Entry {
     pub imprints: Vec<u8>,
     /// The game's own name of each imprint's variant, in the player's language.
     pub imprint_names: Vec<String>,
+    /// Items: the most this section holds of it.
+    pub max: u32,
+    /// The game's icon number (iconId), for game_data::icon.
+    pub icon: Option<u32>,
+    /// What the hover card shows: from the game's parameter tables.
+    pub stats: Option<serde_json::Value>,
+}
+
+/// One item the save editor can add (catalog).
+#[derive(Serialize)]
+pub struct CatalogItem {
+    pub id: u32,
+    pub name: String,
+    pub category: &'static str,
+    pub max: u32,
+    pub icon: Option<u32>,
+    pub description: Option<String>,
+}
+
+/// The items the game has names for and the editor can add: consumables, materials, chalices.
+pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
+    let mut items: Vec<CatalogItem> = params
+        .goods
+        .ids()
+        .filter_map(|id| {
+            let kind = params.goods.get(id, "goodsType")? as u32;
+            let category = GOODS_ADDABLE.iter().find(|(k, _)| *k == kind)?.1;
+            let name = text.goods.get(&id)?;
+            if name.is_empty() || name.starts_with('?') {
+                return None;
+            }
+            Some(CatalogItem {
+                id,
+                name: name.clone(),
+                category,
+                max: params.goods.get(id, "maxNum").unwrap_or(1.0).max(1.0) as u32,
+                icon: params.goods.get(id, "iconId").map(|v| v as u32),
+                description: text.goods_info.get(&id).cloned(),
+            })
+        })
+        .collect();
+    items.sort_by(|a, b| (a.category, a.id).cmp(&(b.category, b.id)));
+    items
+}
+
+fn stat(params: &crate::game_data::Param, id: u32, fields: &[(&str, &str)]) -> serde_json::Value {
+    serde_json::Value::Object(
+        fields
+            .iter()
+            .filter_map(|(key, field)| Some((key.to_string(), serde_json::json!(params.get(id, field)?.round()))))
+            .collect(),
+    )
+}
+
+/// The hover card's numbers. Bloodborne kept Dark Souls' field names: "magic" is Bloodtinge in
+/// requirements and scaling and Arcane in attack and defense, "faith" is Arcane, "thunder" Bolt
+/// (checked against the Chikage, the Holy Moonlight Sword, the Blade of Mercy and Tonitrus).
+fn stats_of(kind: Kind, id: u32, params: &GameParams) -> Option<serde_json::Value> {
+    match kind {
+        Kind::Weapon if params.weapons.has(id) => Some(serde_json::json!({
+            "attack": stat(&params.weapons, id, &[("physical", "attackBasePhysics"), ("arcane", "attackBaseMagic"), ("fire", "attackBaseFire"), ("bolt", "attackBaseThunder")]),
+            "scaling": stat(&params.weapons, id, &[("strength", "correctStrength"), ("skill", "correctAgility"), ("bloodtinge", "correctMagic"), ("arcane", "correctFaith")]),
+            "requirements": stat(&params.weapons, id, &[("strength", "properStrength"), ("skill", "properAgility"), ("bloodtinge", "properMagic"), ("arcane", "properFaith")]),
+        })),
+        Kind::Armor if params.armor.has(id) => Some(serde_json::json!({
+            "defense": stat(&params.armor, id, &[("physical", "defensePhysics"), ("blunt", "defenseBlow"), ("thrust", "defenseThrust"), ("arcane", "defenseMagic"), ("fire", "defenseFire"), ("bolt", "defenseThunder")]),
+        })),
+        Kind::Item if params.goods.has(id) => Some(serde_json::json!({
+            "max": params.goods.get(id, "maxNum")?,
+        })),
+        _ => None,
+    }
+}
+
+fn icon_of(kind: Kind, id: u32, params: &GameParams) -> Option<u32> {
+    let value = match kind {
+        Kind::Item => params.goods.get(id, "iconId"),
+        Kind::Weapon => params.weapons.get(id, "iconId"),
+        Kind::Armor => params.armor.get(id, "iconIdM"),
+        Kind::Upgrade => None,
+    }?;
+    (value > 0.0).then_some(value as u32)
 }
 
 #[derive(Serialize)]
@@ -82,6 +172,7 @@ pub struct Inventory {
 pub enum Change {
     Amount { location: Location, index: u16, amount: u32 },
     Weapon { location: Location, index: u16, level: u8, imprint: u8 },
+    Add { location: Location, id: u32, amount: u32 },
 }
 
 #[derive(Deserialize)]
@@ -131,7 +222,7 @@ fn kind_of(handle: u32, id: u32) -> Option<(Kind, u32)> {
     }
 }
 
-fn entries(bytes: &[u8], text: Option<&ItemText>) -> Result<Vec<Entry>> {
+fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Vec<Entry>> {
     let mut found = Vec::new();
     for location in [Location::Inventory, Location::Storage] {
         let start = section(bytes, location)?;
@@ -160,7 +251,17 @@ fn entries(bytes: &[u8], text: Option<&ItemText>) -> Result<Vec<Entry>> {
                 levels: Vec::new(),
                 imprints: Vec::new(),
                 imprint_names: Vec::new(),
+                max: 0,
+                icon: None,
+                stats: None,
             };
+            if let Some(params) = params {
+                entry.icon = icon_of(kind, item, params);
+                entry.stats = stats_of(kind, item, params);
+                if kind == Kind::Item {
+                    entry.max = item_max(params, item, location).unwrap_or(STORAGE_MAX);
+                }
+            }
             if let Some(text) = text {
                 match kind {
                     Kind::Item => {
@@ -194,13 +295,22 @@ fn entries(bytes: &[u8], text: Option<&ItemText>) -> Result<Vec<Entry>> {
     Ok(found)
 }
 
-pub fn read(user: &Path, title: &str, slot: u8, text: Option<&ItemText>) -> Result<Inventory> {
+/// The most a section holds of an item: the game's maxNum in the inventory, 99 in storage.
+fn item_max(params: &GameParams, id: u32, location: Location) -> Option<u32> {
+    let max = params.goods.get(id, "maxNum")?.max(1.0) as u32;
+    Some(match location {
+        Location::Inventory => max,
+        Location::Storage => STORAGE_MAX.max(max),
+    })
+}
+
+pub fn read(user: &Path, title: &str, slot: u8, text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Inventory> {
     let bytes = slot_bytes(&slot_path(user, title, slot)?)?;
     Ok(Inventory {
         title_id: title.into(),
         slot,
         fingerprint: format!("{:x}", Sha256::digest(&bytes)),
-        entries: entries(&bytes, text)?,
+        entries: entries(&bytes, text, params)?,
     })
 }
 
@@ -220,11 +330,54 @@ fn slot_block(bytes: &[u8], handle: u32, id: u32) -> Result<usize> {
     }
 }
 
+/// Adds an item in the section's first free entry: the game's handle and ID words, the amount,
+/// the next ordering number, and both counters moved on. An item the section already holds is
+/// refused (its amount is what to change).
+fn add_item(bytes: &mut [u8], location: Location, id: u32, amount: u32) -> Result<u16> {
+    let base = character_base(bytes)?.ok_or("The character slot is empty.")?;
+    let start = section(bytes, location)?;
+    let (count_at, next_at) = match location {
+        Location::Inventory => INVENTORY_COUNTERS,
+        Location::Storage => STORAGE_COUNTERS,
+    };
+    let (count_at, next_at) = (base + count_at, base + next_at);
+    let (count, next) = (word(bytes, count_at)?, word(bytes, next_at)?);
+    let mut free = None;
+    let mut used = 0u32;
+    for index in 0..capacity(location) {
+        let at = start + index * ENTRY;
+        let (handle, entry_id) = (word(bytes, at + 4)?, word(bytes, at + 8)?);
+        if entry_id == FREE_ID {
+            free.get_or_insert(index);
+            continue;
+        }
+        used += 1;
+        if kind_of(handle, entry_id) == Some((Kind::Item, id)) {
+            return Err("The character already has this item: change its amount instead.".into());
+        }
+    }
+    // The first counter is at least the entries in use (the game does not lower it when a stack
+    // runs out); one below that means this is not the layout this editor knows.
+    if count < used {
+        return Err("The section's counter does not match its entries.".into());
+    }
+    let index = free.ok_or("This section is full.")?;
+    let at = start + index * ENTRY;
+    bytes[at] = next as u8;
+    bytes[at + 4..at + 8].copy_from_slice(&(0xB000_0000 | id).to_le_bytes());
+    bytes[at + 8..at + 12].copy_from_slice(&(0x4000_0000 | id).to_le_bytes());
+    bytes[at + 12..at + 16].copy_from_slice(&amount.to_le_bytes());
+    bytes[count_at..count_at + 4].copy_from_slice(&(count + 1).to_le_bytes());
+    bytes[next_at..next_at + 4].copy_from_slice(&(next + 1).to_le_bytes());
+    Ok(index as u16)
+}
+
 /// Applies the changes to one character file in a staged save set, then checks the result.
-pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText) -> Result<()> {
+pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParams) -> Result<()> {
     let user = savedata.parent().ok_or("Invalid save staging folder.")?;
     let path = slot_path(user, &edit.title_id, edit.slot)?;
     let mut bytes = slot_bytes(&path)?;
+    let original = bytes.clone();
     if format!("{:x}", Sha256::digest(&bytes)) != edit.fingerprint {
         return Err("The character changed since it was opened. Refresh the inventory.".into());
     }
@@ -235,13 +388,17 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText) -> Result<()> {
     for change in &edit.changes {
         match *change {
             Change::Amount { location, index, amount } => {
-                if !(1..=999).contains(&amount) {
-                    return Err("Item amounts must be between 1 and 999.".into());
+                if usize::from(index) >= capacity(location) {
+                    return Err("Invalid inventory entry.".into());
                 }
                 let at = section(&bytes, location)? + usize::from(index) * ENTRY;
                 let (handle, id) = (word(&bytes, at + 4)?, word(&bytes, at + 8)?);
-                if !matches!(kind_of(handle, id), Some((Kind::Item, _))) || usize::from(index) >= capacity(location) {
+                let Some((Kind::Item, item)) = kind_of(handle, id) else {
                     return Err("Only items have amounts.".into());
+                };
+                let max = item_max(params, item, location).ok_or("This item is not in the game's tables.")?;
+                if !(1..=max).contains(&amount) {
+                    return Err(format!("This item's amount must be between 1 and {max}."));
                 }
                 bytes[at + 12..at + 16].copy_from_slice(&amount.to_le_bytes());
                 expected.push((location, index, id, amount));
@@ -266,10 +423,22 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText) -> Result<()> {
                 bytes[block + 4..block + 8].copy_from_slice(&new_id.to_le_bytes());
                 expected.push((location, index, new_id, amount));
             }
+            Change::Add { location, id, amount } => {
+                let kind = params.goods.get(id, "goodsType").ok_or("This item is not in the game's tables.")? as u32;
+                if !GOODS_ADDABLE.iter().any(|(k, _)| *k == kind) || id > 0x00FF_FFFF {
+                    return Err("Only consumables, materials and chalices can be added.".into());
+                }
+                let max = item_max(params, id, location).ok_or("This item is not in the game's tables.")?;
+                if !(1..=max).contains(&amount) {
+                    return Err(format!("This item's amount must be between 1 and {max}."));
+                }
+                let index = add_item(&mut bytes, location, id, amount)?;
+                expected.push((location, index, 0x4000_0000 | id, amount));
+            }
         }
     }
     // The edited file must still be a character whose entries are what was asked.
-    let after = entries(&bytes, None)?;
+    let after = entries(&bytes, None, None)?;
     crate::save_editor::parse(&bytes, &edit.title_id, edit.slot)?
         .ok_or("Character validation failed after editing.")?;
     for (location, index, id, amount) in expected {
@@ -282,6 +451,7 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText) -> Result<()> {
             return Err("Inventory validation failed after editing.".into());
         }
     }
+    crate::save_editor::mirror(&original, &mut bytes)?;
     fs::write(path, bytes).map_err(|e| e.to_string())
 }
 
@@ -323,10 +493,25 @@ mod tests {
         entry(&mut bytes, 1, 0xB000_03E8, 0x4000_03E8, 17); // item 1000
         entry(&mut bytes, 2, 0x8080_0050, 2_000_000, 1); // weapon 2000000 +0
         entry(&mut bytes, 3, 0x9080_0051, 0x1003_8270, 1); // armor 230000
+        put(&mut bytes, BASE + INVENTORY_COUNTERS.0, 4);
+        put(&mut bytes, BASE + INVENTORY_COUNTERS.1, 0x70);
         let block = BASE - 400;
         put(&mut bytes, block, 0x8080_0050);
         put(&mut bytes, block + 4, 2_000_000);
         bytes
+    }
+
+    fn params() -> GameParams {
+        use crate::game_data::Param;
+        GameParams {
+            goods: Param::synthetic(&[
+                (1000, &[("goodsType", 0.0), ("maxNum", 20.0), ("iconId", 146.0)]),
+                (3000, &[("goodsType", 2.0), ("maxNum", 99.0), ("iconId", 83.0)]),
+                (4000, &[("goodsType", 1.0), ("maxNum", 1.0), ("iconId", 1.0)]),
+            ]),
+            weapons: Param::synthetic(&[(2_000_000, &[("attackBasePhysics", 90.0), ("properStrength", 8.0), ("iconId", 7.0)])]),
+            armor: Param::synthetic(&[(230000, &[("defensePhysics", 20.0), ("iconIdM", 9.0)])]),
+        }
     }
 
     fn text() -> ItemText {
@@ -340,13 +525,16 @@ mod tests {
 
     #[test]
     fn reads_items_weapons_and_armor() {
-        let found = entries(&sample(), Some(&text())).unwrap();
+        let found = entries(&sample(), Some(&text()), Some(&params())).unwrap();
         assert_eq!(found.len(), 3); // the bare fists are not shown
         assert_eq!((found[0].kind, found[0].id, found[0].amount), (Kind::Item, 1000, 17));
         assert_eq!(found[0].name.as_deref(), Some("Vial"));
         assert_eq!((found[1].kind, found[1].level, found[1].levels.len()), (Kind::Weapon, 0, 11));
         assert_eq!(found[1].imprints, vec![0]);
         assert_eq!((found[2].kind, found[2].id), (Kind::Armor, 230000));
+        assert_eq!((found[0].max, found[0].icon), (20, Some(146)));
+        assert_eq!(found[1].stats.as_ref().unwrap()["attack"]["physical"], 90.0);
+        assert_eq!(found[1].stats.as_ref().unwrap()["requirements"]["strength"], 8.0);
     }
 
     fn staged(bytes: Vec<u8>) -> (std::path::PathBuf, std::path::PathBuf) {
@@ -366,24 +554,24 @@ mod tests {
             slot: 0,
             fingerprint: format!("{:x}", Sha256::digest(&bytes)),
             changes: vec![
-                Change::Amount { location: Location::Inventory, index: 1, amount: 99 },
+                Change::Amount { location: Location::Inventory, index: 1, amount: 20 },
                 Change::Weapon { location: Location::Inventory, index: 2, level: 10, imprint: 0 },
             ],
         };
-        rewrite(&savedata, &edit, &text()).unwrap();
+        rewrite(&savedata, &edit, &text(), &params()).unwrap();
         let after = fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap();
-        let found = entries(&after, Some(&text())).unwrap();
-        assert_eq!(found[0].amount, 99);
+        let found = entries(&after, Some(&text()), None).unwrap();
+        assert_eq!(found[0].amount, 20);
         assert_eq!((found[1].id, found[1].level), (2_001_000, 10));
         assert_eq!(word(&after, BASE - 400 + 4).unwrap(), 2_001_000);
         // A stale preview and an ID the game does not have are refused.
-        assert!(rewrite(&savedata, &edit, &text()).is_err());
+        assert!(rewrite(&savedata, &edit, &text(), &params()).is_err());
         let bad = Edit {
             fingerprint: format!("{:x}", Sha256::digest(&after)),
             changes: vec![Change::Weapon { location: Location::Inventory, index: 2, level: 10, imprint: 1 }],
             ..edit
         };
-        assert!(rewrite(&savedata, &bad, &text()).is_err());
+        assert!(rewrite(&savedata, &bad, &text(), &params()).is_err());
         fs::remove_dir_all(root).unwrap();
     }
 
@@ -396,10 +584,88 @@ mod tests {
         let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
         let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
         let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
-        let inventory = read(Path::new(&user), &title, 0, Some(&text)).unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let inventory = read(Path::new(&user), &title, 0, Some(&text), Some(&params)).unwrap();
         for entry in &inventory.entries {
             println!("{:?} {:?} {} {:?} x{} +{}", entry.location, entry.kind, entry.id, entry.name, entry.amount, entry.level);
         }
         assert!(inventory.entries.iter().all(|e| e.kind == Kind::Upgrade || e.name.is_some()));
+    }
+
+    #[test]
+    fn adds_items_with_counters_and_limits() {
+        let bytes = sample();
+        let (root, savedata) = staged(bytes.clone());
+        let add = |amount, id| Edit {
+            title_id: "CUSA03173".into(),
+            slot: 0,
+            fingerprint: format!("{:x}", Sha256::digest(&bytes)),
+            changes: vec![Change::Add { location: Location::Inventory, id, amount }],
+        };
+        // Over the stack limit, a key item and an item already held are refused.
+        assert!(rewrite(&savedata, &add(100, 3000), &text(), &params()).is_err());
+        assert!(rewrite(&savedata, &add(1, 4000), &text(), &params()).is_err());
+        assert!(rewrite(&savedata, &add(1, 1000), &text(), &params()).is_err());
+        rewrite(&savedata, &add(99, 3000), &text(), &params()).unwrap();
+        let after = fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap();
+        let added = entries(&after, None, None).unwrap().into_iter().find(|e| e.id == 3000).unwrap();
+        assert_eq!((added.index, added.amount), (4, 99));
+        assert_eq!(after[BASE + INVENTORY_FROM_NAME + 4 * ENTRY], 0x70);
+        assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.0).unwrap(), 5);
+        assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.1).unwrap(), 0x71);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    /// Adds to a scratch copy of a real save (never the player's own): BB_TEST_SAVE_USER=<copy>
+    /// BB_CHECK_GAME=<dump> cargo test real_add_items -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn real_add_items() {
+        let user = std::path::PathBuf::from(std::env::var("BB_TEST_SAVE_USER").expect("BB_TEST_SAVE_USER"));
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
+        let before = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let held = |id: u32, location: Location| before.entries.iter().any(|e| e.id == id && e.location == location);
+        let mut changes = Vec::new();
+        if !held(3020, Location::Inventory) {
+            changes.push(Change::Add { location: Location::Inventory, id: 3020, amount: 5 });
+        }
+        if !held(3010, Location::Storage) {
+            changes.push(Change::Add { location: Location::Storage, id: 3010, amount: 30 });
+        }
+        let edit = Edit { title_id: title.clone(), slot: 0, fingerprint: before.fingerprint.clone(), changes };
+        rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
+        for entry in read(&user, &title, 0, Some(&text), Some(&params)).unwrap().entries {
+            if [3020, 3010].contains(&entry.id) {
+                println!("{:?} {} {:?} x{}", entry.location, entry.index, entry.name, entry.amount);
+            }
+        }
+    }
+
+    /// A weapon level and an added item on a scratch copy (never the player's own):
+    /// BB_TEST_SAVE_USER=<copy> BB_CHECK_GAME=<dump> cargo test real_weapon_and_item -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn real_weapon_and_item() {
+        let user = std::path::PathBuf::from(std::env::var("BB_TEST_SAVE_USER").expect("BB_TEST_SAVE_USER"));
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
+        let before = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let weapon = before.entries.iter().find(|e| e.kind == Kind::Weapon && e.levels.contains(&5) && e.level != 5).unwrap();
+        println!("weapon {:?} +{} -> +5", weapon.name, weapon.level);
+        let edit = Edit {
+            title_id: title.clone(),
+            slot: 0,
+            fingerprint: before.fingerprint.clone(),
+            changes: vec![
+                Change::Weapon { location: weapon.location, index: weapon.index, level: 5, imprint: weapon.imprint },
+                Change::Add { location: Location::Inventory, id: 3030, amount: 1 },
+            ],
+        };
+        rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
     }
 }
