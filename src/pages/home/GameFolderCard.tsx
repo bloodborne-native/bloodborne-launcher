@@ -10,6 +10,8 @@ export function GameFolderCard() {
   const { data: config } = useConfig();
   const setSetting = useSetting();
   const dir = config?.settings.game_dir ?? "";
+  // iOS: the app's own game folder, filled with the Files app (cannot be chosen).
+  const fixed = config?.platform === "ios";
   const check = useGameCheck(config?.settings.game_dir);
   const status = check.isPending ? (
     <span className="flex items-center gap-2 text-muted-foreground">
@@ -26,7 +28,12 @@ export function GameFolderCard() {
   );
   return (
     <SettingsSection title={t("home.gameFolder")} description={t("home.gameFolderHint")}>
-      <FolderRow title={t("home.folder")} path={dir} onChoose={(path) => setSetting("game_dir", path)} />
+      <FolderRow
+        title={t("home.folder")}
+        description={fixed ? t("home.copyGame") : undefined}
+        path={dir}
+        onChoose={fixed ? undefined : (path) => setSetting("game_dir", path)}
+      />
       {dir && check.data?.game && <GameEditionRow game={check.data.game} />}
       <div className="px-5 py-3 text-sm">{status}</div>
     </SettingsSection>

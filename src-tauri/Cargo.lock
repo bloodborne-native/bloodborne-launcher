@@ -346,6 +346,7 @@ dependencies = [
 name = "bloodborne-launcher"
 version = "0.9.0"
 dependencies = [
+ "flate2",
  "reqwest",
  "semver",
  "serde",

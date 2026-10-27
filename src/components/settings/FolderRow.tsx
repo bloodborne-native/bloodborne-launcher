@@ -4,6 +4,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { FolderOpen, FolderSearch, RotateCcw } from "lucide-react";
 import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
 import { SettingRow } from "@/components/settings/SettingRow";
+import { useConfig } from "@/hooks";
 import { api } from "@/lib";
 
 type Props = {
@@ -21,6 +22,9 @@ type Props = {
 /** A folder: its path, a chooser, showing it in the file manager, and back to the default. */
 export function FolderRow({ title, description, path, custom, onChoose, onReset }: Props) {
   const { t } = useTranslation();
+  const { data: config } = useConfig();
+  // iOS has no file manager to show a folder in (the Files app shows the app's own).
+  const reveal = config?.platform !== "ios";
   const choose = async () => {
     const picked = await open({ directory: true, defaultPath: path || undefined, title: String(title) });
     if (typeof picked === "string") onChoose?.(picked);
@@ -42,12 +46,14 @@ export function FolderRow({ title, description, path, custom, onChoose, onReset 
           <FolderSearch /> {t("common.choose")}
         </Button>
       )}
-      <Tooltip>
-        <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => api.openPath(path)} disabled={!path} />}>
-          <FolderOpen />
-        </TooltipTrigger>
-        <TooltipContent>{t("common.showFolder")}</TooltipContent>
-      </Tooltip>
+      {reveal && (
+        <Tooltip>
+          <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => api.openPath(path)} disabled={!path} />}>
+            <FolderOpen />
+          </TooltipTrigger>
+          <TooltipContent>{t("common.showFolder")}</TooltipContent>
+        </Tooltip>
+      )}
       {onReset && custom && (
         <Tooltip>
           <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={onReset} />}>

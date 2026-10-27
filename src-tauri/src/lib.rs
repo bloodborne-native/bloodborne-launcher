@@ -25,6 +25,7 @@ mod updates;
 mod settings_store;
 mod online_password;
 mod platform;
+mod game_check;
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
@@ -217,6 +218,12 @@ fn load_settings(p: &Paths) -> Map<String, Value> {
     }
     // The password lives in its own file (online_password.rs), never among the settings.
     settings.remove("online_password");
+    // iOS: the game folder is the app's own (platform::fixed_game_dir), created so the Files app
+    // shows it.
+    if let Some(dir) = platform::fixed_game_dir(&p.data) {
+        let _ = fs::create_dir_all(&dir);
+        settings.insert("game_dir".into(), json!(dir));
+    }
     settings
 }
 
@@ -615,11 +622,12 @@ fn save_ini(state: State<AppState>, values: BTreeMap<String, Option<String>>) ->
 }
 
 #[tauri::command]
-async fn check_game(state: State<'_, AppState>, dir: String) -> Result<Value, String> {
+async fn check_game(dir: String) -> Result<Value, String> {
     if dir.is_empty() {
         return Ok(json!({"problem": "Choose the game folder.", "game": null}));
     }
-    api(&state.paths, &["check", &expand(&dir).to_string_lossy()])
+    let dir = expand(&dir);
+    tauri::async_runtime::spawn_blocking(move || game_check::check(&dir)).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]

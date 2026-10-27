@@ -43,7 +43,7 @@ integration exists today; the launcher itself builds and runs on the iPhone (bel
   and stopping the game, and the system language. The rest of the backend is the same everywhere;
   CI checks it on macOS at every push, and also on Ubuntu and Windows when run by hand
   (`gh workflow run checks.yml`; releases are macOS-only for now).
-- **Texts** never name a system ("this computer", "Show the folder"). Options that exist on one
+- **Texts** never name a system or a kind of machine ("this device", "Show the folder"). Options that exist on one
   system only (Metal, MetalFX, the Metal HUD, MoltenVK) appear only there (`config.platform`).
 - **Layout:** from Tailwind's `md` width (768 px) up, the sidebar with the tabs and Play; below it
   (phones, small windows) a tab strip at the top (`components/mobile/MobileHeader`) and the profile

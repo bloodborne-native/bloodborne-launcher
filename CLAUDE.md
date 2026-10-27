@@ -1,9 +1,11 @@
 # bloodborne-launcher
 
 The launcher for bloodborne-native. Tauri (Rust), React and TypeScript, with 20 languages.
-macOS packaging and runtime integration work today; Windows, Linux, Android and iOS are planned.
+macOS packaging and runtime integration work today; the launcher itself also runs on the iPhone
+(README, "iOS"); Windows, Linux and Android are planned.
 Keep profile/save logic independent of the platform and renderer; system differences go in
-`src-tauri/src/platform.rs`, texts never name a system, and layouts work from phone width up.
+`src-tauri/src/platform.rs`, texts never name a system or a kind of machine ("this device", not
+"this computer"), and layouts work from phone width up.
 
 ## Layout and checks
 

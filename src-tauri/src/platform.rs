@@ -30,6 +30,13 @@ pub fn data_dir() -> PathBuf {
     }
 }
 
+/// iOS: the game files live in the app's own Documents/game, copied in with the Files app or a
+/// computer's file sharing (a dump is over 30 GB, and other apps' folders are not the app's to
+/// read while the game runs); the folder cannot be chosen. None elsewhere.
+pub fn fixed_game_dir(data: &Path) -> Option<PathBuf> {
+    cfg!(target_os = "ios").then(|| data.join("game"))
+}
+
 /// A program's file name on this system ("bb-probe", "bb-probe.exe").
 pub fn exe(name: &str) -> String {
     format!("{name}{}", std::env::consts::EXE_SUFFIX)
