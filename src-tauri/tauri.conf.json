@@ -31,6 +31,6 @@
     "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico", "icons/icon.png"],
     "category": "RolePlayingGame",
     "copyright": "GPL-2.0-or-later. Based on bbport (deadinside28/bloodborne_pc) and shadPS4. No game files included.",
-    "macOS": { "minimumSystemVersion": "13.0" }
+    "macOS": { "minimumSystemVersion": "15.0" }
   }
 }
