@@ -28,7 +28,7 @@ export function PlayButton({ className }: { className?: string }) {
         type="button"
         onClick={stop}
         className={cn(
-          "flex w-full items-center justify-center gap-2 rounded-xl border border-blood-500/50 bg-night-800 py-3 font-display text-sm font-semibold tracking-[0.25em] text-blood-400 transition hover:bg-blood-700/30",
+          "flex w-full items-center justify-center gap-2 rounded-xl bg-blood-700/25 py-3 font-display text-sm font-semibold tracking-[0.25em] text-blood-400 backdrop-blur-sm transition hover:bg-blood-700/40",
           className,
         )}
       >
@@ -42,7 +42,7 @@ export function PlayButton({ className }: { className?: string }) {
       onClick={start}
       disabled={check.isPending || !!problem || profiles.busy || !profiles.data || profiles.data.setup_required}
       className={cn(
-        "flex w-full items-center justify-center gap-2 rounded-xl border border-rust-400/35 bg-gradient-to-b from-rust-500 to-rust-700 py-3 font-display text-sm font-semibold tracking-[0.25em] text-parchment shadow-lg shadow-black/50 transition hover:from-rust-400/90 hover:to-rust-600 disabled:cursor-not-allowed disabled:border-transparent disabled:from-night-700 disabled:to-night-700 disabled:text-muted-foreground disabled:shadow-none",
+        "flex w-full items-center justify-center gap-2 rounded-xl bg-rust-500/60 py-3 font-display text-sm font-semibold tracking-[0.25em] text-parchment backdrop-blur-sm transition hover:bg-rust-500/80 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-muted-foreground",
         className,
       )}
     >
