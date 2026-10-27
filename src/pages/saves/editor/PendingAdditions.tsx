@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import type { InventoryLocation } from "@/lib";
 import { Button } from "@/components/ui";
 import type { CatalogCategory } from "@/pages/saves/editor/AddItemPanel";
-import { gemName } from "@/pages/saves/editor/gemName";
+import { gemIcon, gemName } from "@/pages/saves/editor/gemName";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import type { SaveEdits } from "@/pages/saves/editor/useSaveEdits";
 
@@ -15,7 +15,7 @@ export function PendingAdditions({ edits, location, categories, disabled }: Prop
   return additions.map((addition, at) => ({ addition, at }))
     .filter(({ addition }) => addition.location === location && categories.includes(addition.item.category))
     .map(({ addition, at }) => <div key={`added:${at}`} className="flex items-center gap-3 bg-primary/10 px-3 py-2">
-      {addition.item.category !== "gem" && <ItemIcon icon={addition.item.icon} />}
+      <ItemIcon icon={addition.item.category === "gem" ? gemIcon(addition.item.icon, addition.shape ?? 1) : addition.item.icon} />
       <p className="min-w-0 flex-1 text-sm">
         {addition.item.category === "gem" && <span className="block">{gemName(t, { rune: false, shape: addition.shape ?? 1 })}</span>}
         {addition.item.name} <span className="text-xs text-muted-foreground">· {t("inventory.added")}</span>

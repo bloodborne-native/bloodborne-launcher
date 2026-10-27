@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import type { Gem, InventoryEntry } from "@/lib";
 import { Choice } from "@/components/common";
 import { gemName } from "@/pages/saves/editor/gemName";
+import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { entryKey, slotsAt, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
 import { weaponName } from "@/pages/saves/editor/WeaponDetail";
 
@@ -27,9 +28,12 @@ export function GemDetail({ gem, gems, weapons, edits, disabled }: Props) {
     : gem.equipped ? t("inventory.equipped")
     : gem.location === "storage" ? t("inventory.storage") : t("inventory.inventory");
   return <div className="grid gap-4">
-    <div>
-      <p className="font-medium">{gemName(t, gem)}</p>
-      <p className="text-xs text-muted-foreground">{where}</p>
+    <div className="flex items-center gap-4">
+      <ItemIcon icon={gem.icon} className="size-16" />
+      <div>
+        <p className="font-medium">{gemName(t, gem)}</p>
+        <p className="text-xs text-muted-foreground">{where}</p>
+      </div>
     </div>
     <div className="grid gap-2">
       <p className="text-sm font-medium">{t("inventory.weaponSlot")}</p>

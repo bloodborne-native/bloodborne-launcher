@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { CatalogItem, InventoryLocation } from "@/lib";
 import { Button, Input } from "@/components/ui";
+import { gemIcon } from "@/pages/saves/editor/gemName";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { ItemStats } from "@/pages/saves/editor/ItemStats";
 import { useItemCatalog } from "@/pages/saves/editor/useItemCatalog";
@@ -58,7 +59,8 @@ export function AddItemPanel({ held, location, categories, disabled, label, onAd
     {category === "gem" ? <div className="grid max-h-72 content-start overflow-y-auto">
       {catalog.error ? <Message tone="error">{String(catalog.error)}</Message>
         : shown.map((item) => <button key={item.id} type="button" onClick={() => setChosen(item)}
-          className={`rounded-md px-2 py-1.5 text-left text-sm ${chosen?.id === item.id ? "bg-gold-400/25" : "hover:bg-white/[0.06]"}`}>{item.name}</button>)}
+          className={`flex items-center gap-3 rounded-md px-2 py-1 text-left text-sm ${chosen?.id === item.id ? "bg-gold-400/25" : "hover:bg-white/[0.06]"}`}>
+          <ItemIcon icon={gemIcon(item.icon, shape)} className="size-8" />{item.name}</button>)}
     </div> : <div className="grid max-h-72 grid-cols-[repeat(auto-fill,minmax(3rem,1fr))] gap-1 overflow-y-auto">
       {catalog.error ? <Message tone="error" className="col-span-full">{String(catalog.error)}</Message>
         : shown.map((item) => <ItemStats key={item.id} hoverOnly className="block" name={item.name} description={item.description}
@@ -70,7 +72,7 @@ export function AddItemPanel({ held, location, categories, disabled, label, onAd
     </div>}
     {chosen ? <div className="flex flex-wrap items-end gap-3">
       <div className="flex min-w-40 flex-1 items-center gap-2">
-        {chosen.category !== "gem" && <ItemIcon icon={chosen.icon} />}
+        <ItemIcon icon={chosen.category === "gem" ? gemIcon(chosen.icon, shape) : chosen.icon} />
         <div><p className="text-sm">{chosen.name}</p>
           {(chosen.description ?? chosen.caption) && <p className="line-clamp-2 text-xs text-muted-foreground">{chosen.description ?? chosen.caption}</p>}</div>
       </div>

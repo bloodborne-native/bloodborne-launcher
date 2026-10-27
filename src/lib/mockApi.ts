@@ -121,9 +121,9 @@ function previewWeaponVariants() {
 }
 
 const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprint: "inventory-0", upgrades: [
-  { index: 0, handle: 1, rune: false, shape: 1, location: "inventory", equipped: false, weapon: null, effects: [
+  { index: 0, handle: 1, rune: false, shape: 1, icon: null, location: "inventory", equipped: false, weapon: null, effects: [
     { slot: 0, id: 1, text: "Sample effect +1%", options: [{ id: 1, text: "Sample effect +1%" }, { id: 2, text: "Sample effect +5%" }, { id: 3, text: "Sample effect +10%" }] }] },
-  { index: 1, handle: 2, rune: false, shape: 63, location: null, equipped: true, weapon: "Sample weapon", effects: [
+  { index: 1, handle: 2, rune: false, shape: 63, icon: null, location: null, equipped: true, weapon: "Sample weapon", effects: [
     { slot: 0, id: 4, text: "Another sample effect +2%", options: [{ id: 4, text: "Another sample effect +2%" }] }] },
 ], entries: [
   { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", caption: "A longer sample text, as the game describes an item.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 }, variants: {}, slots: [], slot_plan: [] },
@@ -198,7 +198,7 @@ export const mockApi = {
       }
       if (change.type === "add_gem") {
         const text = previewCatalog.find((i) => i.category === "gem" && i.id === change.effects[0])?.name ?? null;
-        previewInventory.upgrades.push({ index: previewInventory.upgrades.length, handle: 100 + previewInventory.upgrades.length, rune: false, shape: change.shape,
+        previewInventory.upgrades.push({ index: previewInventory.upgrades.length, handle: 100 + previewInventory.upgrades.length, rune: false, shape: change.shape, icon: null,
           location: "inventory", equipped: false, weapon: null, effects: [{ slot: 0, id: change.effects[0], text, options: [] }] });
         continue;
       }

@@ -162,6 +162,8 @@ export type Gem = {
   /** Gems: 1 radial, 2 triangle, 4 waning, 8 circle, 63 droplet; runes: 1, 2 (Oath) or 4. */
   shape: number;
   effects: { slot: number; id: number; text: string | null; options: { id: number; text: string }[] }[];
+  /** The game's icon number (api.itemIcon), from its shape and first effect. */
+  icon: number | null;
   location: InventoryLocation | null; equipped: boolean; weapon: string | null;
 };
 export type InventoryChange =

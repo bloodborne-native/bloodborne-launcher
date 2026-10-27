@@ -164,7 +164,8 @@ pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
         name: text.gem_effects.get(&effect)?.clone(),
         category: "gem",
         max: 1,
-        icon: None,
+        // As a radial gem; the dialog shows the shape chosen (the same offset from its first icon).
+        icon: gem_icon(params, false, 1, effect),
         description: None,
         caption: None,
         stats: None,
@@ -268,6 +269,8 @@ pub struct Upgrade {
     /// Gems: 1 radial, 2 triangle, 4 waning, 8 circle, 63 droplet; runes: 1, 2 (Oath) or 4.
     pub shape: u8,
     pub effects: Vec<Effect>,
+    /// The game's icon number (gem_icon), for game_data::icon.
+    pub icon: Option<u32>,
     /// Where it is: an inventory or storage entry, or a weapon's slot (the weapon's name).
     pub location: Option<Location>,
     /// In a slot: the weapon's name when the slot is a weapon's (runes have slots of their own).
@@ -423,6 +426,7 @@ fn upgrades(bytes: &[u8], entries: &[Entry], text: Option<&ItemText>, params: Op
                         },
                     })
                     .collect(),
+                icon: params.and_then(|params| gem_icon(params, rune, shape, *effects.iter().find(|&&id| id != NO_EFFECT)?)),
                 location: held.get(&handle).copied(),
                 equipped: slotted.contains(&handle),
                 weapon,
@@ -603,6 +607,30 @@ fn item_max(params: &GameParams, id: u32, location: Location) -> Option<u32> {
         Location::Inventory => max,
         Location::Storage => STORAGE_MAX.max(max),
     })
+}
+
+/// A gem's or rune's icon: its shape's first icon (gems: 3000 radial, 3200 triangle, 3400 waning,
+/// 3600 circle, 4000 droplet, each followed by a cursed set at +100 not used here; runes from 3000)
+/// plus its first effect's gemIconIdOffset, which picks the colour (tens) and how elaborate it is
+/// (units, 0-6). Checked against the game's menu icons: gems land on 3000-4166, Caryll runes on
+/// 4200-4254.
+fn gem_icon(params: &GameParams, rune: bool, shape: u8, effect: u32) -> Option<u32> {
+    let base = if rune {
+        3000
+    } else {
+        match shape {
+            1 => 3000,
+            2 => 3200,
+            4 => 3400,
+            8 => 3600,
+            63 => 4000,
+            _ => return None,
+        }
+    };
+    // Offsets outside the sets (a few special effects, runes without one) have no icon here.
+    let offset = params.gem_effects.get(effect, "gemIconIdOffset")? as u32;
+    let fits = if rune { (1000..1300).contains(&offset) } else { offset % 10 <= 6 && offset < 70 };
+    fits.then_some(base + offset)
 }
 
 /// The game's rows that generate a weapon gem with one fixed effect (GemGenParam), by that effect:
@@ -1360,7 +1388,7 @@ mod tests {
             println!("{:?} {:?} {} {:?} x{} +{}", entry.location, entry.kind, entry.id, entry.name, entry.amount, entry.level);
         }
         for gem in &inventory.upgrades {
-            println!("gem {} rune {} shape {} {:?} {:?} {:?}", gem.index, gem.rune, gem.shape, gem.location, gem.weapon,
+            println!("gem {} rune {} shape {} icon {:?} {:?} {:?} {:?}", gem.index, gem.rune, gem.shape, gem.icon, gem.location, gem.weapon,
                 gem.effects.iter().map(|e| e.text.clone()).collect::<Vec<_>>());
         }
         assert!(inventory.entries.iter().all(|e| e.kind == Kind::Upgrade || e.name.is_some()));
@@ -1595,6 +1623,20 @@ mod tests {
     }
 
     #[test]
+    fn gem_icons_follow_shape_and_effect() {
+        use crate::game_data::Param;
+        let mut params = params();
+        params.gem_effects = Param::synthetic(&[(1, &[("gemIconIdOffset", 13.0)]), (2, &[("gemIconIdOffset", 1203.0)]), (3, &[("gemIconIdOffset", 247.0)])]);
+        assert_eq!(gem_icon(&params, false, 1, 1), Some(3013));
+        assert_eq!(gem_icon(&params, false, 4, 1), Some(3413));
+        assert_eq!(gem_icon(&params, false, 63, 1), Some(4013));
+        assert_eq!(gem_icon(&params, true, 1, 2), Some(4203));
+        // Outside the sets: no icon rather than another's.
+        assert_eq!(gem_icon(&params, false, 1, 3), None);
+        assert_eq!(gem_icon(&params, true, 1, 1), None);
+    }
+
+        #[test]
     fn character_and_inventory_in_one_edit() {
         let bytes = sample();
         let fingerprint = format!("{:x}", Sha256::digest(&bytes));

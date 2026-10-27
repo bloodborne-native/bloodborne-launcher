@@ -7,6 +7,7 @@ import { AddItemDialog } from "@/pages/saves/editor/AddItemDialog";
 import { PendingAdditions } from "@/pages/saves/editor/PendingAdditions";
 import { GemDetail } from "@/pages/saves/editor/GemDetail";
 import { gemName } from "@/pages/saves/editor/gemName";
+import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import type { SaveEdits } from "@/pages/saves/editor/useSaveEdits";
 
 type Props = { gems: Gem[]; weapons: InventoryEntry[]; edits: SaveEdits; disabled: boolean };
@@ -41,6 +42,7 @@ export function GemsSection({ gems, weapons, edits, disabled }: Props) {
         {!shown.length && !edits.additions.some((a) => a.item.category === "gem") ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
           : shown.map((gem) => <button key={gem.index} type="button" onClick={() => setSelected(gem.index)}
             className={`flex w-full items-center gap-3 px-3 py-2 text-left ${gem === current ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"}`}>
+            <ItemIcon icon={gem.icon} className="size-9" />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm">{gemName(t, gem)}</span>
               <span className="block truncate text-xs text-muted-foreground">{label(gem)}</span>
