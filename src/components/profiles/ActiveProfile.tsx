@@ -30,7 +30,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
             <span className="block truncate text-sm font-medium">{active?.name ?? "—"}</span>
           </span>
           {active && <span title={t("trophies.recordedCount", { count: active.trophy_unlocks.length })}>
-            <TrophyCount profile={active} className="text-xs text-parchment/70" iconClassName="size-4" />
+            <TrophyCount profile={active} className="text-sm text-parchment/80" iconClassName="size-4" />
           </span>}
           <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </MenuTrigger>
