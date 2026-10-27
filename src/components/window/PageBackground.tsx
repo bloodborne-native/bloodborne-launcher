@@ -1,6 +1,6 @@
 import background from "@/assets/page-background.webp";
 
-/** Every page but Home (which has its own picture): a night street (an AI-generated image,
+/** The whole window (Home's own picture fades into it): a night street (an AI-generated image,
  * docs/CREDITS.md), darkened behind the whole window (menu and page), still while the page scrolls. */
 export function PageBackground() {
   return (
