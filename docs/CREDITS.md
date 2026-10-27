@@ -53,9 +53,10 @@ copied; the hunter's sigil is original launcher artwork.
 
 ## Home background
 
-`src/assets/home-hero.webp`, the night city behind Home's title, is an AI-generated image supplied
-by the maintainer (2026-10-27): a generic gothic scene with no character, weapon or place from the
-game, converted to WebP. No game artwork is included; the game card's tile is read from the
+`src/assets/home-hero.webp`, the night city behind Home's title, and `src/assets/page-background.webp`,
+the night street blurred behind the other pages, are AI-generated images supplied by the maintainer
+(2026-10-27): generic gothic scenes with no character, weapon or place from the game, converted to
+WebP. No game artwork is included; the game card's tile is read from the
 player's own dump (`sce_sys/icon0.png`) when Home is shown and is never stored.
 
 ## Trophy tracking
