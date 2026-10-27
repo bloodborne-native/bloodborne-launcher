@@ -1,20 +1,59 @@
 import { useTranslation } from "react-i18next";
+import { ChevronsUpDown, Trophy, UserRound } from "lucide-react";
 import { useProfiles } from "@/hooks";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
+import { useUiStore } from "@/stores";
+import { Menu, MenuContent, MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuTrigger } from "@/components/ui";
 
-/** `compact`: without its label (the narrow-screen bar). */
+/** The active profile as a small widget (its name and recorded trophies) that opens the profile
+ * menu: switch profile, and go to its saves, its trophies or all profiles. `compact`: the
+ * narrow-screen bar. */
 export function ActiveProfile({ compact = false }: { compact?: boolean }) {
   const { t } = useTranslation();
   const { data, change, busy, running } = useProfiles();
+  const openProfile = useUiStore((state) => state.openProfile);
+  const setTab = useUiStore((state) => state.setTab);
+  const active = data?.profiles.find((profile) => profile.id === data.active);
+  const locked = busy || running || !data || data.setup_required;
+  // Trophies off for this save set, or their import failed: a dot on the widget, the reason in the menu.
+  const warning = active && (!active.trophies_eligible || active.trophy_error);
   return (
     <div className={compact ? undefined : "mb-3"}>
-      {!compact && <p className="mb-1 text-xs text-muted-foreground">{t("profiles.active")}</p>}
-      <Select value={data?.active ?? ""} disabled={busy || running || !data || data.setup_required}
-        items={data?.profiles.map((p) => ({ value: p.id, label: p.name })) ?? []}
-        onValueChange={(id) => id && change({ action: "select", id }).catch(() => {})}>
-        <SelectTrigger className="w-full" aria-label={t("profiles.active")}><SelectValue /></SelectTrigger>
-        <SelectContent>{data?.profiles.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
-      </Select>
+      <Menu>
+        <MenuTrigger disabled={!active} aria-label={t("profiles.active")}
+          className="flex w-full items-center gap-2.5 rounded-xl border border-input bg-background/60 px-2.5 py-2 text-left outline-none transition-colors hover:bg-accent/60 focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50">
+          {/* The phone bar shares its row with Play: the name keeps the room, the avatar goes. */}
+          <span className={`relative shrink-0 items-center justify-center rounded-lg bg-blood-700/20 text-blood-400 ${compact ? "hidden" : "flex size-8"}`}>
+            <UserRound className="size-4" aria-hidden="true" />
+          </span>
+          <span className="min-w-0 flex-1">
+            {!compact && <span className="block text-[11px] leading-tight text-muted-foreground">{t("profiles.active")}</span>}
+            <span className="block truncate text-sm font-medium">{active?.name ?? "—"}</span>
+          </span>
+          {active && <span className="relative flex shrink-0 items-center gap-1 text-xs tabular-nums text-parchment/70"
+            title={t("trophies.recordedCount", { count: active.trophy_unlocks.length })}>
+            <Trophy className="size-3.5" aria-hidden="true" />{active.trophy_unlocks.length}
+            {warning && <span className="absolute -top-1 -left-1 size-2 rounded-full bg-blood-400" aria-hidden="true" />}
+          </span>}
+          <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        </MenuTrigger>
+        <MenuContent className="w-64">
+          <MenuLabel>{t("profiles.active")}</MenuLabel>
+          <MenuRadioGroup value={data?.active ?? ""} onValueChange={(id: string) => id !== data?.active && change({ action: "select", id }).catch(() => {})}>
+            {data?.profiles.map((profile) => <MenuRadioItem key={profile.id} value={profile.id} disabled={locked}>
+              <span className="min-w-0 flex-1 truncate">{profile.name}</span>
+              <span className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground">
+                <Trophy className="size-3" aria-hidden="true" />{profile.trophy_unlocks.length}
+              </span>
+            </MenuRadioItem>)}
+          </MenuRadioGroup>
+          {active && !active.trophies_eligible && <p className="px-2 py-1 text-xs text-blood-400">{t("trophies.edited")}</p>}
+          {active?.trophy_error && <p role="alert" className="px-2 py-1 text-xs text-destructive">{t("trophies.error")}</p>}
+          <MenuSeparator />
+          {active && <MenuItem onClick={() => openProfile(active.id, "saves")}>{t("nav.saves")}</MenuItem>}
+          {active && <MenuItem onClick={() => openProfile(active.id, "trophies")}>{t("profiles.trophies")}</MenuItem>}
+          <MenuItem onClick={() => setTab("profiles")}>{t("nav.profiles")}</MenuItem>
+        </MenuContent>
+      </Menu>
     </div>
   );
 }

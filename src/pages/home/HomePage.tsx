@@ -3,7 +3,6 @@ import { FolderOpen, Info } from "lucide-react";
 import { Alert, AlertDescription, Button } from "@/components/ui";
 import { GameFolderCard } from "@/pages/home/GameFolderCard";
 import { HomeHero } from "@/pages/home/HomeHero";
-import { HomeProfileCard } from "@/pages/home/HomeProfileCard";
 import { SummaryGrid } from "@/pages/home/SummaryGrid";
 import { useConfig } from "@/hooks";
 import { api } from "@/lib";
@@ -24,7 +23,6 @@ export function HomePage() {
           </AlertDescription>
         </Alert>
       )}
-      <HomeProfileCard />
       <GameFolderCard />
       <SummaryGrid />
       <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/40 px-5 py-4 text-xs text-muted-foreground">
