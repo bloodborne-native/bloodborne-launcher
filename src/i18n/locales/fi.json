@@ -246,6 +246,12 @@
   "saves": {
     "current": "Nykyinen tallennus",
     "noBackups": "Ei vielä varmuuskopioita.",
+    "characterCount": "{{count}} hahmoa",
+    "characterCount_one": "{{count}} hahmo",
+    "characterCount_other": "{{count}} hahmoa",
+    "backupCount": "{{count}} varmuuskopiota",
+    "backupCount_one": "{{count}} varmuuskopio",
+    "backupCount_other": "{{count}} varmuuskopiota",
     "backupEdited": "Muokattu",
     "backupOriginal": "Alkuperäinen",
     "noCharacters": "Näissä tallennuksissa ei ole luettavia hahmoja.",

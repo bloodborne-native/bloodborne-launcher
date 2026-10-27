@@ -246,6 +246,12 @@
   "saves": {
     "current": "Huidige spelopslag",
     "noBackups": "Nog geen back-ups.",
+    "characterCount": "{{count}} personages",
+    "characterCount_one": "{{count}} personage",
+    "characterCount_other": "{{count}} personages",
+    "backupCount": "{{count}} back-ups",
+    "backupCount_one": "{{count}} back-up",
+    "backupCount_other": "{{count}} back-ups",
     "backupEdited": "Bewerkt",
     "backupOriginal": "Origineel",
     "noCharacters": "Geen leesbare personages in deze opgeslagen spellen.",

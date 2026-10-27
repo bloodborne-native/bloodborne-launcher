@@ -246,6 +246,12 @@
   "saves": {
     "current": "Gravação atual",
     "noBackups": "Ainda não há cópias de segurança.",
+    "characterCount": "{{count}} personagens",
+    "characterCount_one": "{{count}} personagem",
+    "characterCount_other": "{{count}} personagens",
+    "backupCount": "{{count}} cópias de segurança",
+    "backupCount_one": "{{count}} cópia de segurança",
+    "backupCount_other": "{{count}} cópias de segurança",
     "backupEdited": "Editado",
     "backupOriginal": "Original",
     "noCharacters": "Não há personagens legíveis neste conjunto de gravações.",

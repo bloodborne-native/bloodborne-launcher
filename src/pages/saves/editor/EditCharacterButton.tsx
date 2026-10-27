@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { SquarePen } from "lucide-react";
 import type { Character } from "@/lib";
 import { Button } from "@/components/ui";
 import { useUiStore } from "@/stores";
@@ -14,7 +15,7 @@ export function EditCharacterButton({ character, disabled }: { character: Charac
   const ready = (catalog.data?.length ?? 0) > 0;
   return <>
     <Button variant="secondary" size="sm" disabled={disabled || !ready} onClick={() => setEditing(`${character.title_id}:${character.slot}`)}>
-      {t("saves.editCharacter")}
+      <SquarePen aria-hidden="true" /> {t("saves.editCharacter")}
     </Button>
     {!ready && !catalog.isLoading && <p className="basis-full text-xs text-muted-foreground">{t("saves.editorNeedsGame")}</p>}
   </>;

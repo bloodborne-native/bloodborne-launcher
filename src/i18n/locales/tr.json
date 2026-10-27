@@ -246,6 +246,12 @@
   "saves": {
     "current": "Mevcut kayıt",
     "noBackups": "Henüz yedek yok.",
+    "characterCount": "{{count}} karakter",
+    "characterCount_one": "{{count}} karakter",
+    "characterCount_other": "{{count}} karakter",
+    "backupCount": "{{count}} yedek",
+    "backupCount_one": "{{count}} yedek",
+    "backupCount_other": "{{count}} yedek",
     "backupEdited": "Düzenlenmiş",
     "backupOriginal": "Orijinal",
     "noCharacters": "Bu kayıtlarda okunabilir karakter yok.",

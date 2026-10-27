@@ -246,6 +246,12 @@
   "saves": {
     "current": "Aktuel gemt spil",
     "noBackups": "Ingen sikkerhedskopier endnu.",
+    "characterCount": "{{count}} figurer",
+    "characterCount_one": "{{count}} figur",
+    "characterCount_other": "{{count}} figurer",
+    "backupCount": "{{count}} sikkerhedskopier",
+    "backupCount_one": "{{count}} sikkerhedskopi",
+    "backupCount_other": "{{count}} sikkerhedskopier",
     "backupEdited": "Redigeret",
     "backupOriginal": "Original",
     "noCharacters": "Ingen læsbare figurer i disse gemte spil.",

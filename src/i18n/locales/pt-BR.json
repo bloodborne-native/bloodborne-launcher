@@ -433,6 +433,12 @@
   "saves": {
     "current": "Save atual",
     "noBackups": "Nenhum backup ainda.",
+    "characterCount": "{{count}} personagens",
+    "characterCount_one": "{{count}} personagem",
+    "characterCount_other": "{{count}} personagens",
+    "backupCount": "{{count}} backups",
+    "backupCount_one": "{{count}} backup",
+    "backupCount_other": "{{count}} backups",
     "backupEdited": "Editado",
     "backupOriginal": "Original",
     "noCharacters": "Não há personagens legíveis neste conjunto de dados salvos.",

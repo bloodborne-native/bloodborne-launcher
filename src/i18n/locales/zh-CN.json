@@ -246,6 +246,10 @@
   "saves": {
     "current": "当前存档",
     "noBackups": "暂无备份。",
+    "characterCount": "{{count}} 个角色",
+    "characterCount_other": "{{count}} 个角色",
+    "backupCount": "{{count}} 个备份",
+    "backupCount_other": "{{count}} 个备份",
     "backupEdited": "已编辑",
     "backupOriginal": "原始",
     "noCharacters": "此存档中没有可读取的角色。",

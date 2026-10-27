@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Archive, FolderOpen } from "lucide-react";
+import { Archive, FileText, FolderOpen } from "lucide-react";
 import { Badge, Button } from "@/components/ui";
 import { SettingsSection } from "@/components/settings";
 import { RestoreBackupDialog } from "@/pages/saves/RestoreBackupDialog";
@@ -33,12 +33,13 @@ export function SaveProfileCard({ profile, disabled, onChange }: {
     </SettingsSection>
     <SettingsSection title={t("saves.backups")} description={t("saves.backupHint")}>
       {profile.backups.length ? profile.backups.map((backup) => (
-        <div key={backup.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
-          <div className="min-w-0">
-            <p className="flex flex-wrap items-center gap-2 text-sm">{date(backup.created)}
-              <Badge variant={backup.edited ? "destructive" : "secondary"}>{t(backup.edited ? "saves.backupEdited" : "saves.backupOriginal")}</Badge></p>
-            <p className="mt-1 text-xs text-muted-foreground">{size(backup.bytes)}</p>
+        <div key={backup.id} className="flex flex-wrap items-center gap-4 px-5 py-3">
+          <FileText className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm">{date(backup.created)}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{size(backup.bytes)}</p>
           </div>
+          <Badge variant={backup.edited ? "destructive" : "secondary"}>{t(backup.edited ? "saves.backupEdited" : "saves.backupOriginal")}</Badge>
           <RestoreBackupDialog label={date(backup.created)} disabled={disabled}
             onRestore={() => onChange({ action: "restore", id: profile.id, backup: backup.id })} />
         </div>

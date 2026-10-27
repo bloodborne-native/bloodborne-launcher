@@ -447,6 +447,12 @@
   "saves": {
     "current": "Current save",
     "noBackups": "No backups yet.",
+    "characterCount": "{{count}} characters",
+    "characterCount_one": "{{count}} character",
+    "characterCount_other": "{{count}} characters",
+    "backupCount": "{{count}} backups",
+    "backupCount_one": "{{count}} backup",
+    "backupCount_other": "{{count}} backups",
     "backupEdited": "Edited",
     "backupOriginal": "Original",
     "noCharacters": "No readable characters in this save set.",

@@ -246,6 +246,12 @@
   "saves": {
     "current": "Aktueller Spielstand",
     "noBackups": "Noch keine Sicherungskopien.",
+    "characterCount": "{{count}} Charaktere",
+    "characterCount_one": "{{count}} Charakter",
+    "characterCount_other": "{{count}} Charaktere",
+    "backupCount": "{{count}} Sicherungen",
+    "backupCount_one": "{{count}} Sicherung",
+    "backupCount_other": "{{count}} Sicherungen",
     "backupEdited": "Bearbeitet",
     "backupOriginal": "Original",
     "noCharacters": "Keine lesbaren Charaktere in diesen Spielständen.",

@@ -246,6 +246,12 @@
   "saves": {
     "current": "Aktuell sparfil",
     "noBackups": "Inga säkerhetskopior ännu.",
+    "characterCount": "{{count}} rollfigurer",
+    "characterCount_one": "{{count}} rollfigur",
+    "characterCount_other": "{{count}} rollfigurer",
+    "backupCount": "{{count}} säkerhetskopior",
+    "backupCount_one": "{{count}} säkerhetskopia",
+    "backupCount_other": "{{count}} säkerhetskopior",
     "backupEdited": "Redigerad",
     "backupOriginal": "Original",
     "noCharacters": "Inga läsbara rollfigurer i dessa sparfiler.",

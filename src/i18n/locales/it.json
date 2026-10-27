@@ -246,6 +246,12 @@
   "saves": {
     "current": "Salvataggio attuale",
     "noBackups": "Nessuna copia di backup disponibile.",
+    "characterCount": "{{count}} personaggi",
+    "characterCount_one": "{{count}} personaggio",
+    "characterCount_other": "{{count}} personaggi",
+    "backupCount": "{{count}} backup",
+    "backupCount_one": "{{count}} backup",
+    "backupCount_other": "{{count}} backup",
     "backupEdited": "Modificato",
     "backupOriginal": "Originale",
     "noCharacters": "Nessun personaggio leggibile in questi salvataggi.",

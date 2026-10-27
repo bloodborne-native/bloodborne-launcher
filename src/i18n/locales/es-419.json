@@ -246,6 +246,12 @@
   "saves": {
     "current": "Partida actual",
     "noBackups": "Todavía no hay copias de seguridad.",
+    "characterCount": "{{count}} personajes",
+    "characterCount_one": "{{count}} personaje",
+    "characterCount_other": "{{count}} personajes",
+    "backupCount": "{{count}} copias de seguridad",
+    "backupCount_one": "{{count}} copia de seguridad",
+    "backupCount_other": "{{count}} copias de seguridad",
     "backupEdited": "Editado",
     "backupOriginal": "Original",
     "noCharacters": "No hay personajes legibles en este conjunto de partidas.",

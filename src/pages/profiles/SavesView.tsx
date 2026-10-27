@@ -27,7 +27,9 @@ export function SavesView({ profileId }: { profileId: string }) {
   }
   return (
     <>
-      <PageHeader title={t("nav.saves")} subtitle={selected?.name} actions={
+      <PageHeader title={t("nav.saves")} subtitle={selected && [selected.name,
+        ...(characters.data ? [t("saves.characterCount", { count: characters.data.length })] : []),
+        t("saves.backupCount", { count: selected.backups.length })].join(" · ")} actions={
         <Button variant="secondary" size="sm" disabled={busy} onClick={() => {
           void refetch();
           void client.invalidateQueries({ queryKey: ["characters", profileId] });

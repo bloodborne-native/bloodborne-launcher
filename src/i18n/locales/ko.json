@@ -246,6 +246,10 @@
   "saves": {
     "current": "현재 저장 데이터",
     "noBackups": "아직 백업이 없습니다.",
+    "characterCount": "캐릭터 {{count}}명",
+    "characterCount_other": "캐릭터 {{count}}명",
+    "backupCount": "백업 {{count}}개",
+    "backupCount_other": "백업 {{count}}개",
     "backupEdited": "편집됨",
     "backupOriginal": "원본",
     "noCharacters": "이 저장 데이터에 읽을 수 있는 캐릭터가 없습니다.",

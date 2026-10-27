@@ -246,6 +246,10 @@
   "saves": {
     "current": "現在のセーブデータ",
     "noBackups": "バックアップはまだありません。",
+    "characterCount": "キャラクター {{count}} 人",
+    "characterCount_other": "キャラクター {{count}} 人",
+    "backupCount": "バックアップ {{count}} 件",
+    "backupCount_other": "バックアップ {{count}} 件",
     "backupEdited": "編集済み",
     "backupOriginal": "オリジナル",
     "noCharacters": "このセーブデータに読み取れるキャラクターはありません。",

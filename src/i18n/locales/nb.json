@@ -246,6 +246,12 @@
   "saves": {
     "current": "Nåværende lagring",
     "noBackups": "Ingen sikkerhetskopier ennå.",
+    "characterCount": "{{count}} figurer",
+    "characterCount_one": "{{count}} figur",
+    "characterCount_other": "{{count}} figurer",
+    "backupCount": "{{count}} sikkerhetskopier",
+    "backupCount_one": "{{count}} sikkerhetskopi",
+    "backupCount_other": "{{count}} sikkerhetskopier",
     "backupEdited": "Redigert",
     "backupOriginal": "Original",
     "noCharacters": "Ingen lesbare figurer i disse lagrede spillene.",
