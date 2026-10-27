@@ -89,7 +89,7 @@ let nextBackup = 0;
 // ?profile=Name starts the preview with that profile already set up (screenshots).
 const previewProfile = new URLSearchParams(window.location.search).get("profile");
 let profileSetup = previewProfile !== null;
-const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: true, trophy_unlocks: [], trophy_error: null }] };
+const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: !new URLSearchParams(window.location.search).has("edited"), trophy_unlocks: [], trophy_error: null }] };
 let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
   new_game_cycle: 0, stats_consistent: true, fingerprint: "preview" };

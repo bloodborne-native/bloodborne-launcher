@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ChevronsUpDown, Trophy, UserRound } from "lucide-react";
+import { ChevronsUpDown, UserRound } from "lucide-react";
+import { TrophyMark } from "@/components/trophies";
 import { useProfiles } from "@/hooks";
 import { useUiStore } from "@/stores";
 import { Menu, MenuContent, MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuTrigger } from "@/components/ui";
@@ -14,8 +15,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
   const setTab = useUiStore((state) => state.setTab);
   const active = data?.profiles.find((profile) => profile.id === data.active);
   const locked = busy || running || !data || data.setup_required;
-  // Trophies off for this save set, or their import failed: a dot on the widget, the reason in the menu.
-  const warning = active && (!active.trophies_eligible || active.trophy_error);
+  // Trophies off for this save set, or their import failed: the trophy crossed out, the reason in the menu.
   return (
     <div className={compact ? undefined : "mb-3"}>
       <Menu>
@@ -31,8 +31,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
           </span>
           {active && <span className="relative flex shrink-0 items-center gap-1 text-xs tabular-nums text-parchment/70"
             title={t("trophies.recordedCount", { count: active.trophy_unlocks.length })}>
-            <Trophy className="size-3.5" aria-hidden="true" />{active.trophy_unlocks.length}
-            {warning && <span className="absolute -top-1 -left-1 size-2 rounded-full bg-blood-400" aria-hidden="true" />}
+            <TrophyMark profile={active} className="size-3.5" />{active.trophy_unlocks.length}
           </span>}
           <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </MenuTrigger>
@@ -42,7 +41,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
             {data?.profiles.map((profile) => <MenuRadioItem key={profile.id} value={profile.id} disabled={locked}>
               <span className="min-w-0 flex-1 truncate">{profile.name}</span>
               <span className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground">
-                <Trophy className="size-3" aria-hidden="true" />{profile.trophy_unlocks.length}
+                <TrophyMark profile={profile} className="size-3" />{profile.trophy_unlocks.length}
               </span>
             </MenuRadioItem>)}
           </MenuRadioGroup>
