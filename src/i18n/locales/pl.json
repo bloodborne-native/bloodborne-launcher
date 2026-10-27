@@ -277,6 +277,7 @@
     "view": "Pokaż trofea",
     "empty": "Brak zapisanych odblokowań.",
     "edited": "Edytowany zapis: nowe trofea wyłączone.",
+    "off": "Trofea wyłączone",
     "id": "Trofeum {{id}}",
     "local": "Tylko zapis lokalny. Wcześniejszy postęp nie jest importowany.",
     "error": "Import trofeów nie powiódł się.",

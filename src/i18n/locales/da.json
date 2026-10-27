@@ -277,6 +277,7 @@
     "view": "Vis trofæer",
     "empty": "Ingen oplåsninger registreret endnu.",
     "edited": "Redigeret gemt spil: nye trofæer deaktiveret.",
+    "off": "Trofæer deaktiveret",
     "id": "Trofæ {{id}}",
     "local": "Kun lokal registrering. Tidligere fremskridt importeres ikke.",
     "error": "Import af trofæer mislykkedes.",

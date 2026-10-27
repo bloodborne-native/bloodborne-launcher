@@ -277,6 +277,7 @@
     "view": "Trofeeën bekijken",
     "empty": "Nog geen ontgrendelingen vastgelegd.",
     "edited": "Bewerkt spelbestand: nieuwe trofeeën uitgeschakeld.",
+    "off": "Trofeeën uitgeschakeld",
     "id": "Trofee {{id}}",
     "local": "Alleen lokale registratie. Eerdere voortgang wordt niet geïmporteerd.",
     "error": "Trofeeën importeren mislukt.",

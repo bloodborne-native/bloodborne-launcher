@@ -277,6 +277,7 @@
     "view": "Näytä pokaalit",
     "empty": "Avauksia ei ole vielä tallennettu.",
     "edited": "Muokattu tallennus: uudet pokaalit poistettu käytöstä.",
+    "off": "Trofeet poistettu käytöstä",
     "id": "Pokaali {{id}}",
     "local": "Vain paikallinen seuranta. Aiempi edistyminen ei siirry.",
     "error": "Pokaalien tuonti epäonnistui.",

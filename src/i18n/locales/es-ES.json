@@ -277,6 +277,7 @@
     "view": "Ver trofeos",
     "empty": "Aún no hay desbloqueos registrados.",
     "edited": "Partida editada: nuevos trofeos desactivados.",
+    "off": "Trofeos desactivados",
     "id": "Trofeo {{id}}",
     "local": "Solo registro local. No se importa el progreso anterior.",
     "error": "Error al importar trofeos.",

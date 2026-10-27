@@ -462,6 +462,7 @@
     "view": "Ver troféus",
     "empty": "Nenhum troféu registrado ainda.",
     "edited": "Save editado: novos troféus desativados.",
+    "off": "Troféus desabilitados",
     "id": "Troféu {{id}}",
     "local": "Apenas registro local. O progresso anterior do save não é importado.",
     "error": "Falha ao importar troféus.",

@@ -277,6 +277,7 @@
     "view": "Voir les trophées",
     "empty": "Aucun déblocage enregistré.",
     "edited": "Sauvegarde modifiée : nouveaux trophées désactivés.",
+    "off": "Trophées désactivés",
     "id": "Trophée {{id}}",
     "local": "Suivi local uniquement. La progression antérieure n’est pas importée.",
     "error": "Échec de l’importation des trophées.",

@@ -277,6 +277,7 @@
     "view": "Trophäen anzeigen",
     "empty": "Noch keine Freischaltungen erfasst.",
     "edited": "Bearbeiteter Spielstand: neue Trophäen deaktiviert.",
+    "off": "Trophäen deaktiviert",
     "id": "Trophäe {{id}}",
     "local": "Nur lokale Erfassung. Früherer Spielfortschritt wird nicht importiert.",
     "error": "Trophäenimport fehlgeschlagen.",
