@@ -3,7 +3,7 @@ import { Users, Gamepad2, House, MonitorCog, Package, ScrollText, Settings2, Swo
 import type { Tab } from "@/stores";
 
 /** Online play is shown once the runtime's online module ships (bloodborne-mac ROADMAP, "Online"). */
-export const ONLINE_READY = false;
+export const ONLINE_READY = true;
 
 /** The tabs, in order: the sidebar and the narrow-screen strip show the same ones. */
 export const NAV_TABS: { id: Tab; icon: ReactNode }[] = ([

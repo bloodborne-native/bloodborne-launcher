@@ -919,7 +919,6 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
                 return Err("Sign in to The Hunter's Dream before starting online play.".into());
             }
             set("BB_NET_BACKEND", "thd".into());
-            set("BB_BBSC", "0".into());
             set("BB_COMMUNITY_SERVER", str_setting(s, "thd_server"));
             set("BB_THD_ONLINE_ID", name);
             set("BB_THD_TOKEN", token);
@@ -931,8 +930,6 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
                 return Err("Enter your Seamless Hunt account name and password before starting online play.".into());
             }
             set("BB_NET_BACKEND", "".into());
-            // Seamless co-op (BBSC) is not supported yet (the Online page says why).
-            set("BB_BBSC", "0".into());
             set("BB_SHADNET_NPID", name);
             set("BB_SHADNET_PASSWORD", password);
             set("BB_SHADNET_SERVER", str_setting(s, "online_server"));
