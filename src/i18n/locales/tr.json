@@ -246,8 +246,8 @@
   "saves": {
     "current": "Mevcut kayıt",
     "noBackups": "Henüz yedek yok.",
-    "editor": "Kayıt düzenleyici",
-    "characterPreviewHint": "Bu profilin kayıtlarındaki karakterler.",
+    "backupEdited": "Düzenlenmiş",
+    "backupOriginal": "Orijinal",
     "noCharacters": "Bu kayıtlarda okunabilir karakter yok.",
     "readingCharacters": "Karakterler okunuyor…",
     "slot": "Yuva {{slot}}",

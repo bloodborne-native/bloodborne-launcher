@@ -38,8 +38,8 @@ export function SavesView({ profileId }: { profileId: string }) {
       {running && <Message tone="warning" className="mb-4">{t("saves.stopFirst")}</Message>}
       {error && <Message tone="error" className="mb-4">{String(error)}</Message>}
       {selected && <>
-        <SaveProfileCard profile={selected} disabled={running || busy || isFetching} onChange={change} />
         <CharacterPreview profileId={profileId} running={running} />
+        <SaveProfileCard profile={selected} disabled={running || busy || isFetching} onChange={change} />
       </>}
     </>
   );

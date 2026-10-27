@@ -246,8 +246,8 @@
   "saves": {
     "current": "Aktuell sparfil",
     "noBackups": "Inga säkerhetskopior ännu.",
-    "editor": "Sparfilsredigerare",
-    "characterPreviewHint": "Rollfigurer i profilens sparfiler.",
+    "backupEdited": "Redigerad",
+    "backupOriginal": "Original",
     "noCharacters": "Inga läsbara rollfigurer i dessa sparfiler.",
     "readingCharacters": "Läser rollfigurer…",
     "slot": "Plats {{slot}}",

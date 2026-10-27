@@ -246,8 +246,8 @@
   "saves": {
     "current": "Nåværende lagring",
     "noBackups": "Ingen sikkerhetskopier ennå.",
-    "editor": "Lagringsredigerer",
-    "characterPreviewHint": "Figurer i profilens lagrede spill.",
+    "backupEdited": "Redigert",
+    "backupOriginal": "Original",
     "noCharacters": "Ingen lesbare figurer i disse lagrede spillene.",
     "readingCharacters": "Leser figurer…",
     "slot": "Plass {{slot}}",

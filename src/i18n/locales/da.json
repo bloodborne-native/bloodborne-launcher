@@ -246,8 +246,8 @@
   "saves": {
     "current": "Aktuel gemt spil",
     "noBackups": "Ingen sikkerhedskopier endnu.",
-    "editor": "Editor til gemte spil",
-    "characterPreviewHint": "Figurer i profilens gemte spil.",
+    "backupEdited": "Redigeret",
+    "backupOriginal": "Original",
     "noCharacters": "Ingen læsbare figurer i disse gemte spil.",
     "readingCharacters": "Læser figurer…",
     "slot": "Plads {{slot}}",

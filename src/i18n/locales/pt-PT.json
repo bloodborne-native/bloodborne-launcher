@@ -246,8 +246,8 @@
   "saves": {
     "current": "Gravação atual",
     "noBackups": "Ainda não há cópias de segurança.",
-    "editor": "Editor de dados guardados",
-    "characterPreviewHint": "Personagens neste conjunto de gravações do perfil.",
+    "backupEdited": "Editado",
+    "backupOriginal": "Original",
     "noCharacters": "Não há personagens legíveis neste conjunto de gravações.",
     "readingCharacters": "A ler personagens…",
     "slot": "Espaço {{slot}}",

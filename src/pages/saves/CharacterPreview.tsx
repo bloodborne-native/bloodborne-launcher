@@ -14,7 +14,7 @@ export function CharacterPreview({ profileId, running }: { profileId: string; ru
     staleTime: 0,
   });
   const number = (value: number) => value.toLocaleString(i18n.language);
-  return <SettingsSection title={t("saves.editor")} description={t("saves.characterPreviewHint")}>
+  return <SettingsSection>
     {running ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.stopFirst")}</p>
       : error ? <Message tone="error" className="px-5 py-4">{String(error)}</Message>
       : isPending ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.readingCharacters")}</p>

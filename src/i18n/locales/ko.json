@@ -246,8 +246,8 @@
   "saves": {
     "current": "현재 저장 데이터",
     "noBackups": "아직 백업이 없습니다.",
-    "editor": "저장 데이터 편집기",
-    "characterPreviewHint": "이 프로필의 저장 데이터에 있는 캐릭터입니다.",
+    "backupEdited": "편집됨",
+    "backupOriginal": "원본",
     "noCharacters": "이 저장 데이터에 읽을 수 있는 캐릭터가 없습니다.",
     "readingCharacters": "캐릭터를 읽는 중…",
     "slot": "슬롯 {{slot}}",

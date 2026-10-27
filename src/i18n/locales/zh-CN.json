@@ -246,8 +246,8 @@
   "saves": {
     "current": "当前存档",
     "noBackups": "暂无备份。",
-    "editor": "存档编辑器",
-    "characterPreviewHint": "此配置的存档中的角色。",
+    "backupEdited": "已编辑",
+    "backupOriginal": "原始",
     "noCharacters": "此存档中没有可读取的角色。",
     "readingCharacters": "正在读取角色…",
     "slot": "槽位 {{slot}}",

@@ -246,8 +246,8 @@
   "saves": {
     "current": "Huidige spelopslag",
     "noBackups": "Nog geen back-ups.",
-    "editor": "Opslageditor",
-    "characterPreviewHint": "Personages in de opgeslagen spellen van dit profiel.",
+    "backupEdited": "Bewerkt",
+    "backupOriginal": "Origineel",
     "noCharacters": "Geen leesbare personages in deze opgeslagen spellen.",
     "readingCharacters": "Personages lezen…",
     "slot": "Plaats {{slot}}",

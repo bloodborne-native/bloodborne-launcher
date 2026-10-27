@@ -246,8 +246,8 @@
   "saves": {
     "current": "Salvataggio attuale",
     "noBackups": "Nessuna copia di backup disponibile.",
-    "editor": "Editor dei salvataggi",
-    "characterPreviewHint": "Personaggi nei salvataggi di questo profilo.",
+    "backupEdited": "Modificato",
+    "backupOriginal": "Originale",
     "noCharacters": "Nessun personaggio leggibile in questi salvataggi.",
     "readingCharacters": "Lettura dei personaggi…",
     "slot": "Slot {{slot}}",

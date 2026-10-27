@@ -447,8 +447,8 @@
   "saves": {
     "current": "Current save",
     "noBackups": "No backups yet.",
-    "editor": "Save editor",
-    "characterPreviewHint": "Characters in this profile’s save set.",
+    "backupEdited": "Edited",
+    "backupOriginal": "Original",
     "noCharacters": "No readable characters in this save set.",
     "readingCharacters": "Reading characters…",
     "slot": "Slot {{slot}}",

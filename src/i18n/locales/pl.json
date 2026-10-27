@@ -246,8 +246,8 @@
   "saves": {
     "current": "Bieżący zapis",
     "noBackups": "Brak kopii zapasowych.",
-    "editor": "Edytor zapisów",
-    "characterPreviewHint": "Postacie w zestawie zapisów tego profilu.",
+    "backupEdited": "Edytowany",
+    "backupOriginal": "Oryginalny",
     "noCharacters": "Brak czytelnych postaci w tym zestawie zapisów.",
     "readingCharacters": "Wczytywanie postaci…",
     "slot": "Miejsce {{slot}}",

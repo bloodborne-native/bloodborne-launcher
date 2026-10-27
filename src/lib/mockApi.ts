@@ -89,7 +89,10 @@ let nextBackup = 0;
 // ?profile=Name starts the preview with that profile already set up (screenshots).
 const previewProfile = new URLSearchParams(window.location.search).get("profile");
 let profileSetup = previewProfile !== null;
-const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: !new URLSearchParams(window.location.search).has("edited"), trophy_unlocks: [], trophy_error: null }] };
+const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000,
+  // ?backups: two older backups, one of an edited save set.
+  backups: new URLSearchParams(window.location.search).has("backups") ? [{ id: "b-2", created: 1719990000, bytes: 12582912, edited: true }, { id: "b-1", created: 1719900000, bytes: 12582912, edited: false }] : [],
+  trophies_eligible: !new URLSearchParams(window.location.search).has("edited"), trophy_unlocks: [], trophy_error: null }] };
 // ?more adds two profiles (one with recorded trophies) for lists of profiles.
 if (new URLSearchParams(window.location.search).has("more")) {
   const unlock = (trophy_id: number): TrophyUnlock => ({ translations: {}, name: null, description: null, grade: "bronze", group: "base", title_id: "CUSA03173", trophy_id, unlocked_at: 1720000000 });
@@ -166,7 +169,7 @@ export const mockApi = {
     if ((character && character.fingerprint !== previewCharacter.fingerprint) || (inventory && inventory.fingerprint !== previewInventory.fingerprint)) {
       return Promise.reject("The character changed since it was opened. Refresh the save preview.");
     }
-    profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
+    profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes, edited: !profile.trophies_eligible });
     profile.trophies_eligible = false;
     if (character) {
       const level = character.vitality + character.endurance + character.strength + character.skill + character.bloodtinge + character.arcane - 50;
@@ -222,11 +225,11 @@ export const mockApi = {
     const profile = saves.profiles.find((p) => p.id === change.id);
     if (!profile) return Promise.reject("Unknown profile.");
     if (change.action === "backup") {
-      profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
+      profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes, edited: !profile.trophies_eligible });
     } else if (change.action === "restore") {
       const backup = profile.backups.find((b) => b.id === change.backup);
       if (backup) {
-        profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
+        profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes, edited: !profile.trophies_eligible });
         profile.bytes = backup.bytes;
       }
     }

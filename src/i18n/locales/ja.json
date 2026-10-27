@@ -246,8 +246,8 @@
   "saves": {
     "current": "現在のセーブデータ",
     "noBackups": "バックアップはまだありません。",
-    "editor": "セーブエディター",
-    "characterPreviewHint": "このプロファイルのセーブデータにあるキャラクター。",
+    "backupEdited": "編集済み",
+    "backupOriginal": "オリジナル",
     "noCharacters": "このセーブデータに読み取れるキャラクターはありません。",
     "readingCharacters": "キャラクターを読み込み中…",
     "slot": "スロット {{slot}}",

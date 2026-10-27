@@ -110,7 +110,7 @@ export type Option<T extends string | number> =
   | { value: T; label: string; hint?: undefined; literal: true };
 
 /** Complete runtime save sets, kept separate from shader caches. Times are Unix seconds. */
-export type SaveBackup = { id: string; created: number; bytes: number };
+export type SaveBackup = { id: string; created: number; bytes: number; /** Its save set was edited (.bb-edited). */ edited: boolean };
 export type TrophyUnlock = { translations: Record<string, { name: string; description?: string | null }>; name: string | null; description: string | null; grade: "platinum" | "gold" | "silver" | "bronze" | "unknown"; group: "base" | "old_hunters" | null; title_id: string; trophy_id: number; unlocked_at: number };
 export type SaveProfile = { trophies_eligible: boolean; trophy_unlocks: TrophyUnlock[]; trophy_error: string | null; id: string; name: string; path: string; bytes: number; modified: number | null; backups: SaveBackup[] };
 export type SaveList = { active: string; profiles: SaveProfile[] };

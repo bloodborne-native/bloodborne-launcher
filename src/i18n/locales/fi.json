@@ -246,8 +246,8 @@
   "saves": {
     "current": "Nykyinen tallennus",
     "noBackups": "Ei vielä varmuuskopioita.",
-    "editor": "Tallennuseditori",
-    "characterPreviewHint": "Hahmot tämän profiilin tallennuksissa.",
+    "backupEdited": "Muokattu",
+    "backupOriginal": "Alkuperäinen",
     "noCharacters": "Näissä tallennuksissa ei ole luettavia hahmoja.",
     "readingCharacters": "Luetaan hahmoja…",
     "slot": "Paikka {{slot}}",

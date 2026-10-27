@@ -246,8 +246,8 @@
   "saves": {
     "current": "Aktueller Spielstand",
     "noBackups": "Noch keine Sicherungskopien.",
-    "editor": "Spielstand-Editor",
-    "characterPreviewHint": "Charaktere in den Spielständen dieses Profils.",
+    "backupEdited": "Bearbeitet",
+    "backupOriginal": "Original",
     "noCharacters": "Keine lesbaren Charaktere in diesen Spielständen.",
     "readingCharacters": "Charaktere werden gelesen…",
     "slot": "Platz {{slot}}",

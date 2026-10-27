@@ -246,8 +246,8 @@
   "saves": {
     "current": "Partida actual",
     "noBackups": "Todavía no hay copias de seguridad.",
-    "editor": "Editor de partidas",
-    "characterPreviewHint": "Personajes del conjunto de partidas de este perfil.",
+    "backupEdited": "Editado",
+    "backupOriginal": "Original",
     "noCharacters": "No hay personajes legibles en este conjunto de partidas.",
     "readingCharacters": "Leyendo personajes…",
     "slot": "Ranura {{slot}}",
