@@ -2,14 +2,20 @@ import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { api, queryKeys } from "@/lib";
-import type { Character, InventoryChange, InventoryEntry } from "@/lib";
+import type { CatalogItem, Character, InventoryChange, InventoryEntry, InventoryLocation } from "@/lib";
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui";
+import { AddItemPanel } from "@/pages/saves/AddItemPanel";
+import { ItemIcon } from "@/pages/saves/ItemIcon";
+import { ItemStats } from "@/pages/saves/ItemStats";
 
 type Filter = "item" | "weapon" | "armor" | "storage";
 const FILTERS: Filter[] = ["item", "weapon", "armor", "storage"];
 const key = (entry: InventoryEntry) => `${entry.location}:${entry.index}`;
 
-/** The inventory and storage of one character: amounts of items, and weapons' level and imprint. */
+type Addition = { item: CatalogItem; location: InventoryLocation; amount: number };
+
+/** The inventory and storage of one character: amounts of items, weapons' level and imprint, and
+ * items to add. Names, icons and stats come from the player's game files. */
 export function EditInventoryDialog({ profileId, character, disabled }: { profileId: string; character: Character; disabled: boolean }) {
   const { t, i18n } = useTranslation();
   const client = useQueryClient();
@@ -19,6 +25,8 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
   // Edited values by entry: amounts for items, level and imprint for weapons.
   const [amounts, setAmounts] = useState<Record<string, string>>({});
   const [weapons, setWeapons] = useState<Record<string, { level: number; imprint: number }>>({});
+  const [additions, setAdditions] = useState<Addition[]>([]);
+  const [adding, setAdding] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
   const inventory = useQuery({
@@ -35,7 +43,13 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
       .filter((entry) => filter === "storage" ? entry.location === "storage" : entry.location === "inventory" && entry.kind === filter)
       .filter((entry) => !query || (entry.name ?? "").toLocaleLowerCase(i18n.language).includes(query));
   }, [entries, filter, search, i18n.language]);
-  const changes: InventoryChange[] = entries.flatMap((entry): InventoryChange[] => {
+  const held = useMemo(() => {
+    const sets: Record<InventoryLocation, Set<number>> = { inventory: new Set(), storage: new Set() };
+    for (const entry of entries) if (entry.kind === "item") sets[entry.location].add(entry.id);
+    for (const addition of additions) sets[addition.location].add(addition.item.id);
+    return sets;
+  }, [entries, additions]);
+  const edits: InventoryChange[] = entries.flatMap((entry): InventoryChange[] => {
     const amount = amounts[key(entry)];
     if (entry.kind === "item" && amount !== undefined && Number(amount) !== entry.amount) {
       return [{ type: "amount", location: entry.location, index: entry.index, amount: Number(amount) }];
@@ -46,8 +60,13 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
     }
     return [];
   });
-  const valid = Object.values(amounts).every((value) => /^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 999);
-  const reset = () => { setAmounts({}); setWeapons({}); setSearch(""); setError(undefined); };
+  const changes: InventoryChange[] = [...edits, ...additions.map(({ item, location, amount }): InventoryChange =>
+    ({ type: "add", location, id: item.id, amount }))];
+  const valid = entries.every((entry) => {
+    const value = amounts[key(entry)];
+    return value === undefined || (/^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= (entry.max || 999));
+  });
+  const reset = () => { setAmounts({}); setWeapons({}); setAdditions([]); setAdding(false); setSearch(""); setError(undefined); };
   const label = (entry: InventoryEntry) => entry.name ?? t("inventory.unnamed", { id: entry.id });
   return <Dialog open={open} onOpenChange={(next, details) => {
     if (pending) { details.cancel(); return; }
@@ -67,17 +86,32 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
           placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
       </div>
       {inventory.data && !named && <p className="text-xs text-muted-foreground">{t("inventory.noNames")}</p>}
+      {named && <div className="grid gap-2">
+        <div className="flex items-center gap-2">
+          <Button size="sm" variant={adding ? "default" : "outline"} disabled={pending} onClick={() => setAdding((on) => !on)}>{t("inventory.add")}</Button>
+          {additions.map((addition, at) => <span key={at} className="flex items-center gap-1 rounded-md border border-border py-0.5 pr-1 pl-0.5 text-xs">
+            <ItemIcon icon={addition.item.icon} className="size-6" />
+            {addition.item.name} ×{addition.amount}{addition.location === "storage" ? ` · ${t("inventory.storage")}` : ""}
+            <button type="button" aria-label={t("inventory.remove")} className="px-1 text-muted-foreground hover:text-foreground"
+              onClick={() => setAdditions((all) => all.filter((_, other) => other !== at))}>×</button>
+          </span>)}
+        </div>
+        {adding && <AddItemPanel held={held} disabled={pending} onAdd={(item, location, amount) => setAdditions((all) => [...all, { item, location, amount }])} />}
+      </div>}
       <div className="min-h-40 flex-1 overflow-y-auto rounded-md border border-border">
         {inventory.isPending ? <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.reading")}</p>
           : inventory.error ? <p role="alert" className="px-4 py-3 text-sm text-destructive">{String(inventory.error)}</p>
           : !shown.length ? <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
           : shown.map((entry) => <div key={key(entry)} className="flex flex-wrap items-center gap-3 border-t border-border px-4 py-2 first:border-t-0">
-            <div className="min-w-40 flex-1">
-              <p className="text-sm">{label(entry)}</p>
-              {entry.description && <p className="line-clamp-1 text-xs text-muted-foreground" title={entry.description}>{entry.description}</p>}
-            </div>
+            <ItemStats name={label(entry)} description={entry.description} icon={entry.icon} stats={entry.stats}>
+              <ItemIcon icon={entry.icon} />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm">{label(entry)}{entry.kind === "weapon" && entry.level > 0 ? ` +${entry.level}` : ""}</p>
+                {entry.description && <p className="line-clamp-1 text-xs text-muted-foreground">{entry.description}</p>}
+              </div>
+            </ItemStats>
             {entry.kind === "item" && <input aria-label={t("inventory.amount")} className="w-24 rounded-md border border-input bg-background px-2 py-1 text-sm"
-              type="number" min="1" max="999" step="1" disabled={pending}
+              type="number" min="1" max={entry.max || 999} step="1" disabled={pending}
               value={amounts[key(entry)] ?? String(entry.amount)}
               onChange={(event) => setAmounts((current) => ({ ...current, [key(entry)]: event.target.value }))} />}
             {entry.kind === "weapon" && (() => {

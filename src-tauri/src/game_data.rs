@@ -389,6 +389,100 @@ pub fn game_params(game: &Path) -> Result<GameParams> {
     Ok(GameParams { goods: load("EquipParamGoods")?, weapons: load("EquipParamWeapon")?, armor: load("EquipParamProtector")? })
 }
 
+// ---- Icons (menu/menu_knowledge_NNNNN.tpf.dcx) --------------------------------------------------
+
+/// The PS4 lays block-compressed textures out in tiles of 8 x 8 blocks, the blocks of a tile in
+/// Z order (x in the even bits of their index, y in the odd ones), the texture padded to whole
+/// tiles. This returns the blocks in rows, as the decoders expect them.
+fn untile(data: &[u8], blocks_x: usize, blocks_y: usize, block: usize) -> Result<Vec<u8>> {
+    let tiles_x = blocks_x.div_ceil(8);
+    let tiles_y = blocks_y.div_ceil(8);
+    if data.len() < tiles_x * tiles_y * 64 * block {
+        return Err("Truncated texture".into());
+    }
+    let mut out = vec![0u8; blocks_x * blocks_y * block];
+    for tile in 0..tiles_x * tiles_y {
+        let (tx, ty) = (tile % tiles_x, tile / tiles_x);
+        for index in 0..64 {
+            let (mut x, mut y) = (0usize, 0usize);
+            for bit in 0..3 {
+                x |= ((index >> (2 * bit)) & 1) << bit;
+                y |= ((index >> (2 * bit + 1)) & 1) << bit;
+            }
+            let (bx, by) = (tx * 8 + x, ty * 8 + y);
+            if bx < blocks_x && by < blocks_y {
+                let from = (tile * 64 + index) * block;
+                let to = (by * blocks_x + bx) * block;
+                out[to..to + block].copy_from_slice(&data[from..from + block]);
+            }
+        }
+    }
+    Ok(out)
+}
+
+/// An icon from the player's game files as a PNG, scaled down to `size` pixels (a box filter).
+pub fn icon_png(game: &Path, icon: u32, size: u32) -> Result<Vec<u8>> {
+    let path = game.join(format!("dvdroot_ps4/menu/menu_knowledge_{icon:05}.tpf.dcx"));
+    let raw = std::fs::read(&path).map_err(|e| format!("Icon {icon}: {e}"))?;
+    let tpf = dcx(&raw)?;
+    if bytes_at(&tpf, 0, 4)? != b"TPF\0" || i32_le(&tpf, 8)? < 1 {
+        return Err("Not a texture pack".into());
+    }
+    // The first texture's record: data offset and size, format, width and height.
+    let offset = i32_le(&tpf, 0x10)?;
+    let size_bytes = i32_le(&tpf, 0x14)?;
+    let format = bytes_at(&tpf, 0x18, 1)?[0];
+    let width = u16::from_le_bytes(bytes_at(&tpf, 0x1C, 2)?.try_into().unwrap()) as usize;
+    let height = u16::from_le_bytes(bytes_at(&tpf, 0x1E, 2)?.try_into().unwrap()) as usize;
+    if width == 0 || height == 0 || width > 2048 || height > 2048 {
+        return Err("Unsupported icon size".into());
+    }
+    let data = bytes_at(&tpf, offset, size_bytes)?;
+    let (blocks_x, blocks_y) = (width.div_ceil(4), height.div_ceil(4));
+    let mut pixels = vec![0u32; width * height];
+    let decode = match format {
+        0 | 1 | 24 | 25 => (8, texture2ddecoder::decode_bc1 as fn(&[u8], usize, usize, &mut [u32]) -> std::result::Result<(), &'static str>),
+        5 | 23 | 33 => (16, texture2ddecoder::decode_bc3 as _),
+        102 | 106 | 107 => (16, texture2ddecoder::decode_bc7 as _),
+        other => return Err(format!("Unsupported icon format {other}")),
+    };
+    let linear = untile(data, blocks_x, blocks_y, decode.0)?;
+    (decode.1)(&linear, width, height, &mut pixels).map_err(|e| format!("Icon {icon}: {e}"))?;
+    // Box filter down to `size` (the icons are square).
+    let size = (size as usize).clamp(16, width.min(height));
+    let mut rgba = vec![0u8; size * size * 4];
+    for oy in 0..size {
+        for ox in 0..size {
+            let (x0, x1) = (ox * width / size, ((ox + 1) * width / size).max(ox * width / size + 1));
+            let (y0, y1) = (oy * height / size, ((oy + 1) * height / size).max(oy * height / size + 1));
+            let mut sum = [0u32; 4];
+            for y in y0..y1 {
+                for x in x0..x1 {
+                    // texture2ddecoder's pixels are BGRA in a little-endian u32.
+                    let [b, g, r, a] = pixels[y * width + x].to_le_bytes();
+                    for (s, c) in sum.iter_mut().zip([r, g, b, a]) {
+                        *s += u32::from(c);
+                    }
+                }
+            }
+            let n = ((x1 - x0) * (y1 - y0)) as u32;
+            let at = (oy * size + ox) * 4;
+            for c in 0..4 {
+                rgba[at + c] = (sum[c] / n) as u8;
+            }
+        }
+    }
+    let mut png = Vec::new();
+    {
+        let mut encoder = png::Encoder::new(&mut png, size as u32, size as u32);
+        encoder.set_color(png::ColorType::Rgba);
+        encoder.set_depth(png::BitDepth::Eight);
+        let mut writer = encoder.write_header().map_err(|e| e.to_string())?;
+        writer.write_image_data(&rgba).map_err(|e| e.to_string())?;
+    }
+    Ok(png)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -434,6 +528,27 @@ mod tests {
         assert_eq!(message_folder("pt-BR"), "porbr");
         assert_eq!(message_folder("ja"), "jpnjp");
         assert_eq!(message_folder("xx"), "engus");
+    }
+
+    #[test]
+    fn untiles_z_order_blocks() {
+        // One 8 x 8-block tile of 1-byte "blocks" numbered by their position in the tile.
+        let data: Vec<u8> = (0..64).collect();
+        let rows = untile(&data, 8, 8, 1).unwrap();
+        assert_eq!(&rows[..4], &[0, 1, 4, 5]); // x = 0..3 of row 0
+        assert_eq!(&rows[8..12], &[2, 3, 6, 7]); // row 1
+        assert_eq!(rows[63], 63);
+    }
+
+    /// Writes an icon to a file for a look (scratch folders only, never the repository):
+    /// BB_CHECK_GAME=<dump> BB_ICON_OUT=<file.png> cargo test real_icon -- --ignored
+    #[test]
+    #[ignore]
+    fn real_icon() {
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let out = std::env::var("BB_ICON_OUT").expect("BB_ICON_OUT");
+        let id = std::env::var("BB_ICON_ID").ok().and_then(|v| v.parse().ok()).unwrap_or(146);
+        std::fs::write(out, icon_png(Path::new(&game), id, 128).unwrap()).unwrap();
     }
 
     /// The player's dump: BB_CHECK_GAME=<dump> cargo test real_game_params -- --ignored --nocapture.

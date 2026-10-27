@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit, Inventory, InventoryEdit } from "@/lib/types";
+import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit, Inventory, InventoryEdit, CatalogItem } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -91,12 +91,18 @@ const previewProfile = new URLSearchParams(window.location.search).get("profile"
 let profileSetup = previewProfile !== null;
 const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: true, trophy_unlocks: [], trophy_error: null }] };
 // Placeholder names: the real ones come from the player's game files (no game text here).
+const previewCatalog: CatalogItem[] = [
+  { id: 1000, name: "Sample item", category: "consumable", max: 20, icon: 1, description: "A sample item for the preview." },
+  { id: 1100, name: "Sample remedy", category: "consumable", max: 20, icon: 3, description: null },
+  { id: 3000, name: "Sample material", category: "material", max: 99, icon: 4, description: null },
+  { id: 6100, name: "Sample chalice", category: "chalice", max: 1, icon: 5, description: null },
+];
 const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprint: "inventory-0", entries: [
-  { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
-  { location: "inventory", index: 2, kind: "item", id: 1230, amount: 18, name: "Sample ammunition", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
-  { location: "inventory", index: 3, kind: "weapon", id: 7000200, amount: 1, name: "Sample weapon", description: null, level: 2, imprint: 0, levels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], imprints: [0, 1, 2], imprint_names: ["Sample weapon", "Sample weapon (variant 1)", "Sample weapon (variant 2)"] },
-  { location: "inventory", index: 4, kind: "armor", id: 230000, amount: 1, name: "Sample hood", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
-  { location: "storage", index: 1, kind: "item", id: 1200, amount: 4, name: "Sample stored item", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
+  { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 } },
+  { location: "inventory", index: 2, kind: "item", id: 1230, amount: 18, name: "Sample ammunition", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 } },
+  { location: "inventory", index: 3, kind: "weapon", id: 7000200, amount: 1, name: "Sample weapon", description: null, level: 2, imprint: 0, levels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], imprints: [0, 1, 2], imprint_names: ["Sample weapon", "Sample weapon (variant 1)", "Sample weapon (variant 2)"], max: 0, icon: 2, stats: { attack: { physical: 90, arcane: 0, fire: 0, bolt: 0 }, scaling: { strength: 40, skill: 20, bloodtinge: 0, arcane: 0 }, requirements: { strength: 8, skill: 7, bloodtinge: 0, arcane: 0 } } },
+  { location: "inventory", index: 4, kind: "armor", id: 230000, amount: 1, name: "Sample hood", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 } },
+  { location: "storage", index: 1, kind: "item", id: 1200, amount: 4, name: "Sample stored item", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 } },
 ] };
 let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
@@ -146,6 +152,12 @@ export const mockApi = {
     profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
     profile.trophies_eligible = false;
     for (const change of edit.changes) {
+      if (change.type === "add") {
+        const item = previewCatalog.find((i) => i.id === change.id);
+        previewInventory.entries.push({ location: change.location, index: 100 + previewInventory.entries.length, kind: "item", id: change.id, amount: change.amount,
+          name: item?.name ?? null, description: item?.description ?? null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: item?.max ?? 1, icon: item?.icon ?? null, stats: { max: item?.max ?? 1 } });
+        continue;
+      }
       const entry = previewInventory.entries.find((e) => e.location === change.location && e.index === change.index);
       if (!entry) continue;
       if (change.type === "amount") entry.amount = change.amount;
@@ -154,6 +166,9 @@ export const mockApi = {
     previewInventory.fingerprint = `inventory-${nextBackup}`;
     return wait(undefined);
   },
+  itemCatalog: () => wait(structuredClone(previewCatalog)),
+  // A plain square: the real icons come from the player's game files.
+  itemIcon: (icon: number) => wait(`data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" rx="8" fill="hsl(${icon * 67 % 360} 30% 35%)"/></svg>`)}`),
   changeSave: (change: SaveChange) => {
     const profile = saves.profiles.find((p) => p.id === change.id);
     if (!profile) return Promise.reject("Unknown profile.");

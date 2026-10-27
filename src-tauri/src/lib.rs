@@ -531,6 +531,24 @@ fn game_folder(p: &Paths) -> Result<PathBuf, String> {
 fn item_text(p: &Paths, language: &str) -> Result<game_data::ItemText, String> {
     game_data::item_text(&game_folder(p)?, language)
 }
+/// An item's icon as a PNG data URL, decoded from the player's game files once per launch.
+#[tauri::command]
+async fn item_icon(state: State<'_, AppState>, icon: u32) -> Result<String, String> {
+    use base64::Engine;
+    static ICONS: Mutex<BTreeMap<(PathBuf, u32), String>> = Mutex::new(BTreeMap::new());
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = game_folder(&state.paths)?;
+        let key = (game.clone(), icon);
+        if let Some(url) = ICONS.lock().map_err(|e| e.to_string())?.get(&key) {
+            return Ok(url.clone());
+        }
+        let png = game_data::icon_png(&game, icon, 128)?;
+        let url = format!("data:image/png;base64,{}", base64::engine::general_purpose::STANDARD.encode(png));
+        ICONS.lock().map_err(|e| e.to_string())?.insert(key, url.clone());
+        Ok(url)
+    }).await
+}
 #[tauri::command]
 async fn item_catalog(state: State<'_, AppState>, language: String) -> Result<Vec<inventory::CatalogItem>, String> {
     let state = state.inner().clone();
@@ -1157,7 +1175,7 @@ pub fn run() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, character_inventory, edit_inventory, item_catalog, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, character_inventory, edit_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

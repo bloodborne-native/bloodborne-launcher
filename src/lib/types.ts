@@ -130,11 +130,23 @@ export type InventoryEntry = {
   location: InventoryLocation; index: number; kind: "item" | "weapon" | "armor" | "upgrade";
   id: number; amount: number; name: string | null; description: string | null;
   level: number; imprint: number; levels: number[]; imprints: number[]; imprint_names: string[];
+  /** Items: the most this section holds. */
+  max: number;
+  /** The game's icon number (api.itemIcon). */
+  icon: number | null;
+  /** The hover card's numbers, from the game's parameter tables. */
+  stats: InventoryStats | null;
 };
+export type InventoryStats = {
+  attack?: Record<string, number>; scaling?: Record<string, number>; requirements?: Record<string, number>;
+  defense?: Record<string, number>; max?: number;
+};
+export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice"; max: number; icon: number | null; description: string | null };
 export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[] };
 export type InventoryChange =
   | { type: "amount"; location: InventoryLocation; index: number; amount: number }
-  | { type: "weapon"; location: InventoryLocation; index: number; level: number; imprint: number };
+  | { type: "weapon"; location: InventoryLocation; index: number; level: number; imprint: number }
+  | { type: "add"; location: InventoryLocation; id: number; amount: number };
 export type InventoryEdit = { title_id: string; slot: number; fingerprint: string; changes: InventoryChange[] };
 
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };
