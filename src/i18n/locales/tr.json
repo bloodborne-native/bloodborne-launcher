@@ -56,7 +56,7 @@
     "title": "Geceyi avla", "subtitle": "Av yeniden başlıyor.",
     "gameFolderHint": "Herhangi bir bölgeden, 1.09 güncellemesi uygulanmış Bloodborne kopyanızı seçin.", "checking": "Oyun dosyaları denetleniyor…", "ready": "Avlanmaya hazır",
     "copyGame": "Oyun dosyalarınızı dosya yöneticinizle bu klasöre kopyalayın veya başka bir cihazdan paylaşın.",
-    "noFolder": "Oyun klasörünüzü seçin.", "folder": "Oyun klasörü", "edition": "{{id}} · sürüm {{version}}", "region": { "america": "Amerika", "europe": "Avrupa", "japan": "Japonya", "asia": "Asya", "unknown": "Bilinmeyen bölge" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Dahil", "dlcMissing": "Dahil değil", "dlcMissingHint": "Bu sürüm, port’un henüz desteklemediği The Old Hunters eklentisini gerektiriyor.", "summary": "Genel bakış", "upscaler": "Ölçekleyici", "renderSize": "{{size}} çözünürlükte işleniyor",
+    "noFolder": "Oyun klasörünüzü seçin.", "folder": "Oyun klasörü", "edition": "{{id}} · sürüm {{version}}", "region": { "america": "Amerika", "europe": "Avrupa", "japan": "Japonya", "asia": "Asya", "unknown": "Bilinmeyen bölge" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Dahil", "dlcMissing": "Dahil değil", "dlcMissingHint": "Bu sürüm The Old Hunters’ı içermiyor ve port henüz eklentileri yükleyemiyor.", "summary": "Genel bakış", "upscaler": "Ölçekleyici", "renderSize": "{{size}} çözünürlükte işleniyor",
     "frameRate": "Kare hızı", "controller": "Kumanda", "mods": "Modlar",
     "modsActive": "{{count}} etkin", "modsActive_one": "{{count}} etkin", "modsActive_other": "{{count}} etkin", "modsOff": "Kapalı",
     "lastRun": "Son oturum", "lastRunOk": "Oyun normal şekilde kapandı.", "lastRunError": "Oyun {{code}} çıkış koduyla kapandı."

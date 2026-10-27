@@ -56,7 +56,7 @@
     "title": "夜を狩れ", "subtitle": "狩りが再び始まる。",
     "gameFolderHint": "アップデート1.09を適用した Bloodborne（地域は問いません）を選択してください。", "checking": "ゲームファイルを確認しています…", "ready": "狩りの準備完了",
     "copyGame": "ファイル管理アプリでゲームファイルをこのフォルダーにコピーするか、他のデバイスから共有してください。",
-    "noFolder": "ゲームフォルダーを選択してください。", "folder": "ゲームフォルダ", "edition": "{{id}} · バージョン {{version}}", "region": { "america": "北米・中南米", "europe": "ヨーロッパ", "japan": "日本", "asia": "アジア", "unknown": "不明な地域" }, "oldHunters": "The Old Hunters", "dlcIncluded": "収録", "dlcMissing": "未収録", "dlcMissingHint": "このエディションには追加コンテンツ The Old Hunters が必要ですが、移植版はまだ対応していません。", "summary": "概要", "upscaler": "アップスケーラー", "renderSize": "{{size}} でレンダリング中",
+    "noFolder": "ゲームフォルダーを選択してください。", "folder": "ゲームフォルダ", "edition": "{{id}} · バージョン {{version}}", "region": { "america": "北米・中南米", "europe": "ヨーロッパ", "japan": "日本", "asia": "アジア", "unknown": "不明な地域" }, "oldHunters": "The Old Hunters", "dlcIncluded": "収録", "dlcMissing": "未収録", "dlcMissingHint": "このエディションには The Old Hunters が含まれておらず、移植版はまだ追加コンテンツを読み込めません。", "summary": "概要", "upscaler": "アップスケーラー", "renderSize": "{{size}} でレンダリング中",
     "frameRate": "フレームレート", "controller": "コントローラー", "mods": "MOD",
     "modsActive": "{{count}} 件有効", "modsActive_other": "{{count}} 件有効", "modsOff": "オフ",
     "lastRun": "前回のセッション", "lastRunOk": "ゲームは正常に終了しました。", "lastRunError": "ゲームが終了コード {{code}} で終了しました。"

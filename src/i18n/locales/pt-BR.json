@@ -89,7 +89,7 @@
     "copyGame": "Copie os arquivos do jogo para esta pasta com seu gerenciador de arquivos ou compartilhe-os de outro dispositivo.",
     "checking": "Verificando os arquivos do jogo…",
     "ready": "Pronto para caçar",
-    "noFolder": "Selecione a pasta do jogo.", "folder": "Pasta do jogo", "edition": "{{id}} · versão {{version}}", "region": { "america": "Américas", "europe": "Europa", "japan": "Japão", "asia": "Ásia", "unknown": "Região desconhecida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluído", "dlcMissing": "Não incluído", "dlcMissingHint": "Esta edição requer o add-on The Old Hunters, que o port ainda não suporta.",
+    "noFolder": "Selecione a pasta do jogo.", "folder": "Pasta do jogo", "edition": "{{id}} · versão {{version}}", "region": { "america": "Américas", "europe": "Europa", "japan": "Japão", "asia": "Ásia", "unknown": "Região desconhecida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluído", "dlcMissing": "Não incluído", "dlcMissingHint": "Esta edição não inclui The Old Hunters, e o port ainda não consegue carregar add-ons.",
     "summary": "Visão geral",
     "upscaler": "Upscaler",
     "renderSize": "Renderizando em {{size}}",

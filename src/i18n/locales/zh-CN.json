@@ -56,7 +56,7 @@
     "title": "狩猎长夜", "subtitle": "狩猎再次开始。",
     "gameFolderHint": "选择你的 Bloodborne 副本（任意地区），需已应用 1.09 更新。", "checking": "正在检查游戏文件…", "ready": "准备狩猎",
     "copyGame": "使用文件管理器将游戏文件复制到此文件夹，或从其他设备共享过来。",
-    "noFolder": "请选择游戏文件夹。", "folder": "游戏文件夹", "edition": "{{id}} · 版本 {{version}}", "region": { "america": "美洲", "europe": "欧洲", "japan": "日本", "asia": "亚洲", "unknown": "未知地区" }, "oldHunters": "The Old Hunters", "dlcIncluded": "已包含", "dlcMissing": "未包含", "dlcMissingHint": "此版本需要 The Old Hunters 扩展内容，而移植版尚不支持。", "summary": "概览", "upscaler": "超分辨率", "renderSize": "以 {{size}} 渲染",
+    "noFolder": "请选择游戏文件夹。", "folder": "游戏文件夹", "edition": "{{id}} · 版本 {{version}}", "region": { "america": "美洲", "europe": "欧洲", "japan": "日本", "asia": "亚洲", "unknown": "未知地区" }, "oldHunters": "The Old Hunters", "dlcIncluded": "已包含", "dlcMissing": "未包含", "dlcMissingHint": "此版本不包含 The Old Hunters，而移植版目前还无法加载扩展内容。", "summary": "概览", "upscaler": "超分辨率", "renderSize": "以 {{size}} 渲染",
     "frameRate": "帧率", "controller": "手柄", "mods": "模组",
     "modsActive": "已启用 {{count}} 个", "modsActive_other": "已启用 {{count}} 个", "modsOff": "已关闭",
     "lastRun": "上次运行", "lastRunOk": "游戏已正常关闭。", "lastRunError": "游戏以退出代码 {{code}} 关闭。"

@@ -105,7 +105,7 @@
     "oldHunters": "The Old Hunters",
     "dlcIncluded": "Included",
     "dlcMissing": "Not included",
-    "dlcMissingHint": "This edition requires The Old Hunters add-on, which isn’t supported by the port yet.",
+    "dlcMissingHint": "This edition doesn’t include The Old Hunters, and the port can’t load add-ons yet.",
     "summary": "Overview",
     "upscaler": "Upscaler",
     "renderSize": "Rendering at {{size}}",

@@ -56,7 +56,7 @@
     "title": "Jakt på natten", "subtitle": "Jakten begynner igjen.",
     "gameFolderHint": "Velg din kopi av Bloodborne, fra hvilken som helst region, med oppdatering 1.09 installert.", "checking": "Kontrollerer spillfiler…", "ready": "Klar til jakt",
     "copyGame": "Kopier spillfilene til denne mappen med filbehandleren din, eller del dem fra en annen enhet.",
-    "noFolder": "Velg spillmappen din.", "folder": "Spillmappe", "edition": "{{id}} · versjon {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asia", "unknown": "Ukjent region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inkludert", "dlcMissing": "Ikke inkludert", "dlcMissingHint": "Denne utgaven krever tillegget The Old Hunters, som porten ikke støtter ennå.", "summary": "Oversikt", "upscaler": "Oppskalering", "renderSize": "Gjengir i {{size}}",
+    "noFolder": "Velg spillmappen din.", "folder": "Spillmappe", "edition": "{{id}} · versjon {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asia", "unknown": "Ukjent region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inkludert", "dlcMissing": "Ikke inkludert", "dlcMissingHint": "Denne utgaven inneholder ikke The Old Hunters, og porten kan ikke laste inn tillegg ennå.", "summary": "Oversikt", "upscaler": "Oppskalering", "renderSize": "Gjengir i {{size}}",
     "frameRate": "Bildefrekvens", "controller": "Kontroller", "mods": "Modder",
     "modsActive": "{{count}} aktive", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktive", "modsOff": "Av",
     "lastRun": "Siste økt", "lastRunOk": "Spillet ble lukket normalt.", "lastRunError": "Spillet ble avsluttet med avslutningskode {{code}}."
