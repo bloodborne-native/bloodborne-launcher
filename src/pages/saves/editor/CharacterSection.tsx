@@ -11,7 +11,7 @@ export function CharacterSection({ character, edits, disabled }: { character: Ch
   const { fields, setFields, level } = edits;
   if (!character.stats_consistent) return <p className="text-sm text-destructive">{t("saves.inconsistentStats")}</p>;
   const set = (field: keyof typeof fields, value: string) => setFields((all) => ({ ...all, [field]: value }));
-  return <div className="grid max-w-2xl gap-5">
+  return <div className="grid gap-5 rounded-2xl surface p-4 sm:p-5">
     <div className="grid grid-cols-2 gap-4">
       <label className="grid gap-1 text-sm">{t("saves.echoes")}
         <Input type="number" min="0" max="999999999" step="1" value={fields.echoes} disabled={disabled} onChange={(event) => set("echoes", event.target.value)} />

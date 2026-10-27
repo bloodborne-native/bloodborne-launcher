@@ -82,8 +82,8 @@ export function SaveEditor({ profileId, character, disabled, onClose }: SaveEdit
     <PageHeader title={character.name}
       subtitle={`${t("saves.level", { level: edits.characterEdit ? edits.level : character.level })} · ${t("saves.slot", { slot: character.slot + 1 })}`} />
     <Tabs value={section} onValueChange={(value) => setSection(value as Section)}>
-      <TabsList className="mb-4 max-w-full justify-start overflow-x-auto [scrollbar-width:none]">
-        {SECTIONS.map((name) => <TabsTrigger key={name} value={name} className="shrink-0 gap-1.5">
+      <TabsList className="mb-5 h-auto max-w-full justify-start gap-1 overflow-x-auto p-1 [scrollbar-width:none]">
+        {SECTIONS.map((name) => <TabsTrigger key={name} value={name} className="h-8 shrink-0 gap-1.5 px-3.5">
           {t(TITLES[name])}
           {edits.counts[name] > 0 && <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground tabular-nums">{edits.counts[name]}</span>}
         </TabsTrigger>)}
