@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Swords } from "lucide-react";
 import type { Gem, InventoryEntry } from "@/lib";
 import { Button, Input } from "@/components/ui";
 import { AddItemPanel } from "@/pages/saves/editor/AddItemPanel";
@@ -27,7 +28,7 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
   // Wide: the list and the chosen weapon side by side. Narrow: the list, then the weapon tapped
   // on its own with a way back.
   const picked = selected !== undefined && current !== undefined;
-  return <div className="grid gap-4 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
+  return <div className="grid gap-4 lg:grid-cols-[18rem_minmax(0,1fr)]">
     <div className={`content-start gap-2 self-start rounded-2xl surface p-3 ${picked ? "hidden lg:grid" : "grid"}`}>
       <div className="flex gap-2">
         <Input className="min-w-0 flex-1" type="search"
@@ -63,6 +64,10 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
       <div className="own-scroll rounded-2xl lg:surface lg:p-4">
         <WeaponDetail key={entryKey(current)} entry={current} gems={gems} edits={edits} disabled={disabled} />
       </div>
-    </div> : <p className="text-sm text-muted-foreground">{t("inventory.chooseWeapon")}</p>}
+    </div> : <div className="hidden min-h-64 flex-col items-center justify-center gap-3 rounded-2xl surface p-6 text-center lg:flex">
+      {/* No weapon to show: the panel keeps its place, with what to do. */}
+      <Swords className="size-8 text-muted-foreground/60" aria-hidden="true" />
+      <p className="text-sm text-muted-foreground">{t(weapons.length ? "inventory.chooseWeapon" : "inventory.noWeapons")}</p>
+    </div>}
   </div>;
 }

@@ -23,7 +23,8 @@ export function CharacterCard({ character, disabled }: { character: Character; d
           {t("saves.level", { level: character.level })} · {t("saves.playtime", { hours })} · {t("saves.newGameCycle", { cycle: character.new_game_cycle + 1 })}
         </p>
         <dl className="grid grid-cols-3 gap-y-3 rounded-xl surface-inset py-3 sm:grid-cols-6">
-          {ATTRIBUTES.map((field) => <div key={field} className="text-center">
+          {/* Labels at the top, numbers on one line at the bottom (a label may wrap). */}
+          {ATTRIBUTES.map((field) => <div key={field} className="flex flex-col items-center justify-between px-1 text-center">
             <dt className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{t(`saves.${field}`)}</dt>
             <dd className="mt-1 font-display text-xl tabular-nums">{number(character[field])}</dd>
           </div>)}
