@@ -10,11 +10,11 @@ export function HomeHero() {
   return (
     <>
       {/* Absolute to the scrolling main (AppWindow), behind the content (main isolates it). */}
-      {/* Its lower part fades out (a mask) into the window's own background. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] overflow-hidden [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] md:h-[36rem]" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] overflow-hidden md:h-[36rem]" aria-hidden="true">
         <img src={hero} alt="" draggable={false} className="size-full object-cover object-[72%_center]" />
         {/* The text side, and narrow screens where the text covers the city: shade it. */}
         <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/0 md:from-background/85 md:via-background/30" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-background to-transparent" />
       </div>
       <div className="flex min-h-64 max-w-lg flex-col justify-center pb-10 pt-6 md:min-h-80 md:pt-12">
         <p className="flex items-center gap-3 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-400">
