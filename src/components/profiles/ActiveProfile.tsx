@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ChevronsUpDown, UserRound } from "lucide-react";
-import { TrophyMark } from "@/components/trophies";
+import { TrophyCount } from "@/components/trophies";
 import { useProfiles } from "@/hooks";
 import { useUiStore } from "@/stores";
 import { Menu, MenuContent, MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuTrigger } from "@/components/ui";
@@ -15,7 +15,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
   const setTab = useUiStore((state) => state.setTab);
   const active = data?.profiles.find((profile) => profile.id === data.active);
   const locked = busy || running || !data || data.setup_required;
-  // Trophies off for this save set, or their import failed: the trophy crossed out, the reason in the menu.
+  // Trophies off for this save set, or their import failed: a red trophy, the count struck through, the reason in the menu.
   return (
     <div className={compact ? undefined : "mb-3"}>
       <Menu>
@@ -29,9 +29,8 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
             {!compact && <span className="block text-[11px] leading-tight text-muted-foreground">{t("profiles.active")}</span>}
             <span className="block truncate text-sm font-medium">{active?.name ?? "—"}</span>
           </span>
-          {active && <span className="relative flex shrink-0 items-center gap-1.5 text-xs tabular-nums text-parchment/70"
-            title={t("trophies.recordedCount", { count: active.trophy_unlocks.length })}>
-            <TrophyMark profile={active} className="size-4" badge="size-3" />{active.trophy_unlocks.length}
+          {active && <span title={t("trophies.recordedCount", { count: active.trophy_unlocks.length })}>
+            <TrophyCount profile={active} className="text-xs text-parchment/70" iconClassName="size-4" />
           </span>}
           <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </MenuTrigger>
@@ -40,9 +39,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
           <MenuRadioGroup value={data?.active ?? ""} onValueChange={(id: string) => id !== data?.active && change({ action: "select", id }).catch(() => {})}>
             {data?.profiles.map((profile) => <MenuRadioItem key={profile.id} value={profile.id} disabled={locked}>
               <span className="min-w-0 flex-1 truncate">{profile.name}</span>
-              <span className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground">
-                <TrophyMark profile={profile} className="size-3.5" badge="size-2.5" />{profile.trophy_unlocks.length}
-              </span>
+              <TrophyCount profile={profile} className="text-xs text-muted-foreground" iconClassName="size-3.5" />
             </MenuRadioItem>)}
           </MenuRadioGroup>
           {active && !active.trophies_eligible && <p className="px-2 py-1 text-xs text-blood-400">{t("trophies.edited")}</p>}
