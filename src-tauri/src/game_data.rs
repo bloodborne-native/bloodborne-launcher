@@ -147,6 +147,8 @@ pub struct ItemText {
     pub goods_caption: HashMap<u32, String>,
     pub weapon_caption: HashMap<u32, String>,
     pub armor_caption: HashMap<u32, String>,
+    /// Gem and rune effects ("Physical ATK UP +2.7%"), by effect ID (menu.msgbnd).
+    pub gem_effects: HashMap<u32, String>,
 }
 
 // The tables of item.msgbnd: names, short descriptions and long ones (FMG ids in the container).
@@ -157,6 +159,8 @@ const GOODS_INFO: u32 = 20;
 const GOODS_CAPTION: u32 = 24;
 const WEAPON_CAPTION: u32 = 25;
 const ARMOR_CAPTION: u32 = 26;
+// menu.msgbnd: the texts of gem and rune effects.
+const GEM_EFFECT: u32 = 35;
 
 /// Reads the item texts from a game folder (the one with eboot.bin), in the given language.
 pub fn item_text(game: &Path, language: &str) -> Result<ItemText> {
@@ -183,6 +187,16 @@ pub fn item_text(game: &Path, language: &str) -> Result<ItemText> {
     }
     if text.goods.is_empty() || text.weapons.is_empty() || text.armor.is_empty() {
         return Err("The game's item names were not found".into());
+    }
+    let mut menu = msg.join(message_folder(language)).join("menu.msgbnd.dcx");
+    if !menu.is_file() {
+        menu = msg.join("engus/menu.msgbnd.dcx");
+    }
+    if let Ok(raw) = std::fs::read(&menu) {
+        let container = dcx(&raw)?;
+        if let Some((_, _, data)) = bnd4(&container)?.into_iter().find(|(id, _, _)| *id == GEM_EFFECT) {
+            text.gem_effects = fmg(data)?;
+        }
     }
     Ok(text)
 }
@@ -364,11 +378,12 @@ impl Param {
     }
 }
 
-/// The parameter tables the save editor reads: items, weapons and armor.
+/// The parameter tables the save editor reads: items, weapons, armor and gem effects.
 pub struct GameParams {
     pub goods: Param,
     pub weapons: Param,
     pub armor: Param,
+    pub gem_effects: Param,
 }
 
 pub fn game_params(game: &Path) -> Result<GameParams> {
@@ -386,7 +401,12 @@ pub fn game_params(game: &Path) -> Result<GameParams> {
         let def = defs.iter().find(|(_, n, _)| n == &format!("{name}.paramdef")).ok_or(format!("{name}'s definition is missing"))?.2;
         Param::parse(data.to_vec(), def)
     };
-    Ok(GameParams { goods: load("EquipParamGoods")?, weapons: load("EquipParamWeapon")?, armor: load("EquipParamProtector")? })
+    Ok(GameParams {
+        goods: load("EquipParamGoods")?,
+        weapons: load("EquipParamWeapon")?,
+        armor: load("EquipParamProtector")?,
+        gem_effects: load("GemeffectParam")?,
+    })
 }
 
 // ---- Icons (menu/menu_knowledge_NNNNN.tpf.dcx) --------------------------------------------------

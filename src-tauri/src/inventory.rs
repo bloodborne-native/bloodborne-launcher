@@ -165,6 +165,179 @@ pub struct Inventory {
     pub slot: u8,
     pub fingerprint: String,
     pub entries: Vec<Entry>,
+    pub upgrades: Vec<Upgrade>,
+}
+
+/// A gem or rune: a 40-byte record from byte 84 of the file (handle, source, type, shape and six
+/// effect IDs, 0xFFFFFFFF for none), referenced by an inventory entry or a weapon's slot.
+#[derive(Serialize, Debug)]
+pub struct Upgrade {
+    /// Its position in the list (what an edit refers to) and its handle.
+    pub index: u16,
+    pub handle: u32,
+    pub rune: bool,
+    /// Gems: 1 radial, 2 triangle, 4 waning, 8 circle, 63 droplet; runes: 1, 2 (Oath) or 4.
+    pub shape: u8,
+    pub effects: Vec<Effect>,
+    /// Where it is: an inventory or storage entry, or a weapon's slot (the weapon's name).
+    pub location: Option<Location>,
+    /// In a slot: the weapon's name when the slot is a weapon's (runes have slots of their own).
+    pub equipped: bool,
+    pub weapon: Option<String>,
+}
+
+#[derive(Serialize, Debug)]
+pub struct Effect {
+    /// Its position among the record's six (what an edit refers to).
+    pub slot: u8,
+    pub id: u32,
+    pub text: Option<String>,
+    /// The same kind of effect at its other strengths (the game's effects of the same category),
+    /// weakest first: what this effect can be changed to.
+    pub options: Vec<EffectOption>,
+}
+
+#[derive(Serialize, Debug)]
+pub struct EffectOption {
+    pub id: u32,
+    pub text: String,
+}
+
+/// The effects of the same category as `id` that the game names, by rank: the alternatives an
+/// edit may choose. A rune's effects and a gem's never mix (their categories differ).
+fn effect_options(id: u32, text: &ItemText, params: &GameParams) -> Vec<EffectOption> {
+    let Some(category) = params.gem_effects.get(id, "categoryId") else {
+        return Vec::new();
+    };
+    let mut options: Vec<(f64, u32)> = params
+        .gem_effects
+        .ids()
+        .filter(|&other| params.gem_effects.get(other, "categoryId") == Some(category))
+        .filter(|other| text.gem_effects.contains_key(other))
+        .map(|other| (params.gem_effects.get(other, "effectRank").unwrap_or(0.0), other))
+        .collect();
+    options.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    options.into_iter().map(|(_, other)| EffectOption { id: other, text: text.gem_effects[&other].clone() }).collect()
+}
+
+const UPGRADE: usize = 40;
+const NO_EFFECT: u32 = 0xFFFF_FFFF;
+const GEM_SHAPES: [u8; 5] = [1, 2, 4, 8, 63];
+// Runes: 1 and 2 (Oath) as known, 4 seen in a real save.
+const RUNE_SHAPES: [u8; 3] = [1, 2, 4];
+
+/// A gem or rune record: (its offset, handle, whether a rune, shape, effect IDs).
+type Record = (usize, u32, bool, u8, [u32; 6]);
+/// A weapon's or armor piece's slot block: (its offset, the weapon or armor ID, the five slots'
+/// (shape, gem handle)).
+type SlotBlock = (usize, u32, [(u32, u32); 5]);
+
+/// The gem and rune records, until the first record that is not one (the list has no length).
+fn upgrade_records(bytes: &[u8]) -> Result<Vec<Record>> {
+    let mut found = Vec::new();
+    let mut at = UPGRADES_START;
+    while let Some(record) = bytes.get(at..at + UPGRADE) {
+        let (kind, shape) = (record[8], record[12]);
+        let valid = match kind {
+            1 => GEM_SHAPES.contains(&shape),
+            2 => RUNE_SHAPES.contains(&shape),
+            _ => false,
+        };
+        if !valid || record[9..12] != [0, 0, 0] || record[13..16] != [0, 0, 0] {
+            break;
+        }
+        let mut effects = [0u32; 6];
+        for (i, effect) in effects.iter_mut().enumerate() {
+            *effect = word(record, 16 + i * 4)?;
+        }
+        found.push((at, word(record, 0)?, kind == 2, shape, effects));
+        at += UPGRADE;
+        if found.len() > 4096 {
+            return Err("Unrecognized gem list.".into());
+        }
+    }
+    Ok(found)
+}
+
+/// The weapons' and armor's slot blocks after the gem list: (block offset, its weapon or armor ID,
+/// the five slots' (shape, gem handle)).
+fn slot_blocks(bytes: &[u8], end: usize) -> Result<Vec<SlotBlock>> {
+    let start = UPGRADES_START + upgrade_records(bytes)?.len() * UPGRADE;
+    let mut blocks = Vec::new();
+    let mut at = start;
+    while at + SLOT_BLOCK <= end {
+        let handle = word(bytes, at)?;
+        // A block starts with its weapon's (0x8080...) or armor piece's (0x9080...) handle; a closed
+        // slot's shape (0x80000000) and fillers do not match, and are stepped over 4 bytes at a time.
+        if matches!(handle >> 16, 0x8080 | 0x9080) {
+            let mut slots = [(0u32, 0u32); 5];
+            for (i, slot) in slots.iter_mut().enumerate() {
+                *slot = (word(bytes, at + 20 + i * 8)?, word(bytes, at + 24 + i * 8)?);
+            }
+            blocks.push((at, word(bytes, at + 4)?, slots));
+            at += SLOT_BLOCK;
+        } else {
+            at += 4;
+        }
+    }
+    Ok(blocks)
+}
+
+fn upgrades(bytes: &[u8], entries: &[Entry], text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Vec<Upgrade>> {
+    let base = character_base(bytes)?.ok_or("The character slot is empty.")?;
+    let blocks_end = base.saturating_sub(147);
+    let blocks = slot_blocks(bytes, blocks_end)?;
+    let blocks_start = UPGRADES_START + upgrade_records(bytes)?.len() * UPGRADE;
+    // Every handle a slot holds: weapons' and armor's blocks, and the rune slots, which are not in
+    // a block of either.
+    let slotted: std::collections::HashSet<u32> = (blocks_start..blocks_end.saturating_sub(4))
+        .step_by(4)
+        .filter_map(|at| word(bytes, at).ok())
+        .filter(|handle| handle >> 24 == 0xC0)
+        .collect();
+    let mut held = std::collections::HashMap::new();
+    for location in [Location::Inventory, Location::Storage] {
+        let start = section(bytes, location)?;
+        for entry in entries.iter().filter(|e| e.location == location && e.kind == Kind::Upgrade) {
+            held.insert(word(bytes, start + usize::from(entry.index) * ENTRY + 4)?, location);
+        }
+    }
+    // Records nothing refers to (gems and runes discarded or used up) are left out.
+    Ok(upgrade_records(bytes)?
+        .into_iter()
+        .enumerate()
+        .filter(|(_, (_, handle, ..))| held.contains_key(handle) || slotted.contains(handle))
+        .map(|(index, (_, handle, rune, shape, effects))| {
+            let block = blocks.iter().find(|(_, _, slots)| slots.iter().any(|(_, gem)| *gem == handle));
+            let weapon = block.and_then(|(_, weapon, _)| {
+                let (base, _, _) = weapon_parts(*weapon);
+                text.and_then(|t| t.weapons.get(&base).cloned())
+            });
+            Upgrade {
+                index: index as u16,
+                handle,
+                rune,
+                shape,
+                effects: effects
+                    .iter()
+                    .enumerate()
+                    .filter(|&(_, &id)| id != NO_EFFECT)
+                    .map(|(slot, &id)| Effect {
+                        slot: slot as u8,
+                        id,
+                        text: text.and_then(|t| t.gem_effects.get(&id).cloned()),
+                        options: match (text, params) {
+                            (Some(text), Some(params)) => effect_options(id, text, params),
+                            _ => Vec::new(),
+                        },
+                    })
+                    .collect(),
+                location: held.get(&handle).copied(),
+                equipped: slotted.contains(&handle),
+                weapon,
+            }
+        })
+        .collect())
 }
 
 #[derive(Deserialize, Debug)]
@@ -173,6 +346,9 @@ pub enum Change {
     Amount { location: Location, index: u16, amount: u32 },
     Weapon { location: Location, index: u16, level: u8, imprint: u8 },
     Add { location: Location, id: u32, amount: u32 },
+    /// A gem's or rune's effect (by its position among the record's six) changed to another of
+    /// the same category.
+    Effect { upgrade: u16, slot: u8, effect: u32 },
 }
 
 #[derive(Deserialize)]
@@ -306,11 +482,13 @@ fn item_max(params: &GameParams, id: u32, location: Location) -> Option<u32> {
 
 pub fn read(user: &Path, title: &str, slot: u8, text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Inventory> {
     let bytes = slot_bytes(&slot_path(user, title, slot)?)?;
+    let entries = entries(&bytes, text, params)?;
     Ok(Inventory {
         title_id: title.into(),
         slot,
         fingerprint: format!("{:x}", Sha256::digest(&bytes)),
-        entries: entries(&bytes, text, params)?,
+        upgrades: upgrades(&bytes, &entries, text, params)?,
+        entries,
     })
 }
 
@@ -385,6 +563,7 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
         return Err("No inventory values changed.".into());
     }
     let mut expected = Vec::new();
+    let mut expected_effects = Vec::new();
     for change in &edit.changes {
         match *change {
             Change::Amount { location, index, amount } => {
@@ -423,6 +602,23 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                 bytes[block + 4..block + 8].copy_from_slice(&new_id.to_le_bytes());
                 expected.push((location, index, new_id, amount));
             }
+            Change::Effect { upgrade, slot, effect } => {
+                let records = upgrade_records(&bytes)?;
+                let (at, ..) = *records.get(usize::from(upgrade)).ok_or("Unknown gem.")?;
+                let field = at + 16 + usize::from(slot) * 4;
+                if slot >= 6 {
+                    return Err("Unknown gem effect.".into());
+                }
+                let current = word(&bytes, field)?;
+                let category = |id| params.gem_effects.get(id, "categoryId");
+                if current == NO_EFFECT || category(current).is_none() || category(current) != category(effect)
+                    || !text.gem_effects.contains_key(&effect)
+                {
+                    return Err("An effect can only change to another of the same kind.".into());
+                }
+                bytes[field..field + 4].copy_from_slice(&effect.to_le_bytes());
+                expected_effects.push((field, effect));
+            }
             Change::Add { location, id, amount } => {
                 let kind = params.goods.get(id, "goodsType").ok_or("This item is not in the game's tables.")? as u32;
                 if !GOODS_ADDABLE.iter().any(|(k, _)| *k == kind) || id > 0x00FF_FFFF {
@@ -441,6 +637,11 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
     let after = entries(&bytes, None, None)?;
     crate::save_editor::parse(&bytes, &edit.title_id, edit.slot)?
         .ok_or("Character validation failed after editing.")?;
+    for (field, effect) in expected_effects {
+        if word(&bytes, field)? != effect {
+            return Err("Gem validation failed after editing.".into());
+        }
+    }
     for (location, index, id, amount) in expected {
         let found = after
             .iter()
@@ -493,7 +694,17 @@ mod tests {
         entry(&mut bytes, 1, 0xB000_03E8, 0x4000_03E8, 17); // item 1000
         entry(&mut bytes, 2, 0x8080_0050, 2_000_000, 1); // weapon 2000000 +0
         entry(&mut bytes, 3, 0x9080_0051, 0x1003_8270, 1); // armor 230000
-        put(&mut bytes, BASE + INVENTORY_COUNTERS.0, 4);
+        // A radial gem with one effect, held in the inventory (entry 5).
+        put(&mut bytes, UPGRADES_START, 0xC080_0041);
+        put(&mut bytes, UPGRADES_START + 4, 0x8001_E460);
+        bytes[UPGRADES_START + 8] = 1;
+        bytes[UPGRADES_START + 12] = 1;
+        put(&mut bytes, UPGRADES_START + 16, 126201);
+        for i in 1..6 {
+            put(&mut bytes, UPGRADES_START + 16 + i * 4, NO_EFFECT);
+        }
+        entry(&mut bytes, 5, 0xC080_0041, 0x8001_E460, 1);
+        put(&mut bytes, BASE + INVENTORY_COUNTERS.0, 5);
         put(&mut bytes, BASE + INVENTORY_COUNTERS.1, 0x70);
         let block = BASE - 400;
         put(&mut bytes, block, 0x8080_0050);
@@ -511,6 +722,11 @@ mod tests {
             ]),
             weapons: Param::synthetic(&[(2_000_000, &[("attackBasePhysics", 90.0), ("properStrength", 8.0), ("iconId", 7.0)])]),
             armor: Param::synthetic(&[(230000, &[("defensePhysics", 20.0), ("iconIdM", 9.0)])]),
+            gem_effects: Param::synthetic(&[
+                (126201, &[("categoryId", 1.0), ("effectRank", 1.0)]),
+                (126207, &[("categoryId", 1.0), ("effectRank", 7.0)]),
+                (122401, &[("categoryId", 2.0), ("effectRank", 1.0)]),
+            ]),
         }
     }
 
@@ -519,6 +735,11 @@ mod tests {
             goods: HashMap::from([(1000, "Vial".to_string())]),
             armor: HashMap::from([(230000, "Hood".to_string())]),
             weapons: (0..=10).map(|l| (2_000_000 + l * 100, "Blade".to_string())).collect(),
+            gem_effects: HashMap::from([
+                (126201, "Physical +0.7%".to_string()),
+                (126207, "Physical +7%".to_string()),
+                (122401, "Blood +1.8%".to_string()),
+            ]),
             ..Default::default()
         }
     }
@@ -526,7 +747,7 @@ mod tests {
     #[test]
     fn reads_items_weapons_and_armor() {
         let found = entries(&sample(), Some(&text()), Some(&params())).unwrap();
-        assert_eq!(found.len(), 3); // the bare fists are not shown
+        assert_eq!(found.len(), 4); // the bare fists are not shown; the gem's entry is
         assert_eq!((found[0].kind, found[0].id, found[0].amount), (Kind::Item, 1000, 17));
         assert_eq!(found[0].name.as_deref(), Some("Vial"));
         assert_eq!((found[1].kind, found[1].level, found[1].levels.len()), (Kind::Weapon, 0, 11));
@@ -589,6 +810,10 @@ mod tests {
         for entry in &inventory.entries {
             println!("{:?} {:?} {} {:?} x{} +{}", entry.location, entry.kind, entry.id, entry.name, entry.amount, entry.level);
         }
+        for gem in &inventory.upgrades {
+            println!("gem {} rune {} shape {} {:?} {:?} {:?}", gem.index, gem.rune, gem.shape, gem.location, gem.weapon,
+                gem.effects.iter().map(|e| e.text.clone()).collect::<Vec<_>>());
+        }
         assert!(inventory.entries.iter().all(|e| e.kind == Kind::Upgrade || e.name.is_some()));
     }
 
@@ -611,7 +836,7 @@ mod tests {
         let added = entries(&after, None, None).unwrap().into_iter().find(|e| e.id == 3000).unwrap();
         assert_eq!((added.index, added.amount), (4, 99));
         assert_eq!(after[BASE + INVENTORY_FROM_NAME + 4 * ENTRY], 0x70);
-        assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.0).unwrap(), 5);
+        assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.0).unwrap(), 6);
         assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.1).unwrap(), 0x71);
         fs::remove_dir_all(root).unwrap();
     }
@@ -665,6 +890,55 @@ mod tests {
                 Change::Weapon { location: weapon.location, index: weapon.index, level: 5, imprint: weapon.imprint },
                 Change::Add { location: Location::Inventory, id: 3030, amount: 1 },
             ],
+        };
+        rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
+    }
+
+    #[test]
+    fn gems_read_and_change_within_their_category() {
+        let bytes = sample();
+        let found = entries(&bytes, None, None).unwrap();
+        let gems = upgrades(&bytes, &found, Some(&text()), Some(&params())).unwrap();
+        assert_eq!(gems.len(), 1);
+        assert_eq!((gems[0].shape, gems[0].location), (1, Some(Location::Inventory)));
+        let options: Vec<u32> = gems[0].effects[0].options.iter().map(|o| o.id).collect();
+        assert_eq!(options, vec![126201, 126207]);
+        let (root, savedata) = staged(bytes.clone());
+        let change = |effect| Edit {
+            title_id: "CUSA03173".into(),
+            slot: 0,
+            fingerprint: format!("{:x}", Sha256::digest(&bytes)),
+            changes: vec![Change::Effect { upgrade: 0, slot: 0, effect }],
+        };
+        // Another kind of effect, and an empty effect slot, are refused.
+        assert!(rewrite(&savedata, &change(122401), &text(), &params()).is_err());
+        let empty = Edit { changes: vec![Change::Effect { upgrade: 0, slot: 1, effect: 126207 }], ..change(126207) };
+        assert!(rewrite(&savedata, &empty, &text(), &params()).is_err());
+        rewrite(&savedata, &change(126207), &text(), &params()).unwrap();
+        let after = fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap();
+        assert_eq!(word(&after, UPGRADES_START + 16).unwrap(), 126207);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    /// A gem effect raised to its strongest kind on a scratch copy (never the player's own):
+    /// BB_TEST_SAVE_USER=<copy> BB_CHECK_GAME=<dump> cargo test real_gem_effect -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn real_gem_effect() {
+        let user = std::path::PathBuf::from(std::env::var("BB_TEST_SAVE_USER").expect("BB_TEST_SAVE_USER"));
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
+        let before = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let gem = before.upgrades.iter().find(|g| !g.rune && g.location == Some(Location::Inventory) && g.effects[0].options.len() > 1).unwrap();
+        let best = gem.effects[0].options.last().unwrap();
+        println!("gem {}: {:?} -> {}", gem.index, gem.effects[0].text, best.text);
+        let edit = Edit {
+            title_id: title.clone(),
+            slot: 0,
+            fingerprint: before.fingerprint.clone(),
+            changes: vec![Change::Effect { upgrade: gem.index, slot: 0, effect: best.id }],
         };
         rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
     }
