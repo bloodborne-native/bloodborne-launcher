@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { PageHeader } from "@/components/settings";
 import { Button, Tabs, TabsList, TabsTrigger } from "@/components/ui";
 import { CharacterSection } from "@/pages/saves/editor/CharacterSection";
-import { GemRow } from "@/pages/saves/editor/GemRow";
+import { GemsSection } from "@/pages/saves/editor/GemsSection";
 import { ItemsSection } from "@/pages/saves/editor/ItemsSection";
 import { WeaponsSection } from "@/pages/saves/editor/WeaponsSection";
 import { useSaveEdits } from "@/pages/saves/editor/useSaveEdits";
@@ -65,10 +65,7 @@ export function SaveEditor({ profileId, character, disabled, onClose }: SaveEdit
       case "weapon": return <>{notice}<WeaponsSection weapons={entries.filter((e) => e.kind === "weapon")} gems={gems} edits={edits} disabled={locked} /></>;
       case "armor": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "inventory" && e.kind === "armor")} edits={edits}
         addTo={named ? "inventory" : undefined} categories={["armor"]} addLabel={t("inventory.addArmor")} disabled={locked} /></>;
-      case "gems": return gems.length ? <div className="own-scroll rounded-2xl surface py-1">{gems.map((gem) => <GemRow key={gem.index} gem={gem}
-        chosen={edits.effects[gem.index] ?? {}} disabled={locked}
-        onChoose={(slot, effect) => edits.setEffects((all) => ({ ...all, [gem.index]: { ...all[gem.index], [slot]: effect } }))} />)}</div>
-        : <p className="text-sm text-muted-foreground">{t("inventory.empty")}</p>;
+      case "gems": return <GemsSection gems={gems} weapons={entries.filter((e) => e.kind === "weapon")} edits={edits} disabled={locked} />;
       case "storage": return <>{notice}<ItemsSection entries={entries.filter((e) => e.location === "storage" && e.kind !== "upgrade")} edits={edits} addTo={named ? "storage" : undefined}
         categories={["consumable", "material", "chalice", "weapon", "armor"]} disabled={locked} /></>;
     }

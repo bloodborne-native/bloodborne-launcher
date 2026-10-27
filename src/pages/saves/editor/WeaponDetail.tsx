@@ -4,7 +4,7 @@ import { Button } from "@/components/ui";
 import { GemSlots } from "@/pages/saves/editor/GemSlots";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { StatsTable } from "@/pages/saves/editor/StatsTable";
-import { entryKey, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
+import { entryKey, slotsAt, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
 
 // The imprints' names when the game's own word cannot be taken from the weapon names (0 normal, 1 Uncanny, 2 Lost).
 const IMPRINTS = ["inventory.normal", "inventory.uncanny", "inventory.lost"] as const;
@@ -35,6 +35,7 @@ export function WeaponDetail({ entry, gems, edits, disabled }: Props) {
     return own || (imprint === 0 && normal ? normal : t(IMPRINTS[imprint] ?? IMPRINTS[0]));
   };
   const chosenStats = stats(chosen.level, chosen.imprint);
+  const slots = slotsAt(entry, chosen, gems);
   const imprints = entry.imprints.flatMap((imprint) => {
     const numbers = stats(chosen.level, imprint);
     return numbers ? [{ label: imprintLabel(imprint), stats: numbers, chosen: imprint === chosen.imprint }] : [];
@@ -76,7 +77,7 @@ export function WeaponDetail({ entry, gems, edits, disabled }: Props) {
     </div>}
     <div className={section}>
       <p className="text-sm font-medium">{t("inventory.gemSlots")}</p>
-      {entry.slots.length ? <GemSlots slots={entry.slots} chosen={edits.gemSlots[key] ?? {}} gems={gems} available={edits.available} disabled={disabled}
+      {slots.length ? <GemSlots slots={slots} chosen={edits.gemSlots[key] ?? {}} gems={gems} available={edits.available} disabled={disabled}
         onChoose={(slot, gem) => edits.setGemSlots((all) => ({ ...all, [key]: { ...all[key], [slot]: gem } }))} />
         : <p className="text-sm text-muted-foreground">{t("inventory.noSlots")}</p>}
     </div>

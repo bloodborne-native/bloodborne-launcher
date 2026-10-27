@@ -378,12 +378,15 @@ impl Param {
     }
 }
 
-/// The parameter tables the save editor reads: items, weapons, armor and gem effects.
+/// The parameter tables the save editor reads: items, weapons, armor, gem effects, weapons' gem
+/// slots and the gems the game generates (a gem's source).
 pub struct GameParams {
     pub goods: Param,
     pub weapons: Param,
     pub armor: Param,
     pub gem_effects: Param,
+    pub weapon_slots: Param,
+    pub gem_sources: Param,
 }
 
 pub fn game_params(game: &Path) -> Result<GameParams> {
@@ -406,6 +409,8 @@ pub fn game_params(game: &Path) -> Result<GameParams> {
         weapons: load("EquipParamWeapon")?,
         armor: load("EquipParamProtector")?,
         gem_effects: load("GemeffectParam")?,
+        weapon_slots: load("WeaponGenParam")?,
+        gem_sources: load("GemGenParam")?,
     })
 }
 

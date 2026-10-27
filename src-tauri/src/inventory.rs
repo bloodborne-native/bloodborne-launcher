@@ -93,6 +93,18 @@ pub struct Entry {
     pub variants: std::collections::BTreeMap<u32, serde_json::Value>,
     /// Weapons: their open gem slots.
     pub slots: Vec<WeaponSlot>,
+    /// Weapons: the gem slots the game gives them at each level and imprint (empty when the game's
+    /// tables are missing or do not list the weapon).
+    pub slot_plan: Vec<PlannedSlot>,
+}
+
+/// A gem slot the game gives a weapon: for an imprint, the slot's shape and the level it opens at.
+#[derive(Serialize, Debug, Clone, Copy, PartialEq)]
+pub struct PlannedSlot {
+    pub imprint: u8,
+    pub slot: u8,
+    pub opens: u8,
+    pub shape: u32,
 }
 
 /// An open gem slot of a weapon: its shape (the gem shapes it takes, as bits: 1 radial, 2
@@ -144,6 +156,19 @@ pub fn catalog(text: &ItemText, params: &GameParams) -> Vec<CatalogItem> {
             })
         })
         .collect();
+    // Gems: one per effect the game has a gem of, added with the shape chosen.
+    let mut gems: Vec<(u32, u32)> = gem_sources(params).into_iter().collect();
+    gems.sort_unstable();
+    items.extend(gems.into_iter().filter_map(|(effect, _)| Some(CatalogItem {
+        id: effect,
+        name: text.gem_effects.get(&effect)?.clone(),
+        category: "gem",
+        max: 1,
+        icon: None,
+        description: None,
+        caption: None,
+        stats: None,
+    })));
     // Weapons at +0 without an imprint, and armor pieces: one each per addition.
     items.extend(params.weapons.ids().filter(|&id| addable_weapon(id, text, params)).map(|id| CatalogItem {
         id,
@@ -421,6 +446,9 @@ pub enum Change {
     Unequip { upgrade: u16 },
     /// A weapon (+0, no imprint) or armor piece into the inventory or storage.
     AddEquipment { location: Location, id: u32 },
+    /// A new gem into the inventory: its shape and effects (the first one names the game's row
+    /// that generates such a gem, its source).
+    AddGem { shape: u8, effects: Vec<u32> },
 }
 
 #[derive(Deserialize)]
@@ -505,6 +533,7 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                 stats: None,
                 variants: Default::default(),
                 slots: Vec::new(),
+                slot_plan: Vec::new(),
             };
             if let Some(params) = params {
                 entry.icon = icon_of(kind, item, params);
@@ -576,11 +605,118 @@ fn item_max(params: &GameParams, id: u32, location: Location) -> Option<u32> {
     })
 }
 
+/// The game's rows that generate a weapon gem with one fixed effect (GemGenParam), by that effect:
+/// what a new gem's source is (the game keeps it as the record's second word and the inventory
+/// entry's ID, 0x80000000 | row).
+fn gem_sources(params: &GameParams) -> std::collections::HashMap<u32, u32> {
+    let table = &params.gem_sources;
+    let mut found = std::collections::HashMap::new();
+    let mut rows: Vec<u32> = table.ids().collect();
+    rows.sort_unstable();
+    for row in rows {
+        let field = |name: &str| table.get(row, name).unwrap_or(-1.0);
+        let fixed = field("gemeffectGenParamType_0") == 1.0 && (1..6).all(|i| field(&format!("gemeffectGenParamType_{i}")) == 0.0);
+        if field("equipableSegmentWeapon") == 1.0 && fixed && field("gemeffectGenParam_0") >= 0.0 {
+            found.entry(field("gemeffectGenParam_0") as u32).or_insert(row);
+        }
+    }
+    found
+}
+
+/// Adds a gem record and its inventory entry. The record (40 bytes) takes the place of a free
+/// table entry (8 bytes), so everything after the table moves 32 bytes on, and the file's last 32
+/// bytes go (the file has a fixed size; the game writes the character from the start of it and
+/// leaves earlier writes' bytes after its end). Returns the entry's index and ID, and where the
+/// record went. Refused for files that hold two copies of the character, as additions are.
+fn add_gem(bytes: &mut Vec<u8>, shape: u8, effects: &[u32], text: &ItemText, params: &GameParams) -> Result<(u16, u32, usize)> {
+    if !GEM_SHAPES.contains(&shape) {
+        return Err("Unknown gem shape.".into());
+    }
+    if effects.is_empty() || effects.len() > 6 || effects.iter().any(|e| !text.gem_effects.contains_key(e) || params.gem_effects.get(*e, "categoryId").is_none()) {
+        return Err("A gem has one to six of the game's effects.".into());
+    }
+    let row = *gem_sources(params).get(&effects[0]).ok_or("The game has no gem with this effect.")?;
+    if crate::save_editor::copy_count(bytes)? != 1 {
+        return Err("Gems cannot be added to this character yet: the file holds two copies of it.".into());
+    }
+    let (used, _) = table(bytes)?;
+    let mut at = UPGRADES_START;
+    let mut free = None;
+    for _ in 0..4096 {
+        match bytes[at + 3] {
+            0x80 | 0x90 => at += SLOT_BLOCK,
+            0xC0 => at += UPGRADE,
+            _ => {
+                free.get_or_insert(at);
+                at += 8;
+            }
+        }
+    }
+    let free = free.ok_or("The character has no free gem record left.")?;
+    let next = used.iter().map(|&(at, _)| word(bytes, at).map(|h| h & 0x00FF_FFFF)).collect::<Result<Vec<_>>>()?.into_iter().max().unwrap_or(0x80_0000) + 1;
+    if next > 0x00FF_FFFF {
+        return Err("The character has no free gem record left.".into());
+    }
+    let (handle, source) = (0xC000_0000 | next, 0x8000_0000 | row);
+    let mut record = Vec::with_capacity(UPGRADE);
+    record.extend_from_slice(&handle.to_le_bytes());
+    record.extend_from_slice(&source.to_le_bytes());
+    record.extend_from_slice(&[1, 0, 0, 0, shape, 0, 0, 0]);
+    for i in 0..6 {
+        record.extend_from_slice(&effects.get(i).copied().unwrap_or(NO_EFFECT).to_le_bytes());
+    }
+    let size = bytes.len();
+    bytes.splice(free..free + 8, record);
+    bytes.truncate(size);
+    let index = add_entry(bytes, Location::Inventory, handle, source, 1)?;
+    Ok((index, source, free))
+}
+
+/// The game's gem slots by weapon ID (WeaponGenParam: one row per ID, level and imprint included;
+/// a slot's shape, or a closed slot with the high bit set).
+type SlotRows = std::collections::HashMap<u32, Vec<[u32; 5]>>;
+
+fn slot_rows(params: &GameParams) -> SlotRows {
+    let table = &params.weapon_slots;
+    let mut rows = SlotRows::new();
+    for row in table.ids() {
+        let Some(id) = table.get(row, "wepParamId") else { continue };
+        let shapes = std::array::from_fn(|i| table.get(row, &format!("gemSlotType_{i}")).map_or(SLOT_CLOSED, |v| v as u32));
+        rows.entry(id as u32).or_default().push(shapes);
+    }
+    rows
+}
+
+/// A weapon's slots for each imprint: each slot's shape where it first opens (+1, +3 and +6 for most
+/// weapons). A few DLC weapons have rows that disagree at +9 and +10; their slots opened earlier.
+fn slot_plan(rows: &SlotRows, base: u32) -> Vec<PlannedSlot> {
+    let mut plan: Vec<PlannedSlot> = Vec::new();
+    for imprint in 0..=2u8 {
+        for level in 0..=10u8 {
+            let Some(found) = rows.get(&weapon_id(base, level, imprint)) else { continue };
+            for slot in 0..5u8 {
+                let open = found.iter().map(|shapes| shapes[usize::from(slot)]).find(|&shape| shape != 0 && shape & SLOT_CLOSED == 0);
+                if let Some(shape) = open.filter(|_| !plan.iter().any(|p| p.imprint == imprint && p.slot == slot)) {
+                    plan.push(PlannedSlot { imprint, slot, opens: level, shape });
+                }
+            }
+        }
+    }
+    plan
+}
+
+/// A slot's shape at a level and imprint, by the plan; None: closed.
+fn planned_shape(plan: &[PlannedSlot], slot: u8, level: u8, imprint: u8) -> Option<u32> {
+    plan.iter().find(|p| p.imprint == imprint && p.slot == slot && p.opens <= level).map(|p| p.shape)
+}
+
 pub fn read(user: &Path, title: &str, slot: u8, text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Inventory> {
     let bytes = slot_bytes(&slot_path(user, title, slot)?)?;
     let mut entries = entries(&bytes, text, params)?;
     let upgrades = upgrades(&bytes, &entries, text, params)?;
+    let rows = params.map(slot_rows).unwrap_or_default();
     for entry in entries.iter_mut().filter(|e| e.kind == Kind::Weapon) {
+        entry.slot_plan = slot_plan(&rows, weapon_parts(entry.id).0);
         let at = section(&bytes, entry.location)? + usize::from(entry.index) * ENTRY;
         // A weapon without its block is shown without slots (and its level cannot change).
         let Ok(block) = slot_block(&bytes, word(&bytes, at + 4)?, word(&bytes, at + 8)?) else {
@@ -818,6 +954,25 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                 let block = slot_block(&bytes, handle, id)?;
                 bytes[at + 8..at + 12].copy_from_slice(&new_id.to_le_bytes());
                 bytes[block + 4..block + 8].copy_from_slice(&new_id.to_le_bytes());
+                // The slots the game gives the weapon at its new level and imprint (an upgrade
+                // opens them; a lower level or another imprint closes or reshapes them).
+                let plan = slot_plan(&slot_rows(params), base);
+                if !plan.is_empty() {
+                    let records = upgrade_records(&bytes)?;
+                    for slot in 0..5u8 {
+                        let shape = planned_shape(&plan, slot, level, imprint).unwrap_or(SLOT_CLOSED);
+                        let (_, gem) = slot_at(&bytes, block, slot)?;
+                        if gem != NO_GEM {
+                            let fits = records.iter().find(|r| r.1 == gem).is_some_and(|r| shape != SLOT_CLOSED && u32::from(r.3) & shape != 0);
+                            if !fits {
+                                return Err("Take the gems out of the slots that close or change shape first.".into());
+                            }
+                        }
+                        let field = block + 20 + usize::from(slot) * 8;
+                        bytes[field..field + 4].copy_from_slice(&shape.to_le_bytes());
+                        expected_effects.push((field, shape));
+                    }
+                }
                 expected.push((location, index, new_id, amount));
             }
             Change::Effect { upgrade, slot, effect } => {
@@ -853,7 +1008,18 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                     return Err("Gems go in weapons.".into());
                 }
                 let block = slot_block(&bytes, weapon_handle, id)?;
-                let (slot_shape, current) = slot_at(&bytes, block, slot)?;
+                let (mut slot_shape, current) = slot_at(&bytes, block, slot)?;
+                // A slot the game opens at the weapon's level but the save still has closed (a level
+                // changed before the editor opened slots) opens now.
+                let (base, level, imprint) = weapon_parts(id);
+                if slot_shape == SLOT_CLOSED {
+                    if let Some(shape) = planned_shape(&slot_plan(&slot_rows(params), base), slot, level, imprint) {
+                        let field = block + 20 + usize::from(slot) * 8;
+                        bytes[field..field + 4].copy_from_slice(&shape.to_le_bytes());
+                        expected_effects.push((field, shape));
+                        slot_shape = shape;
+                    }
+                }
                 // A slot takes the gem shapes of its bits; droplet gems (all bits) fit any open slot.
                 if slot_shape == SLOT_CLOSED || u32::from(shape) & slot_shape == 0 {
                     return Err("This slot does not take this gem's shape.".into());
@@ -885,6 +1051,8 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                 let (index, id_word) = add_equipment(&mut bytes, location, id, text, params)?;
                 expected.push((location, index, id_word, 1));
             }
+            // Last, below: a new gem moves every byte after the table.
+            Change::AddGem { .. } => {}
             Change::Add { location, id, amount } => {
                 let kind = params.goods.get(id, "goodsType").ok_or("This item is not in the game's tables.")? as u32;
                 if !GOODS_ADDABLE.iter().any(|(k, _)| *k == kind) || id > 0x00FF_FFFF {
@@ -897,6 +1065,15 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                 let index = add_item(&mut bytes, location, id, amount)?;
                 expected.push((location, index, 0x4000_0000 | id, amount));
             }
+        }
+    }
+    for change in &edit.changes {
+        if let Change::AddGem { shape, effects } = change {
+            let (index, source, at) = add_gem(&mut bytes, *shape, effects, text, params)?;
+            for (field, _) in expected_effects.iter_mut().filter(|(field, _)| *field >= at) {
+                *field += UPGRADE - 8;
+            }
+            expected.push((Location::Inventory, index, source, 1));
         }
     }
     // The edited file must still be a character whose entries are what was asked.
@@ -1039,7 +1216,33 @@ mod tests {
                 (126207, &[("categoryId", 1.0), ("effectRank", 7.0)]),
                 (122401, &[("categoryId", 2.0), ("effectRank", 1.0)]),
             ]),
+            weapon_slots: slot_params(),
+            // A gem source: row 132000 makes a gem with effect 126201.
+            gem_sources: Param::synthetic(&[(132000, &[("equipableSegmentWeapon", 1.0), ("gemeffectGenParamType_0", 1.0), ("gemeffectGenParam_0", 126201.0),
+                ("gemeffectGenParamType_1", 0.0), ("gemeffectGenParamType_2", 0.0), ("gemeffectGenParamType_3", 0.0), ("gemeffectGenParamType_4", 0.0),
+                ("gemeffectGenParamType_5", 0.0)])]),
         }
+    }
+
+    /// The test weapon's slots: radial at +1 and +3, then a triangle at +6 (Uncanny: waning).
+    fn slot_params() -> crate::game_data::Param {
+        let closed = f64::from(SLOT_CLOSED | 0x100);
+        let rows: Vec<(u32, Vec<(&str, f64)>)> = (0..=10u32)
+            .flat_map(|level| (0..=1u32).map(move |imprint| (level, imprint)))
+            .map(|(level, imprint)| {
+                let open = |from: u32, shape: f64| if level >= from { shape } else { closed };
+                (1000 + level * 10 + imprint, vec![
+                    ("wepParamId", f64::from(2_000_000 + imprint * 10_000 + level * 100)),
+                    ("gemSlotType_0", open(1, 1.0)),
+                    ("gemSlotType_1", open(3, 1.0)),
+                    ("gemSlotType_2", open(6, if imprint == 0 { 2.0 } else { 4.0 })),
+                    ("gemSlotType_3", closed),
+                    ("gemSlotType_4", closed),
+                ])
+            })
+            .collect();
+        let borrowed: Vec<(u32, &[(&str, f64)])> = rows.iter().map(|(id, fields)| (*id, &fields[..])).collect();
+        crate::game_data::Param::synthetic(&borrowed)
     }
 
     fn text() -> ItemText {
@@ -1303,6 +1506,95 @@ mod tests {
     }
 
     #[test]
+    fn levels_open_close_and_reshape_gem_slots() {
+        let (root, savedata) = staged(sample());
+        let path = savedata.join("1/CUSA03173/SPRJ0005/userdata0000");
+        let mut text = text();
+        text.weapons.extend((0..=10).map(|l| (2_010_000 + l * 100, "Uncanny Blade".to_string())));
+        let apply = |changes| rewrite(&savedata, &Edit {
+            title_id: "CUSA03173".into(),
+            slot: 0,
+            fingerprint: format!("{:x}", Sha256::digest(fs::read(&path).unwrap())),
+            changes,
+        }, &text, &params());
+        let level = |level, imprint| Change::Weapon { location: Location::Inventory, index: 2, level, imprint };
+        let shapes = || -> Vec<u32> {
+            let bytes = fs::read(&path).unwrap();
+            (0..5).map(|slot| slot_at(&bytes, SAMPLE_BLOCK, slot).unwrap().0).collect()
+        };
+        // +6: the game's three slots (radial, radial, triangle).
+        apply(vec![level(6, 0)]).unwrap();
+        assert_eq!(shapes(), [1, 1, 2, SLOT_CLOSED, SLOT_CLOSED]);
+        let inventory = read(&root.join("user"), "CUSA03173", 0, Some(&text), Some(&params())).unwrap();
+        let weapon = inventory.entries.iter().find(|e| e.index == 2).unwrap();
+        assert_eq!(weapon.slot_plan.iter().filter(|p| p.imprint == 1).map(|p| (p.slot, p.opens, p.shape)).collect::<Vec<_>>(),
+            [(0, 1, 1), (1, 3, 1), (2, 6, 4)]);
+        // A radial gem in the second slot; Uncanny reshapes the third slot and keeps the gem.
+        apply(vec![Change::Equip { upgrade: 0, location: Location::Inventory, index: 2, slot: 1 }]).unwrap();
+        apply(vec![level(6, 1)]).unwrap();
+        assert_eq!(shapes(), [1, 1, 4, SLOT_CLOSED, SLOT_CLOSED]);
+        // +2 closes the second slot: refused while the gem is in it, done once it is taken out.
+        assert!(apply(vec![level(2, 1)]).is_err());
+        apply(vec![Change::Unequip { upgrade: 0 }, level(2, 1)]).unwrap();
+        assert_eq!(shapes(), [1, SLOT_CLOSED, SLOT_CLOSED, SLOT_CLOSED, SLOT_CLOSED]);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn equipping_opens_a_slot_the_level_already_has() {
+        // A weapon at +6 whose second slot the save still has closed (a level changed by an older
+        // editor): equipping there opens it as the game would.
+        let mut bytes = sample();
+        let at = BASE + INVENTORY_FROM_NAME + 2 * ENTRY;
+        bytes[at + 8..at + 12].copy_from_slice(&2_000_600u32.to_le_bytes());
+        bytes[SAMPLE_BLOCK + 4..SAMPLE_BLOCK + 8].copy_from_slice(&2_000_600u32.to_le_bytes());
+        bytes[SAMPLE_BLOCK + 28..SAMPLE_BLOCK + 32].copy_from_slice(&SLOT_CLOSED.to_le_bytes());
+        let fingerprint = format!("{:x}", Sha256::digest(&bytes));
+        let (root, savedata) = staged(bytes);
+        let edit = Edit {
+            title_id: "CUSA03173".into(), slot: 0, fingerprint,
+            changes: vec![Change::Equip { upgrade: 0, location: Location::Inventory, index: 2, slot: 1 }],
+        };
+        rewrite(&savedata, &edit, &text(), &params()).unwrap();
+        let after = fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap();
+        assert_eq!(slot_at(&after, SAMPLE_BLOCK, 1).unwrap(), (1, 0xC080_0041));
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn adds_a_gem_and_moves_what_follows_the_table() {
+        let bytes = sample();
+        let (root, savedata) = staged(bytes.clone());
+        let path = savedata.join("1/CUSA03173/SPRJ0005/userdata0000");
+        let base = character_base(&bytes).unwrap().unwrap();
+        let edit = |changes| Edit {
+            title_id: "CUSA03173".into(), slot: 0,
+            fingerprint: format!("{:x}", Sha256::digest(fs::read(&path).unwrap())), changes,
+        };
+        // An effect the game has no gem of, and a shape it does not have, are refused.
+        assert!(rewrite(&savedata, &edit(vec![Change::AddGem { shape: 1, effects: vec![122401] }]), &text(), &params()).is_err());
+        assert!(rewrite(&savedata, &edit(vec![Change::AddGem { shape: 3, effects: vec![126201] }]), &text(), &params()).is_err());
+        // A new triangle gem, with the existing gem's effect changed in the same edit.
+        rewrite(&savedata, &edit(vec![
+            Change::AddGem { shape: 2, effects: vec![126201, 122401] },
+            Change::Effect { upgrade: 0, slot: 0, effect: 126207 },
+        ]), &text(), &params()).unwrap();
+        let after = fs::read(&path).unwrap();
+        assert_eq!(after.len(), bytes.len());
+        assert_eq!(character_base(&after).unwrap(), Some(base + 32));
+        let inventory = read(&root.join("user"), "CUSA03173", 0, Some(&text()), Some(&params())).unwrap();
+        assert_eq!(inventory.upgrades.len(), 2);
+        let new = inventory.upgrades.iter().find(|g| g.shape == 2).unwrap();
+        assert_eq!(new.effects.iter().map(|e| e.id).collect::<Vec<_>>(), [126201, 122401]);
+        assert_eq!(new.location, Some(Location::Inventory));
+        assert!(inventory.upgrades.iter().any(|g| g.effects[0].id == 126207));
+        // The character's own values moved with it.
+        let character = crate::save_editor::parse(&after, "CUSA03173", 0).unwrap().unwrap();
+        assert_eq!(character.echoes, crate::save_editor::parse(&bytes, "CUSA03173", 0).unwrap().unwrap().echoes);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn character_and_inventory_in_one_edit() {
         let bytes = sample();
         let fingerprint = format!("{:x}", Sha256::digest(&bytes));
@@ -1358,6 +1650,41 @@ mod tests {
         let after = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
         for e in after.entries.iter().filter(|e| e.id == weapon.id || e.id == armor.id) {
             println!("after: {:?} {:?} {:?} slots {:?}", e.location, e.kind, e.name, e.slots);
+        }
+    }
+
+    /// A new gem and a weapon raised to +6 (its slots open), on a scratch copy (never the player's
+    /// own), for a game run that saves them back:
+    /// BB_TEST_SAVE_USER=<copy> BB_CHECK_GAME=<dump> cargo test real_add_gem -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn real_add_gem() {
+        let user = std::path::PathBuf::from(std::env::var("BB_TEST_SAVE_USER").expect("BB_TEST_SAVE_USER"));
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
+        let before = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let items = catalog(&text, &params);
+        let gem = items.iter().find(|i| i.category == "gem" && i.name.contains("Physical")).unwrap();
+        let weapon = before.entries.iter().find(|e| e.kind == Kind::Weapon && e.level < 6 && !e.slot_plan.is_empty()).unwrap();
+        println!("{} gem effects; adding {} ({}); {:?} +{} -> +6, slots {:?}", items.iter().filter(|i| i.category == "gem").count(),
+            gem.name, gem.id, weapon.name, weapon.level, weapon.slots);
+        let edit = Edit {
+            title_id: title.clone(),
+            slot: 0,
+            fingerprint: before.fingerprint.clone(),
+            changes: vec![
+                Change::Weapon { location: weapon.location, index: weapon.index, level: 6, imprint: weapon.imprint },
+                Change::AddGem { shape: 1, effects: vec![gem.id] },
+            ],
+        };
+        rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
+        let after = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let raised = after.entries.iter().find(|e| e.location == weapon.location && e.index == weapon.index).unwrap();
+        println!("after: {:?} slots {:?}", raised.name, raised.slots);
+        for g in &after.upgrades {
+            println!("gem {} shape {} {:?} {:?}", g.index, g.shape, g.location, g.effects.iter().map(|e| e.text.clone()).collect::<Vec<_>>());
         }
     }
 

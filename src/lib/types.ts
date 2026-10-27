@@ -142,13 +142,17 @@ export type InventoryEntry = {
   variants: Record<string, InventoryStats>;
   /** Weapons: their open gem slots (shape bits: 1 radial, 2 triangle, 4 waning, 8 circle), with
    * the gem in each (an index in Inventory.upgrades). */
-  slots: { slot: number; shape: number; gem: number | null }[];
+  slots: WeaponSlot[];
+  /** Weapons: the slots the game gives them, for each imprint: each slot's shape and the level it
+   * opens at (empty when the game's tables do not list the weapon). */
+  slot_plan: { imprint: number; slot: number; opens: number; shape: number }[];
 };
+export type WeaponSlot = { slot: number; shape: number; gem: number | null };
 export type InventoryStats = {
   attack?: Record<string, number>; scaling?: Record<string, number>; requirements?: Record<string, number>;
   defense?: Record<string, number>; max?: number;
 };
-export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice" | "weapon" | "armor"; max: number; icon: number | null; description: string | null;
+export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice" | "weapon" | "armor" | "gem"; max: number; icon: number | null; description: string | null;
   /** The game's long description, and the hover card's numbers. */
   caption: string | null; stats: InventoryStats | null };
 export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[]; upgrades: Gem[] };
@@ -167,7 +171,8 @@ export type InventoryChange =
   | { type: "add_equipment"; location: InventoryLocation; id: number }
   | { type: "effect"; upgrade: number; slot: number; effect: number }
   | { type: "equip"; upgrade: number; location: InventoryLocation; index: number; slot: number }
-  | { type: "unequip"; upgrade: number };
+  | { type: "unequip"; upgrade: number }
+  | { type: "add_gem"; shape: number; effects: number[] };
 export type InventoryEdit = { title_id: string; slot: number; fingerprint: string; changes: InventoryChange[] };
 /** One edit of a character: attributes and Blood Echoes, inventory changes, or both (one backup). */
 export type SaveEdit = { character: CharacterEdit | null; inventory: InventoryEdit | null };

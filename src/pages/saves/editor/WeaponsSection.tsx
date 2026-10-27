@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { Swords } from "lucide-react";
 import type { Gem, InventoryEntry } from "@/lib";
 import { Button, Input } from "@/components/ui";
-import { AddItemPanel } from "@/pages/saves/editor/AddItemPanel";
+import { AddItemDialog } from "@/pages/saves/editor/AddItemDialog";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { PendingAdditions } from "@/pages/saves/editor/PendingAdditions";
 import { WeaponDetail, weaponName } from "@/pages/saves/editor/WeaponDetail";
-import { entryKey, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
+import { entryKey, slotsAt, type SaveEdits } from "@/pages/saves/editor/useSaveEdits";
 
 type Props = { weapons: InventoryEntry[]; gems: Gem[]; edits: SaveEdits; disabled: boolean };
 
@@ -17,7 +17,6 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string>();
-  const [adding, setAdding] = useState(false);
   // Weapons can be added more than once: nothing is "already held".
   const held = useMemo(() => ({ inventory: new Set<number>(), storage: new Set<number>() }), []);
   const shown = useMemo(() => {
@@ -33,24 +32,28 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
       <div className="flex gap-2">
         <Input className="min-w-0 flex-1" type="search"
           placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
-        <Button size="sm" variant={adding ? "default" : "secondary"} disabled={disabled} onClick={() => setAdding((on) => !on)}>{t("inventory.addWeapon")}</Button>
+        <AddItemDialog label={t("inventory.addWeapon")} held={held} location="inventory" categories={["weapon"]} disabled={disabled}
+          onAdd={(item) => edits.setAdditions((all) => [...all, { item, location: "inventory", amount: 1 }])} />
       </div>
-      {adding && <AddItemPanel held={held} location="inventory" categories={["weapon"]} disabled={disabled}
-        onAdd={(item) => edits.setAdditions((all) => [...all, { item, location: "inventory", amount: 1 }])} />}
       <div className="own-scroll -mx-3 -mb-3 pb-1">
         <PendingAdditions edits={edits} location="inventory" categories={["weapon"]} disabled={disabled} />
         {!shown.length ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
           : shown.map((entry) => {
             const chosen = edits.weapon(entry);
             const active = entry === current;
+            const slots = slotsAt(entry, chosen, gems);
+            const used = slots.filter((slot) => {
+              const picked = edits.gemSlots[entryKey(entry)] ?? {};
+              return (slot.slot in picked ? picked[slot.slot] : slot.gem) !== null;
+            }).length;
             return <button key={entryKey(entry)} type="button" onClick={() => setSelected(entryKey(entry))}
               className={`flex w-full items-center gap-3 px-3 py-2 text-left ${active ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"}`}>
               <ItemIcon icon={entry.icon} className="size-9" />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm">{weaponName(entry, chosen.level, chosen.imprint) || t("inventory.unnamed", { id: entry.id })}</span>
-                {(entry.slots.length > 0 || entry.location === "storage") && <span className="block text-xs text-muted-foreground">
-                  {entry.slots.length > 0 && t("inventory.slotsUsed", { used: entry.slots.filter((slot) => slot.gem !== null).length, count: entry.slots.length })}
-                  {entry.slots.length > 0 && entry.location === "storage" && " · "}
+                {(slots.length > 0 || entry.location === "storage") && <span className="block text-xs text-muted-foreground">
+                  {slots.length > 0 && t("inventory.slotsUsed", { used, count: slots.length })}
+                  {slots.length > 0 && entry.location === "storage" && " · "}
                   {entry.location === "storage" && t("inventory.storage")}
                 </span>}
               </span>

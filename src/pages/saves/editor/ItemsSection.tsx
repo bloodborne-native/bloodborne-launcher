@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { InventoryEntry, InventoryLocation } from "@/lib";
-import { Button, Input } from "@/components/ui";
-import { AddItemPanel, type CatalogCategory } from "@/pages/saves/editor/AddItemPanel";
+import { Input } from "@/components/ui";
+import { AddItemDialog } from "@/pages/saves/editor/AddItemDialog";
+import type { CatalogCategory } from "@/pages/saves/editor/AddItemPanel";
 import { PendingAdditions } from "@/pages/saves/editor/PendingAdditions";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
 import { ItemStats } from "@/pages/saves/editor/ItemStats";
@@ -23,7 +24,6 @@ type Props = {
 export function ItemsSection({ entries, edits, addTo, categories = ["consumable", "material", "chalice"], addLabel, disabled }: Props) {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
-  const [adding, setAdding] = useState(false);
   const { amounts, setAmounts, additions, setAdditions, changed } = edits;
   const shown = useMemo(() => {
     const query = search.trim().toLocaleLowerCase(i18n.language);
@@ -40,10 +40,9 @@ export function ItemsSection({ entries, edits, addTo, categories = ["consumable"
     <div className="flex flex-wrap gap-2">
       <Input className="min-w-40 flex-1" type="search"
         placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
-      {addTo && <Button size="sm" variant={adding ? "default" : "outline"} disabled={disabled} onClick={() => setAdding((on) => !on)}>{addLabel ?? t("inventory.add")}</Button>}
+      {addTo && <AddItemDialog label={addLabel ?? t("inventory.add")} held={held} location={addTo} categories={categories} disabled={disabled}
+        onAdd={(item, amount) => setAdditions((all) => [...all, { item, location: addTo, amount }])} />}
     </div>
-    {addTo && adding && <AddItemPanel held={held} location={addTo} categories={categories} disabled={disabled}
-      onAdd={(item, amount) => setAdditions((all) => [...all, { item, location: addTo, amount }])} />}
     <div className="own-scroll -mx-3 -mb-3 pb-1">
       {addTo && <PendingAdditions edits={edits} location={addTo} categories={categories} disabled={disabled} />}
       {!shown.length && !additions.some((a) => a.location === addTo && categories.includes(a.item.category)) ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>

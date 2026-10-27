@@ -1,13 +1,27 @@
 import { useMemo, useState } from "react";
-import type { CatalogItem, Character, CharacterEdit, Gem, Inventory, InventoryChange, InventoryEntry, InventoryLocation } from "@/lib";
+import type { CatalogItem, Character, CharacterEdit, Gem, Inventory, InventoryChange, InventoryEntry, InventoryLocation, WeaponSlot } from "@/lib";
 
 export const ATTRIBUTES = ["vitality", "endurance", "strength", "skill", "bloodtinge", "arcane"] as const;
 export type Attribute = (typeof ATTRIBUTES)[number];
 export type CharacterFields = { echoes: string; insight: string } & Record<Attribute, string>;
-export type Addition = { item: CatalogItem; location: InventoryLocation; amount: number };
+/** Something to add: an item (with its amount), a weapon or armor piece, or a gem (by its first
+ * effect, with the shape chosen). */
+export type Addition = { item: CatalogItem; location: InventoryLocation; amount: number; shape?: number };
 export type WeaponChoice = { level: number; imprint: number };
 
 export const entryKey = (entry: InventoryEntry) => `${entry.location}:${entry.index}`;
+
+/** A weapon's slots at a level and imprint, as the game gives them (the save's open slots when the
+ * game's tables do not list the weapon), each with the gem it keeps: a gem stays only where it still fits. */
+export function slotsAt(entry: InventoryEntry, choice: WeaponChoice, gems: Gem[]): WeaponSlot[] {
+  const planned = entry.slot_plan.filter((p) => p.imprint === choice.imprint);
+  if (!planned.length) return entry.slots;
+  return planned.filter((p) => p.opens <= choice.level).map((p) => {
+    const gem = entry.slots.find((s) => s.slot === p.slot)?.gem ?? null;
+    const fits = gem !== null && ((gems.find((g) => g.index === gem)?.shape ?? 0) & p.shape) !== 0;
+    return { slot: p.slot, shape: p.shape, gem: fits ? gem : null };
+  });
+}
 
 const fieldsOf = (character: Character): CharacterFields => ({
   echoes: String(character.echoes), insight: String(character.insight),
@@ -60,19 +74,38 @@ export function useSaveEdits(character: Character, inventory: Inventory | undefi
     }
     return [];
   });
-  // Each weapon slot's gem after the edit; gems are taken out first, so a gem can move between slots.
-  const slotted = entries.flatMap((entry) => entry.slots.map((slot) => {
+  // Each weapon slot's gem before and after the edit, at the weapon's chosen level and imprint: a slot
+  // that closes or changes shape lets go of a gem that no longer fits.
+  const slotted = entries.filter((entry) => entry.kind === "weapon").flatMap((entry) => {
     const chosen = gemSlots[entryKey(entry)] ?? {};
-    return { entry, slot, gem: slot.slot in chosen ? chosen[slot.slot] : slot.gem };
-  }));
-  const moved = slotted.filter(({ slot, gem }) => gem !== slot.gem);
-  const slotChanges: InventoryChange[] = [
-    ...moved.flatMap(({ slot }): InventoryChange[] => slot.gem === null ? [] : [{ type: "unequip", upgrade: slot.gem }]),
-    ...moved.flatMap(({ entry, slot, gem }): InventoryChange[] => gem === null ? []
-      : [{ type: "equip", upgrade: gem, location: entry.location, index: entry.index, slot: slot.slot }]),
-  ];
+    const after = slotsAt(entry, weapon(entry), gems);
+    const numbers = new Set([...entry.slots, ...after].map((slot) => slot.slot));
+    return [...numbers].map((number) => {
+      const slot = after.find((s) => s.slot === number);
+      const gem = !slot ? null : number in chosen ? chosen[number] : slot.gem;
+      return { entry, slot: number, before: entry.slots.find((s) => s.slot === number)?.gem ?? null, gem };
+    });
+  });
+  const moved = slotted.filter(({ before, gem }) => gem !== before);
+  // Gems come out first and go in last, so a gem can move between slots, and the weapon's level and
+  // imprint (which open, close and reshape slots) change in between.
+  const unequips = moved.flatMap(({ before }): InventoryChange[] => before === null ? [] : [{ type: "unequip", upgrade: before }]);
+  const equips = moved.flatMap(({ entry, slot, gem }): InventoryChange[] => gem === null ? []
+    : [{ type: "equip", upgrade: gem, location: entry.location, index: entry.index, slot }]);
   const inSlots = new Set(slotted.map(({ gem }) => gem));
-  const takenOut = new Set(moved.map(({ slot }) => slot.gem));
+  /** Whether the edit moves a gem in or out of a weapon's slot. */
+  const gemMoved = (gem: number) => moved.some(({ before, gem: after }) => before === gem || after === gem);
+  /** Where a gem is after the edit: a weapon's slot, or null. */
+  const placeOf = (gem: number) => slotted.find((place) => place.gem === gem) ?? null;
+  /** Puts a gem into a weapon's slot (out of the slot it was in), or takes it out (null). */
+  const moveGem = (gem: number, to: { entry: InventoryEntry; slot: number } | null) => setGemSlots((all) => {
+    const next = { ...all };
+    const from = placeOf(gem);
+    if (from) next[entryKey(from.entry)] = { ...next[entryKey(from.entry)], [from.slot]: null };
+    if (to) next[entryKey(to.entry)] = { ...next[entryKey(to.entry)], [to.slot]: gem };
+    return next;
+  });
+  const takenOut = new Set(moved.map(({ before }) => before));
   /** Whether a gem can go in a slot now: in the inventory or taken out in this edit, and in no other slot. */
   const available = (gem: Gem) => !inSlots.has(gem.index) && (gem.location === "inventory" || takenOut.has(gem.index));
   const effectChanges = gems.flatMap((gem) => gem.effects.flatMap((effect): InventoryChange[] => {
@@ -80,10 +113,12 @@ export function useSaveEdits(character: Character, inventory: Inventory | undefi
     return chosen !== undefined && chosen !== effect.id ? [{ type: "effect", upgrade: gem.index, slot: effect.slot, effect: chosen }] : [];
   }));
   const isEquipment = (addition: Addition) => addition.item.category === "weapon" || addition.item.category === "armor";
-  const additionChanges = additions.map((addition): InventoryChange => isEquipment(addition)
-    ? { type: "add_equipment", location: addition.location, id: addition.item.id }
-    : { type: "add", location: addition.location, id: addition.item.id, amount: addition.amount });
-  const changes = [...entryChanges, ...slotChanges, ...effectChanges, ...additionChanges];
+  const additionChanges = additions.map((addition): InventoryChange => addition.item.category === "gem"
+    ? { type: "add_gem", shape: addition.shape ?? 1, effects: [addition.item.id] }
+    : isEquipment(addition)
+      ? { type: "add_equipment", location: addition.location, id: addition.item.id }
+      : { type: "add", location: addition.location, id: addition.item.id, amount: addition.amount });
+  const changes = [...unequips, ...entryChanges, ...equips, ...effectChanges, ...additionChanges];
   const amountsValid = entries.every((entry) => {
     const value = amounts[entryKey(entry)];
     return value === undefined || (/^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= (entry.max || 999));
@@ -94,11 +129,13 @@ export function useSaveEdits(character: Character, inventory: Inventory | undefi
   const counts = {
     character: characterChanged ? 1 : 0,
     item: entries.filter((e) => e.location === "inventory" && e.kind === "item" && changed(e)).length
-      + additions.filter((a) => a.location === "inventory" && !isEquipment(a)).length,
+      + additions.filter((a) => a.location === "inventory" && !isEquipment(a) && a.item.category !== "gem").length,
     weapon: entries.filter((e) => e.kind === "weapon" && changed(e)).length
       + additions.filter((a) => a.location === "inventory" && a.item.category === "weapon").length,
     armor: additions.filter((a) => a.location === "inventory" && a.item.category === "armor").length,
-    gems: new Set(effectChanges.map((change) => change.type === "effect" && change.upgrade)).size,
+    gems: new Set([...effectChanges.map((change) => change.type === "effect" && change.upgrade),
+      ...moved.flatMap(({ before, gem }) => [before, gem]).filter((gem) => gem !== null)]).size
+      + additions.filter((a) => a.item.category === "gem").length,
     storage: entries.filter((e) => e.location === "storage" && e.kind === "item" && changed(e)).length
       + additions.filter((a) => a.location === "storage").length,
   };
@@ -106,7 +143,7 @@ export function useSaveEdits(character: Character, inventory: Inventory | undefi
 
   return {
     fields, setFields, level, characterValid, characterEdit,
-    amounts, setAmounts, weapon, setWeapons, gemSlots, setGemSlots, effects, setEffects, additions, setAdditions,
+    amounts, setAmounts, weapon, setWeapons, gemSlots, setGemSlots, placeOf, moveGem, gemMoved, effects, setEffects, additions, setAdditions,
     available, changes, counts, total, changed,
     valid: (!characterChanged || characterValid) && amountsValid,
     reset,
