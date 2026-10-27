@@ -36,7 +36,7 @@ export function ItemsSection({ entries, edits, addTo, categories = ["consumable"
     return sets;
   }, [entries, additions]);
   const label = (entry: InventoryEntry) => entry.name ?? t("inventory.unnamed", { id: entry.id });
-  return <div className="grid gap-3">
+  return <div className="grid gap-3 rounded-2xl surface p-3">
     <div className="flex flex-wrap gap-2">
       <Input className="min-w-40 flex-1" type="search"
         placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
@@ -44,7 +44,7 @@ export function ItemsSection({ entries, edits, addTo, categories = ["consumable"
     </div>
     {addTo && adding && <AddItemPanel held={held} location={addTo} categories={categories} disabled={disabled}
       onAdd={(item, amount) => setAdditions((all) => [...all, { item, location: addTo, amount }])} />}
-    <div className="own-scroll rounded-2xl surface py-1">
+    <div className="own-scroll -mx-3 -mb-3 pb-1">
       {addTo && <PendingAdditions edits={edits} location={addTo} categories={categories} disabled={disabled} />}
       {!shown.length && !additions.some((a) => a.location === addTo && categories.includes(a.item.category)) ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
         : shown.map((entry) => <div key={entryKey(entry)}

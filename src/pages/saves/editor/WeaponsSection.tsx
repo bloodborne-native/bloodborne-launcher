@@ -28,7 +28,7 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
   // on its own with a way back.
   const picked = selected !== undefined && current !== undefined;
   return <div className="grid gap-4 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
-    <div className={`content-start gap-2 ${picked ? "hidden lg:grid" : "grid"}`}>
+    <div className={`content-start gap-2 self-start rounded-2xl surface p-3 ${picked ? "hidden lg:grid" : "grid"}`}>
       <div className="flex gap-2">
         <Input className="min-w-0 flex-1" type="search"
           placeholder={t("inventory.search")} value={search} onChange={(event) => setSearch(event.target.value)} />
@@ -36,7 +36,7 @@ export function WeaponsSection({ weapons, gems, edits, disabled }: Props) {
       </div>
       {adding && <AddItemPanel held={held} location="inventory" categories={["weapon"]} disabled={disabled}
         onAdd={(item) => edits.setAdditions((all) => [...all, { item, location: "inventory", amount: 1 }])} />}
-      <div className="own-scroll rounded-2xl surface py-1">
+      <div className="own-scroll -mx-3 -mb-3 pb-1">
         <PendingAdditions edits={edits} location="inventory" categories={["weapon"]} disabled={disabled} />
         {!shown.length ? <p className="px-3 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
           : shown.map((entry) => {
