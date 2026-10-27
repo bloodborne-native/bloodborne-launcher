@@ -15,10 +15,11 @@ export function AppWindow() {
   return (
     // The window: its background (every page but Home) sits behind the menu and the page alike.
     <div className="relative isolate flex h-full flex-col md:flex-row">
-      {tab !== "home" && <PageBackground />}
+      <PageBackground />
       <Sidebar />
       <MobileHeader />
-      <main className="relative isolate flex flex-1 flex-col overflow-y-auto bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,101,0.05),transparent_55%)]">
+      {/* Home's page is its own picture fading to black; the menu keeps the street. */}
+      <main className={`relative isolate flex flex-1 flex-col overflow-y-auto ${tab === "home" ? "bg-background" : "bg-[radial-gradient(ellipse_at_top_right,rgba(201,162,101,0.05),transparent_55%)]"}`}>
         {config?.platform === "macos" ? <TitleBar /> : <div className="hidden h-6 shrink-0 md:block" />}
         <div className="mx-auto w-full max-w-4xl px-4 pb-28 pt-4 sm:px-6 md:px-10 md:pb-12 md:pt-0">
           <UpdateNotice />
