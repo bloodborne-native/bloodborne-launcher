@@ -262,6 +262,7 @@
     "insight": "Intuizione",
     "inconsistentStats": "Il livello e gli attributi non corrispondono; questo personaggio non può essere modificato in sicurezza.",
     "editCharacter": "Modifica personaggio",
+    "editorNeedsGame": "L’editor dei salvataggi legge nomi, icone e valori degli oggetti dai file del gioco: scegli prima la cartella del gioco in Home.",
     "attributes": "Attributi",
     "resultingLevel": "Livello risultante: {{level}}",
     "derivedValuesHint": "Modificare Vitalità o Resistenza porta anche salute o vigore al valore base massimo. Rune ed equipaggiamento possono cambiare il valore mostrato nel gioco.",

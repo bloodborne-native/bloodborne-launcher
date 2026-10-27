@@ -262,6 +262,7 @@
     "insight": "Innsikt",
     "inconsistentStats": "Nivået og egenskapene stemmer ikke overens; figuren kan ikke redigeres trygt.",
     "editCharacter": "Rediger figur",
+    "editorNeedsGame": "Lagringsredigereren leser gjenstanders navn, ikoner og tall fra spillfilene dine: velg først spillmappen under Hjem.",
     "attributes": "Egenskaper",
     "resultingLevel": "Nytt nivå: {{level}}",
     "derivedValuesHint": "Endres Vitalitet eller Utholdenhet, settes også helse eller stamina til full grunnverdi. Runer og utstyr kan endre verdien som vises i spillet.",

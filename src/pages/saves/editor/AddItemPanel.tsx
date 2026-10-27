@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib";
 import type { CatalogItem, InventoryLocation } from "@/lib";
 import { Button } from "@/components/ui";
 import { ItemIcon } from "@/pages/saves/editor/ItemIcon";
+import { useItemCatalog } from "@/pages/saves/editor/useItemCatalog";
 
 const CATEGORIES = ["consumable", "material", "chalice"] as const;
 
@@ -24,7 +23,7 @@ export function AddItemPanel({ held, location, disabled, onAdd }: Props) {
   const [search, setSearch] = useState("");
   const [chosen, setChosen] = useState<CatalogItem>();
   const [amount, setAmount] = useState("1");
-  const catalog = useQuery({ queryKey: ["item-catalog", i18n.language], queryFn: () => api.itemCatalog(i18n.language), staleTime: Infinity });
+  const catalog = useItemCatalog();
   const shown = useMemo(() => {
     const query = search.trim().toLocaleLowerCase(i18n.language);
     return (catalog.data ?? []).filter((item) => item.category === category)

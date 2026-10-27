@@ -262,6 +262,7 @@
     "insight": "Kavrayış",
     "inconsistentStats": "Seviye ve özellikler uyuşmuyor; bu karakter güvenli şekilde düzenlenemez.",
     "editCharacter": "Karakteri düzenle",
+    "editorNeedsGame": "Kayıt düzenleyici eşya adlarını, simgelerini ve değerlerini oyun dosyalarınızdan okur: önce Ana sayfa sekmesinden oyun klasörünü seçin.",
     "attributes": "Özellikler",
     "resultingLevel": "Yeni seviye: {{level}}",
     "derivedValuesHint": "Canlılık veya Dayanıklılık değiştirildiğinde can ya da dayanıklılık çubuğu da tam temel değere ayarlanır. Rünler ve ekipman oyunda gösterilen değeri değiştirebilir.",

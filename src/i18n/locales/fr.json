@@ -262,6 +262,7 @@
     "insight": "Perspicacité",
     "inconsistentStats": "Le niveau et les attributs ne concordent pas ; ce personnage ne peut pas être modifié sans risque.",
     "editCharacter": "Modifier le personnage",
+    "editorNeedsGame": "L’éditeur de sauvegarde lit les noms, icônes et valeurs des objets dans vos fichiers du jeu : choisissez d’abord le dossier du jeu dans Accueil.",
     "attributes": "Attributs",
     "resultingLevel": "Niveau obtenu : {{level}}",
     "derivedValuesHint": "Modifier la Vitalité ou l’Endurance remet aussi la santé ou la vigueur à leur valeur de base maximale. Les runes et l’équipement peuvent changer la valeur affichée en jeu.",

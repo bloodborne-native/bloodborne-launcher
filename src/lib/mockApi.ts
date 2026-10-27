@@ -4,7 +4,7 @@ import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod
 
 const config: Config = {
   settings: {
-    game_dir: "/Users/hunter/Games/CUSA03173",
+    game_dir: new URLSearchParams(window.location.search).has("nogame") ? "" : "/Users/hunter/Games/CUSA03173",
     user_dir: "",
     save_profile: "original",
     mods_dir: "",

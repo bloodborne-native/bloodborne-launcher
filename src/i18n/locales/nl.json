@@ -262,6 +262,7 @@
     "insight": "Inzicht",
     "inconsistentStats": "Niveau en attributen komen niet overeen; dit personage kan niet veilig worden bewerkt.",
     "editCharacter": "Personage bewerken",
+    "editorNeedsGame": "De save-editor leest namen, pictogrammen en waarden van voorwerpen uit je spelbestanden: kies eerst de spelmap op Start.",
     "attributes": "Attributen",
     "resultingLevel": "Nieuw niveau: {{level}}",
     "derivedValuesHint": "Wie Vitaliteit of Uithoudingsvermogen wijzigt, zet ook gezondheid of stamina op de volle basiswaarde. Runen en uitrusting kunnen de waarde in het spel veranderen.",

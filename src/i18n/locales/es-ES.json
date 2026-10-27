@@ -262,6 +262,7 @@
     "insight": "Lucidez",
     "inconsistentStats": "El nivel y los atributos no coinciden; no es seguro editar este personaje.",
     "editCharacter": "Editar personaje",
+    "editorNeedsGame": "El editor de partidas lee los nombres, iconos y valores de los objetos de tus archivos del juego: primero elige la carpeta del juego en Inicio.",
     "attributes": "Atributos",
     "resultingLevel": "Nivel resultante: {{level}}",
     "derivedValuesHint": "Cambiar Vitalidad o Aguante también pone la salud o la resistencia en su valor base completo. Las runas y el equipo pueden cambiar el valor que se muestra en el juego.",

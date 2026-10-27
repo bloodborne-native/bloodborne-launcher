@@ -262,6 +262,7 @@
     "insight": "Insikt",
     "inconsistentStats": "Nivån och egenskaperna stämmer inte överens; rollfiguren kan inte redigeras säkert.",
     "editCharacter": "Redigera rollfigur",
+    "editorNeedsGame": "Sparfilsredigeraren läser föremålens namn, ikoner och värden från dina spelfiler: välj först spelmappen under Hem.",
     "attributes": "Egenskaper",
     "resultingLevel": "Ny nivå: {{level}}",
     "derivedValuesHint": "Ändras Vitalitet eller Uthållighet sätts även hälsa eller stamina till fullt grundvärde. Runor och utrustning kan ändra värdet som visas i spelet.",

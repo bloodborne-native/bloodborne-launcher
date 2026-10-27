@@ -262,6 +262,7 @@
     "insight": "啟蒙",
     "inconsistentStats": "等級與屬性不一致，無法安全編輯此角色。",
     "editCharacter": "編輯角色",
+    "editorNeedsGame": "存檔編輯器從你的遊戲檔案讀取物品名稱、圖示和數值：請先在首頁選擇遊戲資料夾。",
     "attributes": "屬性",
     "resultingLevel": "編輯後的等級：{{level}}",
     "derivedValuesHint": "變更體力或耐力時，生命值或精力也會設為完整的基礎值。符文與裝備可能會改變遊戲中顯示的數值。",

@@ -262,6 +262,7 @@
     "insight": "Einsicht",
     "inconsistentStats": "Stufe und Attribute passen nicht zusammen; dieser Charakter kann nicht sicher bearbeitet werden.",
     "editCharacter": "Charakter bearbeiten",
+    "editorNeedsGame": "Der Spielstand-Editor liest Namen, Symbole und Werte der Gegenstände aus deinen Spieldateien: Wähle zuerst den Spielordner unter Start.",
     "attributes": "Attribute",
     "resultingLevel": "Neue Stufe: {{level}}",
     "derivedValuesHint": "Wer Vitalität oder Ausdauer ändert, setzt auch Gesundheit oder Ausdauerleiste auf den vollen Grundwert. Runen und Ausrüstung können den im Spiel angezeigten Wert verändern.",

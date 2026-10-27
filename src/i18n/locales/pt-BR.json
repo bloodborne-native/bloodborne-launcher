@@ -447,6 +447,7 @@
     "insight": "Discernimento",
     "inconsistentStats": "O nível não corresponde aos atributos; não é seguro editar este personagem.",
     "editCharacter": "Editar personagem",
+    "editorNeedsGame": "O editor de saves lê nomes, ícones e números dos itens dos arquivos do seu jogo: escolha primeiro a pasta do jogo em Início.",
     "attributes": "Atributos",
     "resultingLevel": "Nível resultante: {{level}}",
     "derivedValuesHint": "Alterar Vitalidade ou Resistência também define a vida ou a energia para o valor base máximo. Runas e equipamentos podem alterar o valor exibido no jogo.",

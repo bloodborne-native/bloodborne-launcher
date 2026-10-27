@@ -262,6 +262,7 @@
     "insight": "Oivallus",
     "inconsistentStats": "Taso ja ominaisuudet eivät täsmää; tätä hahmoa ei voi muokata turvallisesti.",
     "editCharacter": "Muokkaa hahmoa",
+    "editorNeedsGame": "Tallennuseditori lukee esineiden nimet, kuvakkeet ja arvot pelitiedostoistasi: valitse ensin pelikansio Koti-sivulla.",
     "attributes": "Ominaisuudet",
     "resultingLevel": "Uusi taso: {{level}}",
     "derivedValuesHint": "Elinvoiman tai Kestävyyden muuttaminen asettaa myös terveyden tai kestävyyspalkin täyteen perusarvoon. Riimut ja varusteet voivat muuttaa pelissä näkyvää arvoa.",

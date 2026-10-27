@@ -461,6 +461,7 @@
     "insight": "Insight",
     "inconsistentStats": "The level and attributes do not agree; this character cannot be edited safely.",
     "editCharacter": "Edit character",
+    "editorNeedsGame": "The save editor reads item names, icons and numbers from your game files: choose the game folder on Home first.",
     "attributes": "Attributes",
     "resultingLevel": "Resulting level: {{level}}",
     "derivedValuesHint": "Changing Vitality or Endurance also sets health or stamina to the full base value. Runes and equipment may change the value shown in game.",
