@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Native port", "version": "v{{version}}" },
-  "nav": { "home": "Hjem", "graphics": "Grafik", "controls": "Styring", "game": "Spil", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Avanceret", "log": "Log", "saves": "Gemte spil", "profiles": "Profiler" },
+  "nav": { "trophies": "Trofæer", "groupSettings": "Indstillinger", "groupDeveloper": "Udvikler", "home": "Hjem", "graphics": "Grafik", "controls": "Styring", "game": "Spil", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Avanceret", "log": "Log", "saves": "Gemte spil", "profiles": "Profiler" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Ikke tildelt", "saveFailed": "Kunne ikke gemme", "restartNote": "Gælder fra næste start."
   },
   "home": {
-    "title": "Jag natten", "subtitle": "Bloodborne, der kører native på din enhed.", "gameFolder": "Spil",
+    "eyebrow": "Vend tilbage til Yharnam",
+    "title": "Jag natten", "subtitle": "Bloodborne, der kører native på din enhed.",
     "gameFolderHint": "Din kopi af Bloodborne (enhver region) med opdatering 1.09 lagt ind.", "checking": "Kontrollerer spillet…", "ready": "Klar til at spille",
     "copyGame": "Kopiér filerne fra dit dump til denne mappe: med appen Filer eller med fildeling fra en anden enhed.",
     "noFolder": "Vælg spilmappen.", "folder": "Spilmappe", "edition": "{{id}} · version {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asien", "unknown": "Ukendt region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inkluderet", "dlcMissing": "Ikke inkluderet", "dlcMissingHint": "Denne udgave sælger The Old Hunters som tilføjelse, som porten endnu ikke indlæser.", "summary": "Overblik", "upscaler": "Opskalering", "renderSize": "Renderer i {{size}}",
     "frameRate": "Billedhastighed", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} aktive", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktive", "modsOff": "Fra",
-    "firstStart": "Første start kompilerer spillets shaders og tager derfor et par minutter. Senere starter går hurtigt.",
-    "lastRun": "Seneste session", "lastRunOk": "Spillet lukkede normalt.", "lastRunError": "Spillet stoppede med afslutningskode {{code}}.",
-    "openData": "Gemte spil og data"
+    "lastRun": "Seneste session", "lastRunOk": "Spillet lukkede normalt.", "lastRunError": "Spillet stoppede med afslutningskode {{code}}."
   },
   "graphics": {
     "effects": "Effekter",
@@ -274,7 +273,6 @@
     "locked": "Låst",
     "preview": "Forhåndsvisning af besked",
     "recordedCount": "Registrerede oplåsninger: {{count}}",
-    "view": "Vis trofæer",
     "empty": "Ingen oplåsninger registreret endnu.",
     "edited": "Redigeret gemt spil: nye trofæer deaktiveret.",
     "id": "Trofæ {{id}}",

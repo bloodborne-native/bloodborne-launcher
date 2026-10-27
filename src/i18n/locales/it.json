@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Port nativo", "version": "v{{version}}" },
-  "nav": { "home": "Home", "graphics": "Grafica", "controls": "Comandi", "game": "Gioco", "mods": "Mod", "patches": "Patch", "online": "Online", "advanced": "Avanzate", "log": "Registro", "saves": "Salvataggi", "profiles": "Profili" },
+  "nav": { "trophies": "Trofei", "groupSettings": "Impostazioni", "groupDeveloper": "Sviluppatore", "home": "Home", "graphics": "Grafica", "controls": "Comandi", "game": "Gioco", "mods": "Mod", "patches": "Patch", "online": "Online", "advanced": "Avanzate", "log": "Registro", "saves": "Salvataggi", "profiles": "Profili" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Non assegnato", "saveFailed": "Impossibile salvare", "restartNote": "Si applica al prossimo avvio."
   },
   "home": {
-    "title": "Caccia la notte", "subtitle": "Bloodborne, in esecuzione nativa sul tuo dispositivo.", "gameFolder": "Gioco",
+    "eyebrow": "Torna a Yharnam",
+    "title": "Caccia la notte", "subtitle": "Bloodborne, in esecuzione nativa sul tuo dispositivo.",
     "gameFolderHint": "La tua copia di Bloodborne (qualsiasi regione) con l’aggiornamento 1.09 integrato.", "checking": "Verifica del gioco…", "ready": "Pronto per giocare",
     "copyGame": "Copia i file del tuo dump in questa cartella: con l'app File o con la condivisione file da un altro dispositivo.",
     "noFolder": "Scegli la cartella del gioco.", "folder": "Cartella del gioco", "edition": "{{id}} · versione {{version}}", "region": { "america": "Americhe", "europe": "Europa", "japan": "Giappone", "asia": "Asia", "unknown": "Regione sconosciuta" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluso", "dlcMissing": "Non incluso", "dlcMissingHint": "Questa edizione vende The Old Hunters come contenuto aggiuntivo, che il port non carica ancora.", "summary": "In breve", "upscaler": "Upscaler", "renderSize": "Renderizza a {{size}}",
     "frameRate": "Frequenza fotogrammi", "controller": "Controller", "mods": "Mod",
     "modsActive": "{{count}} attive", "modsActive_one": "{{count}} attiva", "modsActive_other": "{{count}} attive", "modsOff": "Disattivate",
-    "firstStart": "Il primo avvio compila gli shader del gioco e richiede qualche minuto. Gli avvii successivi sono rapidi.",
-    "lastRun": "Ultima sessione", "lastRunOk": "Il gioco si è chiuso normalmente.", "lastRunError": "Il gioco si è fermato con codice di uscita {{code}}.",
-    "openData": "Salvataggi e dati"
+    "lastRun": "Ultima sessione", "lastRunOk": "Il gioco si è chiuso normalmente.", "lastRunError": "Il gioco si è fermato con codice di uscita {{code}}."
   },
   "graphics": {
     "effects": "Effetti",
@@ -274,7 +273,6 @@
     "locked": "Bloccato",
     "preview": "Anteprima notifica",
     "recordedCount": "Sblocchi registrati: {{count}}",
-    "view": "Mostra trofei",
     "empty": "Nessuno sblocco registrato.",
     "edited": "Salvataggio modificato: nuovi trofei disattivati.",
     "id": "Trofeo {{id}}",

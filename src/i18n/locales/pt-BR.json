@@ -5,6 +5,9 @@
     "version": "v{{version}}"
   },
   "nav": {
+    "trophies": "Troféus",
+    "groupSettings": "Configurações",
+    "groupDeveloper": "Desenvolvedor",
     "home": "Início",
     "graphics": "Gráficos",
     "controls": "Controles",
@@ -79,9 +82,9 @@
     "restartNote": "Vale a partir do próximo início."
   },
   "home": {
+    "eyebrow": "Volte a Yharnam",
     "title": "Cace a noite",
     "subtitle": "Bloodborne, rodando nativamente no seu dispositivo.",
-    "gameFolder": "Jogo",
     "gameFolderHint": "Seu dump de Bloodborne (qualquer região) com a atualização 1.09 mesclada.",
     "copyGame": "Copie os arquivos do seu dump para esta pasta: pelo app Arquivos ou pelo compartilhamento de arquivos de outro dispositivo.",
     "checking": "Verificando o jogo…",
@@ -97,11 +100,9 @@
     "modsActive_one": "{{count}} ativo",
     "modsActive_other": "{{count}} ativos",
     "modsOff": "Desligados",
-    "firstStart": "Na primeira vez os shaders do jogo são compilados, por isso leva alguns minutos. Depois o início é rápido.",
     "lastRun": "Última sessão",
     "lastRunOk": "O jogo fechou normalmente.",
-    "lastRunError": "O jogo parou com o código de saída {{code}}.",
-    "openData": "Saves e dados"
+    "lastRunError": "O jogo parou com o código de saída {{code}}."
   },
   "graphics": {
     "effects": "Efeitos",
@@ -459,7 +460,6 @@
     "locked": "Bloqueado",
     "preview": "Prévia de notificação",
     "recordedCount": "Troféus registrados: {{count}}",
-    "view": "Ver troféus",
     "empty": "Nenhum troféu registrado ainda.",
     "edited": "Save editado: novos troféus desativados.",
     "id": "Troféu {{id}}",

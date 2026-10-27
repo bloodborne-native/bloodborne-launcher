@@ -23,6 +23,8 @@ const tauriApi = {
   saveSettings: (settings: Partial<Settings>) => invoke<void>("save_settings", { settings }),
   saveIni: (values: Record<string, string | null>) => invoke<void>("save_ini", { values }),
   checkGame: (dir: string) => invoke<GameCheck>("check_game", { dir }),
+  /** The game's tile from the dump (PNG bytes; empty when there is none). */
+  gameIcon: (dir: string) => invoke<ArrayBuffer>("game_icon", { dir }),
   listMods: () => invoke<{ mods: Mod[]; dir: string }>("list_mods"),
   saveMods: (order: string[], disabled: string[]) => invoke<void>("save_mods", { order, disabled }),
   listPatches: () => invoke<{ patches: Patch[]; dir: string }>("list_patches"),

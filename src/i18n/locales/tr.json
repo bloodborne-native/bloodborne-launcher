@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Yerel port", "version": "v{{version}}" },
-  "nav": { "home": "Ana sayfa", "graphics": "Grafik", "controls": "Kontroller", "game": "Oyun", "mods": "Modlar", "patches": "Yamalar", "online": "Online", "advanced": "Gelişmiş", "log": "Günlük", "saves": "Kayıtlar", "profiles": "Profiller" },
+  "nav": { "trophies": "Kupalar", "groupSettings": "Ayarlar", "groupDeveloper": "Geliştirici", "home": "Ana sayfa", "graphics": "Grafik", "controls": "Kontroller", "game": "Oyun", "mods": "Modlar", "patches": "Yamalar", "online": "Online", "advanced": "Gelişmiş", "log": "Günlük", "saves": "Kayıtlar", "profiles": "Profiller" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Atanmadı", "saveFailed": "Kaydedilemedi", "restartNote": "Bir sonraki açılışta geçerli olur."
   },
   "home": {
-    "title": "Geceyi avla", "subtitle": "Bloodborne, cihazınızda yerel olarak çalışıyor.", "gameFolder": "Oyun",
+    "eyebrow": "Yharnam'a dön",
+    "title": "Geceyi avla", "subtitle": "Bloodborne, cihazınızda yerel olarak çalışıyor.",
     "gameFolderHint": "Bloodborne kopyanız (herhangi bir bölge), 1.09 güncellemesi birleştirilmiş olarak.", "checking": "Oyun denetleniyor…", "ready": "Oynamaya hazır",
     "copyGame": "Dökümünüzün dosyalarını bu klasöre kopyalayın: Dosyalar uygulamasıyla ya da başka bir cihazdan dosya paylaşımıyla.",
     "noFolder": "Oyun klasörünü seçin.", "folder": "Oyun klasörü", "edition": "{{id}} · sürüm {{version}}", "region": { "america": "Amerika", "europe": "Avrupa", "japan": "Japonya", "asia": "Asya", "unknown": "Bilinmeyen bölge" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Dahil", "dlcMissing": "Dahil değil", "dlcMissingHint": "Bu sürüm The Old Hunters’ı ek içerik olarak satar; port bunu henüz yüklemiyor.", "summary": "Özet", "upscaler": "Ölçekleyici", "renderSize": "{{size}} çözünürlükte işler",
     "frameRate": "Kare hızı", "controller": "Kumanda", "mods": "Modlar",
     "modsActive": "{{count}} etkin", "modsActive_one": "{{count}} etkin", "modsActive_other": "{{count}} etkin", "modsOff": "Kapalı",
-    "firstStart": "İlk açılış oyunun gölgelendiricilerini derler, bu yüzden birkaç dakika sürer. Sonraki açılışlar hızlıdır.",
-    "lastRun": "Son oturum", "lastRunOk": "Oyun normal şekilde kapandı.", "lastRunError": "Oyun {{code}} çıkış koduyla durdu.",
-    "openData": "Kayıtlar ve veriler"
+    "lastRun": "Son oturum", "lastRunOk": "Oyun normal şekilde kapandı.", "lastRunError": "Oyun {{code}} çıkış koduyla durdu."
   },
   "graphics": {
     "effects": "Efektler",
@@ -274,7 +273,6 @@
     "locked": "Kilitli",
     "preview": "Bildirim önizlemesi",
     "recordedCount": "Kaydedilen açılımlar: {{count}}",
-    "view": "Kupaları görüntüle",
     "empty": "Henüz açılım kaydedilmedi.",
     "edited": "Düzenlenmiş kayıt: yeni kupalar devre dışı.",
     "id": "Kupa {{id}}",

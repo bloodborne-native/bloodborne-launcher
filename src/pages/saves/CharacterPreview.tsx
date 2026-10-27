@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib";
 import { SettingsSection } from "@/components/settings";
 import { EditCharacterDialog } from "@/pages/saves/EditCharacterDialog";
+import { Message } from "@/components/common";
 
 export function CharacterPreview({ profileId, running }: { profileId: string; running: boolean }) {
   const { t, i18n } = useTranslation();
@@ -15,7 +16,7 @@ export function CharacterPreview({ profileId, running }: { profileId: string; ru
   const number = (value: number) => value.toLocaleString(i18n.language);
   return <SettingsSection title={t("saves.editor")} description={t("saves.characterPreviewHint")}>
     {running ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.stopFirst")}</p>
-      : error ? <p role="alert" className="px-5 py-4 text-sm text-destructive">{String(error)}</p>
+      : error ? <Message tone="error" className="px-5 py-4">{String(error)}</Message>
       : isPending ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.readingCharacters")}</p>
       : !data?.length ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.noCharacters")}</p>
       : data.map((character) => <div key={`${character.title_id}:${character.slot}`} className="border-t border-border px-5 py-4 first:border-t-0">
@@ -30,7 +31,7 @@ export function CharacterPreview({ profileId, running }: { profileId: string; ru
           {(["vitality", "endurance", "strength", "skill", "bloodtinge", "arcane", "echoes", "insight"] as const).map((field) =>
             <div key={field} className="flex justify-between gap-2"><dt className="text-muted-foreground">{t(`saves.${field}`)}</dt><dd>{number(character[field])}</dd></div>)}
         </dl>
-        {!character.stats_consistent && <p className="mt-3 text-xs text-destructive">{t("saves.inconsistentStats")}</p>}
+        {!character.stats_consistent && <Message tone="error" className="mt-3 text-xs">{t("saves.inconsistentStats")}</Message>}
         <div className="mt-4"><EditCharacterDialog profileId={profileId} character={character} disabled={running} /></div>
       </div>)}
   </SettingsSection>;

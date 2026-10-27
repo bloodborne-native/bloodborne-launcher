@@ -165,6 +165,8 @@ export const mockApi = {
         else config.ini[k] = v;
       }),
     ),
+  // The preview has no game files: Home shows its own art instead.
+  gameIcon: () => wait(new ArrayBuffer(0)),
   checkGame: (dir: string): Promise<GameCheck> =>
     wait(
       dir

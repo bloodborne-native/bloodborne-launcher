@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Nativer Port", "version": "v{{version}}" },
-  "nav": { "home": "Start", "graphics": "Grafik", "controls": "Steuerung", "game": "Spiel", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Erweitert", "log": "Protokoll", "saves": "Spielstände", "profiles": "Profile" },
+  "nav": { "trophies": "Trophäen", "groupSettings": "Einstellungen", "groupDeveloper": "Entwickler", "home": "Start", "graphics": "Grafik", "controls": "Steuerung", "game": "Spiel", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Erweitert", "log": "Protokoll", "saves": "Spielstände", "profiles": "Profile" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Nicht belegt", "saveFailed": "Speichern fehlgeschlagen", "restartNote": "Gilt ab dem nächsten Start."
   },
   "home": {
-    "title": "Jage die Nacht", "subtitle": "Bloodborne, nativ auf deinem Gerät.", "gameFolder": "Spiel",
+    "eyebrow": "Kehre nach Yharnam zurück",
+    "title": "Jage die Nacht", "subtitle": "Bloodborne, nativ auf deinem Gerät.",
     "gameFolderHint": "Deine Kopie von Bloodborne (jede Region) mit eingespieltem Update 1.09.", "checking": "Spiel wird geprüft…", "ready": "Bereit zum Spielen",
     "copyGame": "Kopiere die Dateien deiner Kopie in diesen Ordner: mit der Dateien-App oder über die Dateifreigabe eines anderen Geräts.",
     "noFolder": "Wähle den Spielordner.", "folder": "Spielordner", "edition": "{{id}} · Version {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asien", "unknown": "Unbekannte Region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Enthalten", "dlcMissing": "Nicht enthalten", "dlcMissingHint": "Diese Edition verkauft The Old Hunters als Zusatzinhalt, den die Portierung noch nicht lädt.", "summary": "Überblick", "upscaler": "Upscaler", "renderSize": "Rendert in {{size}}",
     "frameRate": "Bildrate", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} aktiv", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktiv", "modsOff": "Aus",
-    "firstStart": "Beim ersten Start werden die Shader des Spiels kompiliert, das dauert einige Minuten. Spätere Starts sind schnell.",
-    "lastRun": "Letzte Sitzung", "lastRunOk": "Das Spiel wurde normal beendet.", "lastRunError": "Das Spiel wurde mit Exitcode {{code}} beendet.",
-    "openData": "Spielstände und Daten"
+    "lastRun": "Letzte Sitzung", "lastRunOk": "Das Spiel wurde normal beendet.", "lastRunError": "Das Spiel wurde mit Exitcode {{code}} beendet."
   },
   "graphics": {
     "effects": "Effekte",
@@ -274,7 +273,6 @@
     "locked": "Gesperrt",
     "preview": "Benachrichtigungsvorschau",
     "recordedCount": "Erfasste Freischaltungen: {{count}}",
-    "view": "Trophäen anzeigen",
     "empty": "Noch keine Freischaltungen erfasst.",
     "edited": "Bearbeiteter Spielstand: neue Trophäen deaktiviert.",
     "id": "Trophäe {{id}}",

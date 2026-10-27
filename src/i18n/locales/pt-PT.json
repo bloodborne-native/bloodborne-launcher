@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Port nativo", "version": "v{{version}}" },
-  "nav": { "home": "Início", "graphics": "Gráficos", "controls": "Controlos", "game": "Jogo", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Avançado", "log": "Registo", "saves": "Gravações", "profiles": "Perfis" },
+  "nav": { "trophies": "Troféus", "groupSettings": "Definições", "groupDeveloper": "Programador", "home": "Início", "graphics": "Gráficos", "controls": "Controlos", "game": "Jogo", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Avançado", "log": "Registo", "saves": "Gravações", "profiles": "Perfis" },
   "online": {
     "title": "Jogo online",
     "subtitle": "Mensagens, manchas de sangue e cooperação com jogadores do mesmo grupo.",
@@ -52,15 +52,14 @@
     "notAssigned": "Sem atribuição", "saveFailed": "Não foi possível guardar", "restartNote": "Aplica-se no próximo arranque."
   },
   "home": {
-    "title": "Caça a noite", "subtitle": "Bloodborne, a correr nativamente no seu dispositivo.", "gameFolder": "Jogo",
+    "eyebrow": "Regresse a Yharnam",
+    "title": "Caça a noite", "subtitle": "Bloodborne, a correr nativamente no seu dispositivo.",
     "gameFolderHint": "A sua cópia de Bloodborne (qualquer região) com a atualização 1.09 integrada.", "checking": "A verificar o jogo…", "ready": "Pronto para jogar",
     "copyGame": "Copie os ficheiros do seu dump para esta pasta: com a app Ficheiros ou com a partilha de ficheiros de outro dispositivo.",
     "noFolder": "Escolha a pasta do jogo.", "folder": "Pasta do jogo", "edition": "{{id}} · versão {{version}}", "region": { "america": "Américas", "europe": "Europa", "japan": "Japão", "asia": "Ásia", "unknown": "Região desconhecida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluído", "dlcMissing": "Não incluído", "dlcMissingHint": "Esta edição vende The Old Hunters como conteúdo adicional, que o port ainda não carrega.", "summary": "Resumo", "upscaler": "Upscaler", "renderSize": "Renderiza a {{size}}",
     "frameRate": "Taxa de fotogramas", "controller": "Comando", "mods": "Mods",
     "modsActive": "{{count}} ativos", "modsActive_one": "{{count}} ativo", "modsActive_other": "{{count}} ativos", "modsOff": "Desligados",
-    "firstStart": "O primeiro arranque compila os shaders do jogo e demora alguns minutos. Os seguintes são rápidos.",
-    "lastRun": "Última sessão", "lastRunOk": "O jogo fechou normalmente.", "lastRunError": "O jogo parou com o código de saída {{code}}.",
-    "openData": "Gravações e dados"
+    "lastRun": "Última sessão", "lastRunOk": "O jogo fechou normalmente.", "lastRunError": "O jogo parou com o código de saída {{code}}."
   },
   "graphics": {
     "effects": "Efeitos",
@@ -274,7 +273,6 @@
     "locked": "Bloqueado",
     "preview": "Pré-visualização da notificação",
     "recordedCount": "Troféus registados: {{count}}",
-    "view": "Ver troféus",
     "empty": "Ainda não há troféus registados.",
     "edited": "Gravação editada: novos troféus desativados.",
     "id": "Troféu {{id}}",

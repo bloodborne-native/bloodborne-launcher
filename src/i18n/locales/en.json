@@ -5,6 +5,9 @@
     "version": "v{{version}}"
   },
   "nav": {
+    "trophies": "Trophies",
+    "groupSettings": "Settings",
+    "groupDeveloper": "Developer",
     "home": "Home",
     "graphics": "Graphics",
     "controls": "Controls",
@@ -80,9 +83,9 @@
     "restartNote": "Applies at the next start."
   },
   "home": {
+    "eyebrow": "Return to Yharnam",
     "title": "Hunt the night",
     "subtitle": "Bloodborne, running natively on your device.",
-    "gameFolder": "Game",
     "gameFolderHint": "Your dump of Bloodborne (any region) with the 1.09 update merged in.",
     "copyGame": "Copy the files of your dump into this folder: with the Files app, or with file sharing from another device.",
     "checking": "Checking the game…",
@@ -111,11 +114,9 @@
     "modsActive_one": "{{count}} active",
     "modsActive_other": "{{count}} active",
     "modsOff": "Off",
-    "firstStart": "The first start compiles the game's shaders, so it takes a few minutes. Later starts are fast.",
     "lastRun": "Last run",
     "lastRunOk": "The game closed normally.",
-    "lastRunError": "The game stopped with exit code {{code}}.",
-    "openData": "Saves and data"
+    "lastRunError": "The game stopped with exit code {{code}}."
   },
   "graphics": {
     "effects": "Effects",
@@ -473,7 +474,6 @@
     "locked": "Locked",
     "preview": "Notification preview",
     "recordedCount": "Recorded unlocks: {{count}}",
-    "view": "View trophies",
     "empty": "No unlocks recorded yet.",
     "edited": "Edited save: new trophies disabled.",
     "id": "Trophy {{id}}",

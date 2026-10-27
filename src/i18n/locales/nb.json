@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Nativ port", "version": "v{{version}}" },
-  "nav": { "home": "Hjem", "graphics": "Grafikk", "controls": "Kontroller", "game": "Spill", "mods": "Modder", "patches": "Patcher", "online": "Online", "advanced": "Avansert", "log": "Logg", "saves": "Lagrede spill", "profiles": "Profiler" },
+  "nav": { "trophies": "Trofeer", "groupSettings": "Innstillinger", "groupDeveloper": "Utvikler", "home": "Hjem", "graphics": "Grafikk", "controls": "Kontroller", "game": "Spill", "mods": "Modder", "patches": "Patcher", "online": "Online", "advanced": "Avansert", "log": "Logg", "saves": "Lagrede spill", "profiles": "Profiler" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Ikke tilordnet", "saveFailed": "Kunne ikke lagre", "restartNote": "Gjelder fra neste oppstart."
   },
   "home": {
-    "title": "Jakt på natten", "subtitle": "Bloodborne, som kjører nativt på enheten din.", "gameFolder": "Spill",
+    "eyebrow": "Vend tilbake til Yharnam",
+    "title": "Jakt på natten", "subtitle": "Bloodborne, som kjører nativt på enheten din.",
     "gameFolderHint": "Din kopi av Bloodborne (hvilken som helst region) med oppdatering 1.09 lagt inn.", "checking": "Kontrollerer spillet…", "ready": "Klar til å spille",
     "copyGame": "Kopier filene fra dumpen din til denne mappen: med Filer-appen eller med fildeling fra en annen enhet.",
     "noFolder": "Velg spillmappen.", "folder": "Spillmappe", "edition": "{{id}} · versjon {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asia", "unknown": "Ukjent region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inkludert", "dlcMissing": "Ikke inkludert", "dlcMissingHint": "Denne utgaven selger The Old Hunters som tilleggsinnhold, som porten ikke laster ennå.", "summary": "Oversikt", "upscaler": "Oppskalering", "renderSize": "Gjengir i {{size}}",
     "frameRate": "Bildefrekvens", "controller": "Kontroller", "mods": "Modder",
     "modsActive": "{{count}} aktive", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktive", "modsOff": "Av",
-    "firstStart": "Første oppstart kompilerer spillets shadere og tar derfor noen minutter. Senere oppstarter går raskt.",
-    "lastRun": "Siste økt", "lastRunOk": "Spillet ble lukket normalt.", "lastRunError": "Spillet stoppet med avslutningskode {{code}}.",
-    "openData": "Lagrede spill og data"
+    "lastRun": "Siste økt", "lastRunOk": "Spillet ble lukket normalt.", "lastRunError": "Spillet stoppet med avslutningskode {{code}}."
   },
   "graphics": {
     "effects": "Effekter",
@@ -274,7 +273,6 @@
     "locked": "Låst",
     "preview": "Forhåndsvisning av varsel",
     "recordedCount": "Registrerte opplåsinger: {{count}}",
-    "view": "Vis trofeer",
     "empty": "Ingen opplåsinger registrert ennå.",
     "edited": "Redigert lagring: nye trofeer deaktivert.",
     "id": "Trofé {{id}}",

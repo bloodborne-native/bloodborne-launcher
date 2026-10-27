@@ -7,6 +7,7 @@ import { PageHeader, SelectRow, SettingsSection, SwitchRow, TextRow } from "@/co
 import { useConfig, useProfiles, useSetting, useSettingsData } from "@/hooks";
 import { api, queryKeys } from "@/lib";
 import { SavePasswordDialog } from "@/pages/online/SavePasswordDialog";
+import { Message } from "@/components/common";
 
 /** Accounts belong to the selected save profile; the backend blocks edited saves at launch. */
 export function OnlinePage() {
@@ -30,7 +31,7 @@ export function OnlinePage() {
   };
   return <>
     <PageHeader title={t("online.title")} subtitle={t("online.subtitle")} />
-    {edited && <p role="alert" className="mb-4 text-sm text-blood-400">{t("online.editedSave")}</p>}
+    {edited && <Message tone="warning" className="mb-4">{t("online.editedSave")}</Message>}
     <SettingsSection title={t("online.play") }>
       <SwitchRow title={t("online.enable")} description={t("online.enableHint")}
         checked={settings.online} onChange={(value) => set("online", value)} />

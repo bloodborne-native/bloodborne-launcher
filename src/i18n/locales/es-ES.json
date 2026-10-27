@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Port nativo", "version": "v{{version}}" },
-  "nav": { "home": "Inicio", "graphics": "Gráficos", "controls": "Controles", "game": "Juego", "mods": "Mods", "patches": "Parches", "online": "En línea", "advanced": "Avanzado", "log": "Registro", "saves": "Partidas", "profiles": "Perfiles" },
+  "nav": { "trophies": "Trofeos", "groupSettings": "Ajustes", "groupDeveloper": "Desarrollador", "home": "Inicio", "graphics": "Gráficos", "controls": "Controles", "game": "Juego", "mods": "Mods", "patches": "Parches", "online": "En línea", "advanced": "Avanzado", "log": "Registro", "saves": "Partidas", "profiles": "Perfiles" },
   "online": {
     "title": "Juego en línea",
     "subtitle": "Mensajes, manchas de sangre y cooperativo con jugadores del mismo grupo.",
@@ -52,15 +52,14 @@
     "notAssigned": "Sin asignar", "saveFailed": "No se pudo guardar", "restartNote": "Se aplica en el próximo inicio."
   },
   "home": {
-    "title": "Caza la noche", "subtitle": "Bloodborne, ejecutándose de forma nativa en tu dispositivo.", "gameFolder": "Juego",
+    "eyebrow": "Vuelve a Yharnam",
+    "title": "Caza la noche", "subtitle": "Bloodborne, ejecutándose de forma nativa en tu dispositivo.",
     "gameFolderHint": "Tu volcado de Bloodborne (cualquier región) con la actualización 1.09 integrada.", "checking": "Comprobando el juego…", "ready": "Listo para jugar",
     "copyGame": "Copia los archivos de tu dump en esta carpeta: con la app Archivos o con el uso compartido de archivos desde otro dispositivo.",
     "noFolder": "Elige la carpeta del juego.", "folder": "Carpeta del juego", "edition": "{{id}} · versión {{version}}", "region": { "america": "América", "europe": "Europa", "japan": "Japón", "asia": "Asia", "unknown": "Región desconocida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluido", "dlcMissing": "No incluido", "dlcMissingHint": "Esta edición vende The Old Hunters como contenido adicional, que el port aún no carga.", "summary": "Resumen", "upscaler": "Escalador", "renderSize": "Renderiza a {{size}}",
     "frameRate": "Tasa de fotogramas", "controller": "Mando", "mods": "Mods",
     "modsActive": "{{count}} activos", "modsActive_one": "{{count}} activo", "modsActive_other": "{{count}} activos", "modsOff": "Desactivados",
-    "firstStart": "El primer inicio compila los shaders del juego, así que tarda unos minutos. Los siguientes son rápidos.",
-    "lastRun": "Última sesión", "lastRunOk": "El juego se cerró con normalidad.", "lastRunError": "El juego se detuvo con el código de salida {{code}}.",
-    "openData": "Partidas y datos"
+    "lastRun": "Última sesión", "lastRunOk": "El juego se cerró con normalidad.", "lastRunError": "El juego se detuvo con el código de salida {{code}}."
   },
   "graphics": {
     "effects": "Efectos",
@@ -274,7 +273,6 @@
     "locked": "Bloqueado",
     "preview": "Vista previa de notificación",
     "recordedCount": "Desbloqueos registrados: {{count}}",
-    "view": "Ver trofeos",
     "empty": "Aún no hay desbloqueos registrados.",
     "edited": "Partida editada: nuevos trofeos desactivados.",
     "id": "Trofeo {{id}}",

@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "原生移植版", "version": "v{{version}}" },
-  "nav": { "home": "主页", "graphics": "图形", "controls": "操作", "game": "游戏", "mods": "模组", "patches": "补丁", "online": "Online", "advanced": "高级", "log": "日志", "saves": "存档", "profiles": "用户资料" },
+  "nav": { "trophies": "奖杯", "groupSettings": "设置", "groupDeveloper": "开发者", "home": "主页", "graphics": "图形", "controls": "操作", "game": "游戏", "mods": "模组", "patches": "补丁", "online": "Online", "advanced": "高级", "log": "日志", "saves": "存档", "profiles": "用户资料" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "未分配", "saveFailed": "无法保存", "restartNote": "下次启动时生效。"
   },
   "home": {
-    "title": "狩猎长夜", "subtitle": "在你的设备上原生运行的 Bloodborne。", "gameFolder": "游戏",
+    "eyebrow": "重返亚楠",
+    "title": "狩猎长夜", "subtitle": "在你的设备上原生运行的 Bloodborne。",
     "gameFolderHint": "你的 Bloodborne 转储（任意地区），已合并 1.09 更新。", "checking": "正在检查游戏…", "ready": "可以开始游戏",
     "copyGame": "请将你的转储文件复制到此文件夹：使用“文件”App，或通过其他设备的文件共享。",
     "noFolder": "请选择游戏文件夹。", "folder": "游戏文件夹", "edition": "{{id}} · 版本 {{version}}", "region": { "america": "美洲", "europe": "欧洲", "japan": "日本", "asia": "亚洲", "unknown": "未知地区" }, "oldHunters": "The Old Hunters", "dlcIncluded": "已包含", "dlcMissing": "未包含", "dlcMissingHint": "此版本将 The Old Hunters 作为追加内容出售，移植版暂不加载追加内容。", "summary": "概览", "upscaler": "超分辨率", "renderSize": "以 {{size}} 渲染",
     "frameRate": "帧率", "controller": "手柄", "mods": "模组",
     "modsActive": "已启用 {{count}} 个", "modsActive_other": "已启用 {{count}} 个", "modsOff": "已关闭",
-    "firstStart": "首次启动会编译游戏的着色器，因此需要几分钟。之后的启动会很快。",
-    "lastRun": "上次运行", "lastRunOk": "游戏已正常关闭。", "lastRunError": "游戏以退出代码 {{code}} 停止。",
-    "openData": "存档与数据"
+    "lastRun": "上次运行", "lastRunOk": "游戏已正常关闭。", "lastRunError": "游戏以退出代码 {{code}} 停止。"
   },
   "graphics": {
     "effects": "效果",
@@ -274,7 +273,6 @@
     "locked": "未解锁",
     "preview": "通知预览",
     "recordedCount": "已记录解锁：{{count}}",
-    "view": "查看奖杯",
     "empty": "尚无解锁记录。",
     "edited": "已编辑存档：禁用新奖杯解锁。",
     "id": "奖杯 {{id}}",

@@ -51,6 +51,13 @@ The [upstream MIT notice](licenses/shadcn-ui-MIT.txt) is retained here.
 notice is already retained in `docs/licenses/leari-MIT.txt`. No Leari icon or other artwork was
 copied; the hunter's sigil is original launcher artwork.
 
+## Home background
+
+`src/assets/home-hero.webp`, the night city behind Home's title, is an AI-generated image supplied
+by the maintainer (2026-10-27): a generic gothic scene with no character, weapon or place from the
+game, converted to WebP. No game artwork is included; the game card's tile is read from the
+player's own dump (`sce_sys/icon0.png`) when Home is shown and is never stored.
+
 ## Trophy tracking
 
 The runtime event persistence follows the approach in

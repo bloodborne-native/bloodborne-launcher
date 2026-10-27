@@ -13,7 +13,7 @@ export function TrophyGroup({ group, unlocks }: { group: "base" | "old_hunters" 
   const earned = entries.filter((entry) => entry.unlocked).length;
   return <section className="space-y-3">
     <h2 className="font-display text-lg">{t(`trophies.${group}`)} <span className="font-sans text-sm text-muted-foreground">{earned}/{entries.length}</span></h2>
-    <ul className="divide-y divide-border">{entries.map(({ trophy, unlocked }) => {
+    <ul>{entries.map(({ trophy, unlocked }) => {
       const text = trophyText(trophy, i18n.resolvedLanguage ?? "en");
       return <li key={`${trophy.title_id}:${trophy.trophy_id}`} className={`flex items-start gap-4 rounded-lg px-3 py-4 text-sm ${unlocked ? "bg-secondary/30" : ""}`}>
         <div className={`mt-1 shrink-0 ${unlocked ? "" : "opacity-35 grayscale"}`}><TrophyEmblem grade={trophy.grade} size={28} /></div>

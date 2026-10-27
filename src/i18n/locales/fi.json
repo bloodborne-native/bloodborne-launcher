@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Natiivi portti", "version": "v{{version}}" },
-  "nav": { "home": "Koti", "graphics": "Grafiikka", "controls": "Ohjaimet", "game": "Peli", "mods": "Modit", "patches": "Paikat", "online": "Online", "advanced": "Lisäasetukset", "log": "Loki", "saves": "Tallennukset", "profiles": "Profiilit" },
+  "nav": { "trophies": "Palkinnot", "groupSettings": "Asetukset", "groupDeveloper": "Kehittäjä", "home": "Koti", "graphics": "Grafiikka", "controls": "Ohjaimet", "game": "Peli", "mods": "Modit", "patches": "Paikat", "online": "Online", "advanced": "Lisäasetukset", "log": "Loki", "saves": "Tallennukset", "profiles": "Profiilit" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Ei määritetty", "saveFailed": "Tallennus epäonnistui", "restartNote": "Tulee voimaan seuraavalla käynnistyksellä."
   },
   "home": {
-    "title": "Metsästä yötä", "subtitle": "Bloodborne, natiivisti laitteellasi.", "gameFolder": "Peli",
+    "eyebrow": "Palaa Yharnamiin",
+    "title": "Metsästä yötä", "subtitle": "Bloodborne, natiivisti laitteellasi.",
     "gameFolderHint": "Bloodborne-kopiosi (mikä tahansa alue), johon on yhdistetty päivitys 1.09.", "checking": "Tarkistetaan peliä…", "ready": "Valmis pelattavaksi",
     "copyGame": "Kopioi dumppisi tiedostot tähän kansioon: Tiedostot-apilla tai toisen laitteen tiedostojaon kautta.",
     "noFolder": "Valitse pelikansio.", "folder": "Pelikansio", "edition": "{{id}} · versio {{version}}", "region": { "america": "Amerikka", "europe": "Eurooppa", "japan": "Japani", "asia": "Aasia", "unknown": "Tuntematon alue" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Mukana", "dlcMissing": "Ei mukana", "dlcMissingHint": "Tässä versiossa The Old Hunters myydään lisäsisältönä, jota portti ei vielä lataa.", "summary": "Yhteenveto", "upscaler": "Skaalain", "renderSize": "Renderöi {{size}}",
     "frameRate": "Kuvataajuus", "controller": "Ohjain", "mods": "Modit",
     "modsActive": "{{count}} käytössä", "modsActive_one": "{{count}} käytössä", "modsActive_other": "{{count}} käytössä", "modsOff": "Pois",
-    "firstStart": "Ensimmäinen käynnistys kääntää pelin varjostimet, joten se kestää muutaman minuutin. Seuraavat ovat nopeita.",
-    "lastRun": "Edellinen istunto", "lastRunOk": "Peli suljettiin normaalisti.", "lastRunError": "Peli pysähtyi lopetuskoodiin {{code}}.",
-    "openData": "Tallennukset ja tiedot"
+    "lastRun": "Edellinen istunto", "lastRunOk": "Peli suljettiin normaalisti.", "lastRunError": "Peli pysähtyi lopetuskoodiin {{code}}."
   },
   "graphics": {
     "effects": "Tehosteet",
@@ -274,7 +273,6 @@
     "locked": "Lukittu",
     "preview": "Ilmoituksen esikatselu",
     "recordedCount": "Tallennetut avaukset: {{count}}",
-    "view": "Näytä pokaalit",
     "empty": "Avauksia ei ole vielä tallennettu.",
     "edited": "Muokattu tallennus: uudet pokaalit poistettu käytöstä.",
     "id": "Pokaali {{id}}",

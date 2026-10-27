@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Moon } from "@/components/brand";
+import { Brand } from "@/components/brand";
 import { ActiveProfile } from "@/components/profiles";
-import { NAV_TABS } from "@/components/sidebar/navTabs";
-import { PlayButton } from "@/components/sidebar/PlayButton";
+import { NAV_GROUPS } from "@/components/sidebar/navTabs";
+import { RunningDot } from "@/components/sidebar/RunningDot";
 import { SidebarNavItem } from "@/components/sidebar/SidebarNavItem";
 import { useConfig } from "@/hooks";
 import { cn } from "@/lib";
@@ -20,28 +20,24 @@ export function Sidebar() {
         config?.platform === "macos" ? "pt-11" : "pt-5")}
       data-tauri-drag-region
     >
-      <div className="mb-7 flex items-center gap-3 px-2">
-        <Moon className="size-9" />
-        <div>
-          <div className="font-display text-lg font-semibold leading-tight tracking-wider">{t("app.name")}</div>
-          <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{t("app.tagline")}</div>
-        </div>
-      </div>
+      <div className="mb-7 px-2"><Brand /></div>
       <nav className="no-drag flex flex-col gap-0.5">
-        {NAV_TABS.map((item) => (
-          <SidebarNavItem
-            key={item.id}
-            label={t(`nav.${item.id}`)}
-            icon={item.icon}
-            active={tab === item.id}
-            onClick={() => setTab(item.id)}
-            badge={item.id === "log" && running ? <span className="block size-2 animate-pulse rounded-full bg-blood-400" /> : undefined}
-          />
-        ))}
+        {NAV_GROUPS.map((group) => <div key={group.title ?? "main"} className="flex flex-col gap-0.5 [&+&]:mt-4">
+          {group.title && <p className="px-3 pb-1 text-[11px] text-muted-foreground">{t(group.title)}</p>}
+          {group.tabs.map((item) => (
+            <SidebarNavItem
+              key={item.id}
+              label={t(`nav.${item.id}`)}
+              icon={item.icon}
+              active={tab === item.id}
+              onClick={() => setTab(item.id)}
+              badge={item.id === "log" && running ? <RunningDot /> : undefined}
+            />
+          ))}
+        </div>)}
       </nav>
       <div className="no-drag mt-auto">
         <ActiveProfile />
-        <PlayButton />
         <div className="mt-3 text-center text-[11px] text-muted-foreground">{t("app.version", { version: config?.version ?? "" })}</div>
       </div>
     </aside>

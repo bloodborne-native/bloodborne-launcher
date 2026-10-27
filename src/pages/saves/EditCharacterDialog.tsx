@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { api, queryKeys } from "@/lib";
 import type { Character } from "@/lib";
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui";
+import { Message } from "@/components/common";
 
 export function EditCharacterDialog({ profileId, character, disabled }: { profileId: string; character: Character; disabled: boolean }) {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ export function EditCharacterDialog({ profileId, character, disabled }: { profil
         <p className="mt-2 text-xs text-muted-foreground">{t("saves.resultingLevel", { level: Number.isFinite(level) ? level : "—" })}</p>
         <p className="mt-1 text-xs text-muted-foreground">{t("saves.derivedValuesHint")}</p>
       </div>
-      {error && <p role="alert" className="break-words text-sm text-destructive">{error}</p>}
+      {error && <Message tone="error">{error}</Message>}
       <DialogFooter>
         <Button variant="outline" disabled={pending} onClick={() => setOpen(false)}>{t("saves.cancel")}</Button>
         <Button disabled={disabled || pending || !valid} onClick={async () => {

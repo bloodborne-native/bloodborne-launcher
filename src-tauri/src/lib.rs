@@ -621,6 +621,26 @@ fn save_ini(state: State<AppState>, values: BTreeMap<String, Option<String>>) ->
     fs::write(ini_file(p), lines.join("\n") + "\n").map_err(|e| e.to_string())
 }
 
+/// The game's own tile (sce_sys/icon0.png in the player's dump) for Home's game card, as PNG bytes;
+/// read where it is, never copied. Empty when the folder has none.
+#[tauri::command]
+async fn game_icon(dir: String) -> Result<tauri::ipc::Response, String> {
+    let read = move || -> Vec<u8> {
+        if dir.is_empty() {
+            return Vec::new();
+        }
+        let path = expand(&dir).join("sce_sys/icon0.png");
+        // A PS4 tile is 512x512; anything far larger is not one.
+        match std::fs::metadata(&path) {
+            Ok(meta) if meta.is_file() && meta.len() <= 4 << 20 => {}
+            _ => return Vec::new(),
+        }
+        std::fs::read(&path).ok().filter(|bytes| bytes.starts_with(b"\x89PNG\r\n\x1a\n")).unwrap_or_default()
+    };
+    let bytes = tauri::async_runtime::spawn_blocking(read).await.map_err(|e| e.to_string())?;
+    Ok(tauri::ipc::Response::new(bytes))
+}
+
 #[tauri::command]
 async fn check_game(dir: String) -> Result<Value, String> {
     if dir.is_empty() {
@@ -1099,7 +1119,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             updates::check_release,
             updates::open_release,
-            load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
+            load_config, save_settings, save_ini, check_game, game_icon, list_mods, save_mods, list_patches,
             save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {

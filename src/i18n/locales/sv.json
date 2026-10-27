@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Nativ port", "version": "v{{version}}" },
-  "nav": { "home": "Hem", "graphics": "Grafik", "controls": "Kontroller", "game": "Spel", "mods": "Moddar", "patches": "Patchar", "online": "Online", "advanced": "Avancerat", "log": "Logg", "saves": "Sparfiler", "profiles": "Profiler" },
+  "nav": { "trophies": "Troféer", "groupSettings": "Inställningar", "groupDeveloper": "Utvecklare", "home": "Hem", "graphics": "Grafik", "controls": "Kontroller", "game": "Spel", "mods": "Moddar", "patches": "Patchar", "online": "Online", "advanced": "Avancerat", "log": "Logg", "saves": "Sparfiler", "profiles": "Profiler" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Inte tilldelad", "saveFailed": "Kunde inte spara", "restartNote": "Gäller från nästa start."
   },
   "home": {
-    "title": "Jaga natten", "subtitle": "Bloodborne, som körs nativt på din enhet.", "gameFolder": "Spel",
+    "eyebrow": "Återvänd till Yharnam",
+    "title": "Jaga natten", "subtitle": "Bloodborne, som körs nativt på din enhet.",
     "gameFolderHint": "Din kopia av Bloodborne (valfri region) med uppdatering 1.09 inlagd.", "checking": "Kontrollerar spelet…", "ready": "Redo att spela",
     "copyGame": "Kopiera filerna från din dump till den här mappen: med appen Filer eller med fildelning från en annan enhet.",
     "noFolder": "Välj spelmappen.", "folder": "Spelmapp", "edition": "{{id}} · version {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asien", "unknown": "Okänd region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Ingår", "dlcMissing": "Ingår inte", "dlcMissingHint": "Den här utgåvan säljer The Old Hunters som tilläggsinnehåll, som porten inte laddar än.", "summary": "Översikt", "upscaler": "Uppskalare", "renderSize": "Renderar i {{size}}",
     "frameRate": "Bildfrekvens", "controller": "Handkontroll", "mods": "Moddar",
     "modsActive": "{{count}} aktiva", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktiva", "modsOff": "Av",
-    "firstStart": "Första starten kompilerar spelets shaders och tar därför några minuter. Senare starter går fort.",
-    "lastRun": "Senaste sessionen", "lastRunOk": "Spelet stängdes normalt.", "lastRunError": "Spelet avslutades med avslutskod {{code}}.",
-    "openData": "Sparfiler och data"
+    "lastRun": "Senaste sessionen", "lastRunOk": "Spelet stängdes normalt.", "lastRunError": "Spelet avslutades med avslutskod {{code}}."
   },
   "graphics": {
     "effects": "Effekter",
@@ -274,7 +273,6 @@
     "locked": "Låst",
     "preview": "Förhandsvisning av avisering",
     "recordedCount": "Registrerade upplåsningar: {{count}}",
-    "view": "Visa troféer",
     "empty": "Inga upplåsningar registrerade ännu.",
     "edited": "Redigerad sparfil: nya troféer inaktiverade.",
     "id": "Trofé {{id}}",

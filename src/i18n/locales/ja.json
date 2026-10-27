@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "ネイティブ移植版", "version": "v{{version}}" },
-  "nav": { "home": "ホーム", "graphics": "グラフィック", "controls": "操作", "game": "ゲーム", "mods": "MOD", "patches": "パッチ", "online": "Online", "advanced": "詳細設定", "log": "ログ", "saves": "セーブ", "profiles": "プロフィール" },
+  "nav": { "trophies": "トロフィー", "groupSettings": "設定", "groupDeveloper": "開発者", "home": "ホーム", "graphics": "グラフィック", "controls": "操作", "game": "ゲーム", "mods": "MOD", "patches": "パッチ", "online": "Online", "advanced": "詳細設定", "log": "ログ", "saves": "セーブ", "profiles": "プロフィール" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "未割り当て", "saveFailed": "保存できませんでした", "restartNote": "次回の起動時に反映されます。"
   },
   "home": {
-    "title": "夜を狩れ", "subtitle": "Bloodborne をあなたのデバイスでネイティブに。", "gameFolder": "ゲーム",
+    "eyebrow": "ヤーナムへ還れ",
+    "title": "夜を狩れ", "subtitle": "Bloodborne をあなたのデバイスでネイティブに。",
     "gameFolderHint": "お手持ちの Bloodborne のダンプ（どの地域でも可）に、アップデート 1.09 を統合したもの。", "checking": "ゲームを確認しています…", "ready": "プレイできます",
     "copyGame": "ダンプのファイルをこのフォルダにコピーしてください。「ファイル」アプリ、または別のデバイスからのファイル共有を使います。",
     "noFolder": "ゲームフォルダを選択してください。", "folder": "ゲームフォルダ", "edition": "{{id}} · バージョン {{version}}", "region": { "america": "北米・中南米", "europe": "ヨーロッパ", "japan": "日本", "asia": "アジア", "unknown": "不明な地域" }, "oldHunters": "The Old Hunters", "dlcIncluded": "収録", "dlcMissing": "未収録", "dlcMissingHint": "このエディションでは The Old Hunters は追加コンテンツとして販売されており、移植版はまだ読み込みません。", "summary": "概要", "upscaler": "アップスケーラー", "renderSize": "{{size}} で描画",
     "frameRate": "フレームレート", "controller": "コントローラー", "mods": "MOD",
     "modsActive": "{{count}} 件有効", "modsActive_other": "{{count}} 件有効", "modsOff": "オフ",
-    "firstStart": "初回はゲームのシェーダーをコンパイルするため数分かかります。2 回目以降はすぐに起動します。",
-    "lastRun": "前回のセッション", "lastRunOk": "ゲームは正常に終了しました。", "lastRunError": "ゲームは終了コード {{code}} で停止しました。",
-    "openData": "セーブとデータ"
+    "lastRun": "前回のセッション", "lastRunOk": "ゲームは正常に終了しました。", "lastRunError": "ゲームは終了コード {{code}} で停止しました。"
   },
   "graphics": {
     "effects": "エフェクト",
@@ -274,7 +273,6 @@
     "locked": "未獲得",
     "preview": "通知プレビュー",
     "recordedCount": "記録された解除数: {{count}}",
-    "view": "トロフィーを表示",
     "empty": "解除記録はまだありません。",
     "edited": "編集済みセーブ: 新しいトロフィーは無効です。",
     "id": "トロフィー {{id}}",

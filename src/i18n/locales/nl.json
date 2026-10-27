@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "Native port", "version": "v{{version}}" },
-  "nav": { "home": "Start", "graphics": "Graphics", "controls": "Besturing", "game": "Spel", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Geavanceerd", "log": "Logboek", "saves": "Opgeslagen spellen", "profiles": "Profielen" },
+  "nav": { "trophies": "Trofeeën", "groupSettings": "Instellingen", "groupDeveloper": "Ontwikkelaar", "home": "Start", "graphics": "Graphics", "controls": "Besturing", "game": "Spel", "mods": "Mods", "patches": "Patches", "online": "Online", "advanced": "Geavanceerd", "log": "Logboek", "saves": "Opgeslagen spellen", "profiles": "Profielen" },
   "online": {
     "title": "Online play",
     "subtitle": "Messages, bloodstains and co-op with players in the same pool.",
@@ -52,15 +52,14 @@
     "notAssigned": "Niet toegewezen", "saveFailed": "Opslaan mislukt", "restartNote": "Geldt vanaf de volgende start."
   },
   "home": {
-    "title": "Jaag op de nacht", "subtitle": "Bloodborne, native op je apparaat.", "gameFolder": "Spel",
+    "eyebrow": "Keer terug naar Yharnam",
+    "title": "Jaag op de nacht", "subtitle": "Bloodborne, native op je apparaat.",
     "gameFolderHint": "Jouw kopie van Bloodborne (elke regio) met update 1.09 erin samengevoegd.", "checking": "Spel controleren…", "ready": "Klaar om te spelen",
     "copyGame": "Kopieer de bestanden van je dump naar deze map: met de Bestanden-app of via het delen van bestanden vanaf een ander apparaat.",
     "noFolder": "Kies de spelmap.", "folder": "Spelmap", "edition": "{{id}} · versie {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Azië", "unknown": "Onbekende regio" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inbegrepen", "dlcMissing": "Niet inbegrepen", "dlcMissingHint": "Deze editie verkoopt The Old Hunters als extra content, die de port nog niet laadt.", "summary": "Overzicht", "upscaler": "Upscaler", "renderSize": "Rendert op {{size}}",
     "frameRate": "Framerate", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} actief", "modsActive_one": "{{count}} actief", "modsActive_other": "{{count}} actief", "modsOff": "Uit",
-    "firstStart": "De eerste start compileert de shaders van het spel en duurt daardoor een paar minuten. Latere starts zijn snel.",
-    "lastRun": "Laatste sessie", "lastRunOk": "Het spel is normaal afgesloten.", "lastRunError": "Het spel is gestopt met afsluitcode {{code}}.",
-    "openData": "Opslagen en gegevens"
+    "lastRun": "Laatste sessie", "lastRunOk": "Het spel is normaal afgesloten.", "lastRunError": "Het spel is gestopt met afsluitcode {{code}}."
   },
   "graphics": {
     "effects": "Effecten",
@@ -274,7 +273,6 @@
     "locked": "Vergrendeld",
     "preview": "Meldingsvoorbeeld",
     "recordedCount": "Vastgelegde ontgrendelingen: {{count}}",
-    "view": "Trofeeën bekijken",
     "empty": "Nog geen ontgrendelingen vastgelegd.",
     "edited": "Bewerkt spelbestand: nieuwe trofeeën uitgeschakeld.",
     "id": "Trofee {{id}}",

@@ -4,6 +4,7 @@ import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } fro
 import { TitleBar } from "@/components/window/TitleBar";
 import { useConfig, useProfiles } from "@/hooks";
 import { api } from "@/lib";
+import { Message } from "@/components/common";
 
 /** Keep recovery available even when configuration or database initialization fails. */
 export function ProfileRecovery({ error }: { error: unknown }) {
@@ -26,7 +27,7 @@ export function ProfileRecovery({ error }: { error: unknown }) {
             <CardDescription id="profile-recovery-description">{t("profiles.storageHelp")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p role="alert" className="mb-4 break-words text-sm text-destructive">{String(error)}</p>
+            <Message tone="error" className="mb-4">{String(error)}</Message>
             <div className="flex gap-2">
               <Button disabled={retrying} onClick={() => Promise.all([config.refetch(), profiles.refetch()])}>
                 {t("profiles.retry")}

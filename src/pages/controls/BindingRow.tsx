@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Crosshair, LoaderCircle, Mouse, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-import { Badge, Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
+import { IconAction } from "@/components/common";
+import { Badge, Button } from "@/components/ui";
 import { useIni, useSettingsData } from "@/hooks";
 import { api } from "@/lib";
 import { padLabel } from "@/lib/data";
@@ -117,12 +118,7 @@ export function BindingRow({ control, kind }: Props) {
             <Mouse /> {t("controls.mouse")}
           </Button>
         )}
-        <Tooltip>
-          <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => setIni(iniKey, null)} disabled={!custom} />}>
-            <RotateCcw />
-          </TooltipTrigger>
-          <TooltipContent>{t("common.reset")}</TooltipContent>
-        </Tooltip>
+        <IconAction label={t("common.reset")} onClick={() => setIni(iniKey, null)} disabled={!custom}><RotateCcw /></IconAction>
       </div>
     </div>
   );

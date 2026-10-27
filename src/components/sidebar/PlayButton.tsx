@@ -42,7 +42,7 @@ export function PlayButton({ className }: { className?: string }) {
       onClick={start}
       disabled={check.isPending || !!problem || profiles.busy || !profiles.data || profiles.data.setup_required}
       className={cn(
-        "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-blood-500 to-blood-700 py-3 font-display text-sm font-semibold tracking-[0.25em] text-parchment shadow-lg shadow-blood-700/40 transition hover:from-blood-400 hover:to-blood-600 disabled:cursor-not-allowed disabled:from-night-700 disabled:to-night-700 disabled:text-muted-foreground disabled:shadow-none",
+        "flex w-full items-center justify-center gap-2 rounded-xl border border-rust-400/35 bg-gradient-to-b from-rust-500 to-rust-700 py-3 font-display text-sm font-semibold tracking-[0.25em] text-parchment shadow-lg shadow-black/50 transition hover:from-rust-400/90 hover:to-rust-600 disabled:cursor-not-allowed disabled:border-transparent disabled:from-night-700 disabled:to-night-700 disabled:text-muted-foreground disabled:shadow-none",
         className,
       )}
     >
