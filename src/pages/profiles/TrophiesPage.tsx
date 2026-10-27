@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NativeSelect } from "@/components/common";
+import { Choice } from "@/components/common";
 import { PageHeader, SettingsSection } from "@/components/settings";
 import { TrophyGroup, TrophyStatus, type TrophyFilter, type TrophySort } from "@/components/trophies";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui";
@@ -38,11 +38,10 @@ export function TrophiesPage() {
               <TabsTrigger value="locked">{t("trophies.locked")}</TabsTrigger>
             </TabsList>
           </Tabs>
-          <label className="flex items-center gap-2 text-sm text-muted-foreground">{t("trophies.sort")}
-            <NativeSelect value={sort} onChange={(event) => setSort(event.target.value as TrophySort)}>
-              {SORTS.map((option) => <option key={option.value} value={option.value}>{t(option.label)}</option>)}
-            </NativeSelect>
-          </label>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">{t("trophies.sort")}
+            <Choice label={t("trophies.sort")} value={sort} onChange={setSort}
+              options={SORTS.map((option) => ({ value: option.value, label: t(option.label) }))} />
+          </div>
         </div>
         <SettingsSection><div className="px-5 py-4"><TrophyGroup group="base" unlocks={profile.trophy_unlocks} sort={sort} filter={filter} /></div></SettingsSection>
         <SettingsSection><div className="px-5 py-4"><TrophyGroup group="old_hunters" unlocks={profile.trophy_unlocks} sort={sort} filter={filter} /></div></SettingsSection>

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import type { Gem } from "@/lib";
 import { gemName } from "@/pages/saves/editor/gemName";
-import { NativeSelect } from "@/components/common";
+import { Choice } from "@/components/common";
 
 type Props = {
   gem: Gem;
@@ -24,11 +24,9 @@ export function GemRow({ gem, chosen, disabled, onChoose }: Props) {
       <span className="text-xs text-muted-foreground">{where}</span>
     </div>
     {gem.effects.map((effect) => effect.options.length > 1
-      ? <NativeSelect key={effect.slot} aria-label={effect.text ?? t("inventory.effect", { id: effect.id })} disabled={disabled}
-        
-        value={chosen[effect.slot] ?? effect.id} onChange={(event) => onChoose(effect.slot, Number(event.target.value))}>
-        {effect.options.map((option) => <option key={option.id} value={option.id}>{option.text}</option>)}
-      </NativeSelect>
+      ? <Choice key={effect.slot} label={effect.text ?? t("inventory.effect", { id: effect.id })} disabled={disabled} className="w-full"
+        value={chosen[effect.slot] ?? effect.id} options={effect.options.map((option) => ({ value: option.id, label: option.text }))}
+        onChange={(value) => onChoose(effect.slot, value)} />
       : <p key={effect.slot} className="text-sm text-muted-foreground">{effect.text ?? t("inventory.effect", { id: effect.id })}</p>)}
   </div>;
 }
