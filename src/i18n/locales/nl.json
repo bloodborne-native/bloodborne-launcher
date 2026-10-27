@@ -225,7 +225,11 @@
     "equipped": "Uitgerust",
     "effect": "Effect {{id}}",
     "gemSlot": "Edelsteenplek {{slot}}",
-    "emptySlot": "Plek {{slot}}: leeg"
+    "emptySlot": "Plek {{slot}}: leeg",
+    "variations": "Afdrukken bij +{{level}}",
+    "normal": "Normaal",
+    "uncanny": "Onheilspellend",
+    "lost": "Verloren"
   },
   "saves": {
     "current": "Huidige spelopslag",

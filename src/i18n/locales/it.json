@@ -225,7 +225,11 @@
     "equipped": "Equipaggiata",
     "effect": "Effetto {{id}}",
     "gemSlot": "Slot gemma {{slot}}",
-    "emptySlot": "Slot {{slot}}: vuoto"
+    "emptySlot": "Slot {{slot}}: vuoto",
+    "variations": "Impronte a +{{level}}",
+    "normal": "Normale",
+    "uncanny": "Inquietante",
+    "lost": "Perduta"
   },
   "saves": {
     "current": "Salvataggio attuale",

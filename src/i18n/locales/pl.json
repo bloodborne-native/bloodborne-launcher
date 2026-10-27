@@ -225,7 +225,11 @@
     "equipped": "Założony",
     "effect": "Efekt {{id}}",
     "gemSlot": "Gniazdo klejnotu {{slot}}",
-    "emptySlot": "Gniazdo {{slot}}: puste"
+    "emptySlot": "Gniazdo {{slot}}: puste",
+    "variations": "Odciski przy +{{level}}",
+    "normal": "Zwykła",
+    "uncanny": "Niesamowita",
+    "lost": "Utracona"
   },
   "saves": {
     "current": "Bieżący zapis",

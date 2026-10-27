@@ -225,7 +225,11 @@
     "equipped": "Utrustad",
     "effect": "Effekt {{id}}",
     "gemSlot": "Ädelstensplats {{slot}}",
-    "emptySlot": "Plats {{slot}}: tom"
+    "emptySlot": "Plats {{slot}}: tom",
+    "variations": "Prägningar vid +{{level}}",
+    "normal": "Vanlig",
+    "uncanny": "Kuslig",
+    "lost": "Förlorad"
   },
   "saves": {
     "current": "Aktuell sparfil",

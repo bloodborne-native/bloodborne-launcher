@@ -225,7 +225,11 @@
     "equipped": "Équipée",
     "effect": "Effet {{id}}",
     "gemSlot": "Emplacement de gemme {{slot}}",
-    "emptySlot": "Emplacement {{slot}} : vide"
+    "emptySlot": "Emplacement {{slot}} : vide",
+    "variations": "Empreintes à +{{level}}",
+    "normal": "Normale",
+    "uncanny": "Étrange",
+    "lost": "Perdue"
   },
   "saves": {
     "current": "Sauvegarde actuelle",

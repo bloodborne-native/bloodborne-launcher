@@ -9,10 +9,13 @@ import { GemRow } from "@/pages/saves/GemRow";
 import { GemSlots } from "@/pages/saves/GemSlots";
 import { ItemIcon } from "@/pages/saves/ItemIcon";
 import { ItemStats } from "@/pages/saves/ItemStats";
+import { statChanges, statLabel } from "@/pages/saves/statLabels";
 
 type Filter = "item" | "weapon" | "armor" | "gems" | "storage";
 const FILTERS: Filter[] = ["item", "weapon", "armor", "gems", "storage"];
 const key = (entry: InventoryEntry) => `${entry.location}:${entry.index}`;
+// The imprints' short names (weapon IDs: 0 normal, 1 Uncanny, 2 Lost).
+const IMPRINTS = ["inventory.normal", "inventory.uncanny", "inventory.lost"] as const;
 
 type Addition = { item: CatalogItem; location: InventoryLocation; amount: number };
 
@@ -92,10 +95,25 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
   const reset = () => { setAmounts({}); setWeapons({}); setEffects({}); setGemSlots({}); setAdditions([]); setAdding(false); setSearch(""); setError(undefined); };
   const label = (entry: InventoryEntry) => entry.name ?? t("inventory.unnamed", { id: entry.id });
   // A weapon's numbers at the level and imprint chosen, when they differ from its own.
+  const chosenWeapon = (entry: InventoryEntry) => weapons[key(entry)] ?? { level: entry.level, imprint: entry.imprint };
+  const variant = (entry: InventoryEntry, level: number, imprint: number) =>
+    entry.variants[String(entry.id + (level - entry.level) * 100 + (imprint - entry.imprint) * 10000)] ?? null;
   const preview = (entry: InventoryEntry) => {
-    const chosen = weapons[key(entry)];
-    if (entry.kind !== "weapon" || !chosen || (chosen.level === entry.level && chosen.imprint === entry.imprint)) return null;
-    return entry.variants[String(entry.id + (chosen.level - entry.level) * 100 + (chosen.imprint - entry.imprint) * 10000)] ?? null;
+    const chosen = chosenWeapon(entry);
+    if (entry.kind !== "weapon" || (chosen.level === entry.level && chosen.imprint === entry.imprint)) return null;
+    return variant(entry, chosen.level, chosen.imprint);
+  };
+  // The weapon's imprints at the chosen level, side by side in the hover card.
+  const variations = (entry: InventoryEntry) => {
+    const chosen = chosenWeapon(entry);
+    return entry.imprints.flatMap((imprint) => {
+      const stats = variant(entry, chosen.level, imprint);
+      // The game's own word: the imprint's name less the normal one ("Uncanny Saw Cleaver" → "Uncanny").
+      const name = entry.imprint_names[entry.imprints.indexOf(imprint)] ?? "";
+      const normal = entry.imprint_names[entry.imprints.indexOf(0)];
+      const own = imprint > 0 && normal && name.includes(normal) ? name.replace(normal, "").trim() : "";
+      return stats ? [{ label: own || t(IMPRINTS[imprint] ?? IMPRINTS[0]), stats, chosen: imprint === chosen.imprint }] : [];
+    });
   };
   return <Dialog open={open} onOpenChange={(next, details) => {
     if (pending) { details.cancel(); return; }
@@ -135,7 +153,8 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
             : <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>)
           : !shown.length ? <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
           : shown.map((entry) => <div key={key(entry)} className="flex flex-wrap items-center gap-3 border-t border-border px-4 py-2 first:border-t-0">
-            <ItemStats name={label(entry)} description={entry.description} icon={entry.icon} stats={entry.stats} preview={preview(entry)}>
+            <ItemStats name={label(entry)} description={entry.description} icon={entry.icon} stats={entry.stats} preview={preview(entry)}
+              variations={entry.kind === "weapon" ? variations(entry) : undefined} level={chosenWeapon(entry).level}>
               <ItemIcon icon={entry.icon} />
               <div className="min-w-0 flex-1">
                 <p className="text-sm">{label(entry)}</p>
@@ -159,6 +178,14 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
                   {entry.imprints.map((imprint, at) => <option key={imprint} value={imprint}>{entry.imprint_names[at]}</option>)}
                 </select>}
               </>;
+            })()}
+            {(() => {
+              const changes = statChanges(entry.stats, preview(entry));
+              return changes.length > 0 && <p className="w-full pl-13 text-xs text-muted-foreground">
+                {changes.map((change, at) => <span key={`${change.group}:${change.key}`}>{at > 0 && " · "}
+                  {statLabel(t, change.group, change.key)} {change.before} → <span className={(change.group === "requirements" ? change.after < change.before : change.after > change.before) ? "text-emerald-500" : "text-destructive"}>{change.after}</span>
+                </span>)}
+              </p>;
             })()}
             {entry.kind === "weapon" && entry.slots.length > 0 && <GemSlots slots={entry.slots} chosen={gemSlots[key(entry)] ?? {}}
               gems={inventory.data?.upgrades ?? []} available={available} disabled={pending}

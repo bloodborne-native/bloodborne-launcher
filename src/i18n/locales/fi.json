@@ -225,7 +225,11 @@
     "equipped": "Varustettu",
     "effect": "Vaikutus {{id}}",
     "gemSlot": "Jalokivipaikka {{slot}}",
-    "emptySlot": "Paikka {{slot}}: tyhjä"
+    "emptySlot": "Paikka {{slot}}: tyhjä",
+    "variations": "Leimat tasolla +{{level}}",
+    "normal": "Tavallinen",
+    "uncanny": "Kummallinen",
+    "lost": "Kadonnut"
   },
   "saves": {
     "current": "Nykyinen tallennus",

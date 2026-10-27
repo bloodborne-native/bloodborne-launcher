@@ -424,7 +424,11 @@
     "equipped": "Equipped",
     "effect": "Effect {{id}}",
     "gemSlot": "Gem slot {{slot}}",
-    "emptySlot": "Slot {{slot}}: empty"
+    "emptySlot": "Slot {{slot}}: empty",
+    "variations": "Imprints at +{{level}}",
+    "normal": "Normal",
+    "uncanny": "Uncanny",
+    "lost": "Lost"
   },
   "saves": {
     "current": "Current save",

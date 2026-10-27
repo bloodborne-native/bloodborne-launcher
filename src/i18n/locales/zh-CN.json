@@ -225,7 +225,11 @@
     "equipped": "已装备",
     "effect": "效果 {{id}}",
     "gemSlot": "宝石槽 {{slot}}",
-    "emptySlot": "槽 {{slot}}：空"
+    "emptySlot": "槽 {{slot}}：空",
+    "variations": "+{{level}} 时的印记",
+    "normal": "普通",
+    "uncanny": "诡异",
+    "lost": "失落"
   },
   "saves": {
     "current": "当前存档",

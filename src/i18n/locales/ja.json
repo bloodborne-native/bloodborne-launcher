@@ -225,7 +225,11 @@
     "equipped": "装備中",
     "effect": "効果 {{id}}",
     "gemSlot": "血晶石スロット {{slot}}",
-    "emptySlot": "スロット {{slot}}：空き"
+    "emptySlot": "スロット {{slot}}：空き",
+    "variations": "+{{level}}での銘",
+    "normal": "通常",
+    "uncanny": "異質",
+    "lost": "失われた"
   },
   "saves": {
     "current": "現在のセーブデータ",

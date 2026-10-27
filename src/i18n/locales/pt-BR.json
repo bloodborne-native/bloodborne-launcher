@@ -410,7 +410,11 @@
     "equipped": "Equipada",
     "effect": "Efeito {{id}}",
     "gemSlot": "Encaixe de gema {{slot}}",
-    "emptySlot": "Encaixe {{slot}}: vazio"
+    "emptySlot": "Encaixe {{slot}}: vazio",
+    "variations": "Marcas em +{{level}}",
+    "normal": "Normal",
+    "uncanny": "Nefasto",
+    "lost": "Perdido"
   },
   "saves": {
     "current": "Save atual",

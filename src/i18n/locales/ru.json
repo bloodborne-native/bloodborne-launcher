@@ -225,7 +225,11 @@
     "equipped": "Надет",
     "effect": "Эффект {{id}}",
     "gemSlot": "Гнездо камня {{slot}}",
-    "emptySlot": "Гнездо {{slot}}: пусто"
+    "emptySlot": "Гнездо {{slot}}: пусто",
+    "variations": "Отпечатки на +{{level}}",
+    "normal": "Обычное",
+    "uncanny": "Жуткое",
+    "lost": "Утраченное"
   },
   "saves": {
     "current": "Текущее сохранение",

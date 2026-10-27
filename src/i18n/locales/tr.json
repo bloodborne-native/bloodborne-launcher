@@ -225,7 +225,11 @@
     "equipped": "Kuşanılmış",
     "effect": "Etki {{id}}",
     "gemSlot": "Mücevher yuvası {{slot}}",
-    "emptySlot": "Yuva {{slot}}: boş"
+    "emptySlot": "Yuva {{slot}}: boş",
+    "variations": "+{{level}} seviyesinde damgalar",
+    "normal": "Normal",
+    "uncanny": "Tekinsiz",
+    "lost": "Kayıp"
   },
   "saves": {
     "current": "Mevcut kayıt",

@@ -225,7 +225,11 @@
     "equipped": "Equipada",
     "effect": "Efecto {{id}}",
     "gemSlot": "Ranura de gema {{slot}}",
-    "emptySlot": "Ranura {{slot}}: vacía"
+    "emptySlot": "Ranura {{slot}}: vacía",
+    "variations": "Improntas en +{{level}}",
+    "normal": "Normal",
+    "uncanny": "Misteriosa",
+    "lost": "Perdida"
   },
   "saves": {
     "current": "Partida actual",

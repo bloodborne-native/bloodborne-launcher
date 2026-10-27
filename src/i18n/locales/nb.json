@@ -225,7 +225,11 @@
     "equipped": "Utstyrt",
     "effect": "Effekt {{id}}",
     "gemSlot": "Edelsteinplass {{slot}}",
-    "emptySlot": "Plass {{slot}}: tom"
+    "emptySlot": "Plass {{slot}}: tom",
+    "variations": "Preginger ved +{{level}}",
+    "normal": "Vanlig",
+    "uncanny": "Uhyggelig",
+    "lost": "Tapt"
   },
   "saves": {
     "current": "Nåværende lagring",

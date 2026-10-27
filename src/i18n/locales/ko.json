@@ -225,7 +225,11 @@
     "equipped": "장착 중",
     "effect": "효과 {{id}}",
     "gemSlot": "혈석 슬롯 {{slot}}",
-    "emptySlot": "슬롯 {{slot}}: 비어 있음"
+    "emptySlot": "슬롯 {{slot}}: 비어 있음",
+    "variations": "+{{level}}의 각인",
+    "normal": "일반",
+    "uncanny": "기이한",
+    "lost": "잃어버린"
   },
   "saves": {
     "current": "현재 저장 데이터",

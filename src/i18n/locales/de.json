@@ -225,7 +225,11 @@
     "equipped": "Ausgerüstet",
     "effect": "Effekt {{id}}",
     "gemSlot": "Edelsteinplatz {{slot}}",
-    "emptySlot": "Platz {{slot}}: leer"
+    "emptySlot": "Platz {{slot}}: leer",
+    "variations": "Prägungen bei +{{level}}",
+    "normal": "Normal",
+    "uncanny": "Unheimlich",
+    "lost": "Verloren"
   },
   "saves": {
     "current": "Aktueller Spielstand",
