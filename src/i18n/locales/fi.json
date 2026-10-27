@@ -211,7 +211,19 @@
     "bolt": "Salama",
     "blunt": "Tylppä",
     "thrust": "Pisto",
-    "holds": "Enintään {{max}}"
+    "holds": "Enintään {{max}}",
+    "gems": "Jalokivet",
+    "gem": "Verijalokivi",
+    "radial": "Säteittäinen jalokivi",
+    "triangle": "Kolmiojalokivi",
+    "waning": "Vähenevä jalokivi",
+    "circle": "Pyöreä jalokivi",
+    "droplet": "Pisarajalokivi",
+    "rune": "Caryll-riimu",
+    "oathRune": "Valariimu",
+    "in": "Kohteessa {{weapon}}",
+    "equipped": "Varustettu",
+    "effect": "Vaikutus {{id}}"
   },
   "saves": {
     "current": "Nykyinen tallennus",

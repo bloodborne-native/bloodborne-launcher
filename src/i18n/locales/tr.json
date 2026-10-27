@@ -211,7 +211,19 @@
     "bolt": "Yıldırım",
     "blunt": "Ezici",
     "thrust": "Delici",
-    "holds": "En fazla {{max}}"
+    "holds": "En fazla {{max}}",
+    "gems": "Mücevherler",
+    "gem": "Kan mücevheri",
+    "radial": "Işınsal mücevher",
+    "triangle": "Üçgen mücevher",
+    "waning": "Azalan mücevher",
+    "circle": "Yuvarlak mücevher",
+    "droplet": "Damla mücevher",
+    "rune": "Caryll runu",
+    "oathRune": "Yemin runu",
+    "in": "{{weapon}} içinde",
+    "equipped": "Kuşanılmış",
+    "effect": "Etki {{id}}"
   },
   "saves": {
     "current": "Mevcut kayıt",

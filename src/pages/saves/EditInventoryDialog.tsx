@@ -5,17 +5,18 @@ import { api, queryKeys } from "@/lib";
 import type { CatalogItem, Character, InventoryChange, InventoryEntry, InventoryLocation } from "@/lib";
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui";
 import { AddItemPanel } from "@/pages/saves/AddItemPanel";
+import { GemRow } from "@/pages/saves/GemRow";
 import { ItemIcon } from "@/pages/saves/ItemIcon";
 import { ItemStats } from "@/pages/saves/ItemStats";
 
-type Filter = "item" | "weapon" | "armor" | "storage";
-const FILTERS: Filter[] = ["item", "weapon", "armor", "storage"];
+type Filter = "item" | "weapon" | "armor" | "gems" | "storage";
+const FILTERS: Filter[] = ["item", "weapon", "armor", "gems", "storage"];
 const key = (entry: InventoryEntry) => `${entry.location}:${entry.index}`;
 
 type Addition = { item: CatalogItem; location: InventoryLocation; amount: number };
 
-/** The inventory and storage of one character: amounts of items, weapons' level and imprint, and
- * items to add. Names, icons and stats come from the player's game files. */
+/** The inventory and storage of one character: amounts of items, weapons' level and imprint, gem
+ * effects, and items to add. Names, icons and stats come from the player's game files. */
 export function EditInventoryDialog({ profileId, character, disabled }: { profileId: string; character: Character; disabled: boolean }) {
   const { t, i18n } = useTranslation();
   const client = useQueryClient();
@@ -25,6 +26,8 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
   // Edited values by entry: amounts for items, level and imprint for weapons.
   const [amounts, setAmounts] = useState<Record<string, string>>({});
   const [weapons, setWeapons] = useState<Record<string, { level: number; imprint: number }>>({});
+  // Chosen gem effects by gem index, then effect slot.
+  const [effects, setEffects] = useState<Record<number, Record<number, number>>>({});
   const [additions, setAdditions] = useState<Addition[]>([]);
   const [adding, setAdding] = useState(false);
   const [pending, setPending] = useState(false);
@@ -60,13 +63,18 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
     }
     return [];
   });
-  const changes: InventoryChange[] = [...edits, ...additions.map(({ item, location, amount }): InventoryChange =>
+  const gems = inventory.data?.upgrades ?? [];
+  const effectChanges = gems.flatMap((gem) => gem.effects.flatMap((effect): InventoryChange[] => {
+    const chosen = effects[gem.index]?.[effect.slot];
+    return chosen !== undefined && chosen !== effect.id ? [{ type: "effect", upgrade: gem.index, slot: effect.slot, effect: chosen }] : [];
+  }));
+  const changes: InventoryChange[] = [...edits, ...effectChanges, ...additions.map(({ item, location, amount }): InventoryChange =>
     ({ type: "add", location, id: item.id, amount }))];
   const valid = entries.every((entry) => {
     const value = amounts[key(entry)];
     return value === undefined || (/^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= (entry.max || 999));
   });
-  const reset = () => { setAmounts({}); setWeapons({}); setAdditions([]); setAdding(false); setSearch(""); setError(undefined); };
+  const reset = () => { setAmounts({}); setWeapons({}); setEffects({}); setAdditions([]); setAdding(false); setSearch(""); setError(undefined); };
   const label = (entry: InventoryEntry) => entry.name ?? t("inventory.unnamed", { id: entry.id });
   return <Dialog open={open} onOpenChange={(next, details) => {
     if (pending) { details.cancel(); return; }
@@ -101,6 +109,9 @@ export function EditInventoryDialog({ profileId, character, disabled }: { profil
       <div className="min-h-40 flex-1 overflow-y-auto rounded-md border border-border">
         {inventory.isPending ? <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.reading")}</p>
           : inventory.error ? <p role="alert" className="px-4 py-3 text-sm text-destructive">{String(inventory.error)}</p>
+          : filter === "gems" ? (gems.length ? gems.map((gem) => <GemRow key={gem.index} gem={gem} chosen={effects[gem.index] ?? {}} disabled={pending}
+            onChoose={(slot, effect) => setEffects((all) => ({ ...all, [gem.index]: { ...all[gem.index], [slot]: effect } }))} />)
+            : <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>)
           : !shown.length ? <p className="px-4 py-3 text-sm text-muted-foreground">{t("inventory.empty")}</p>
           : shown.map((entry) => <div key={key(entry)} className="flex flex-wrap items-center gap-3 border-t border-border px-4 py-2 first:border-t-0">
             <ItemStats name={label(entry)} description={entry.description} icon={entry.icon} stats={entry.stats}>

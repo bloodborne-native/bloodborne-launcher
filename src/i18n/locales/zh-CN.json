@@ -211,7 +211,19 @@
     "bolt": "雷",
     "blunt": "打击",
     "thrust": "突刺",
-    "holds": "最多 {{max}} 个"
+    "holds": "最多 {{max}} 个",
+    "gems": "宝石",
+    "gem": "血宝石",
+    "radial": "放射型宝石",
+    "triangle": "三角型宝石",
+    "waning": "残缺型宝石",
+    "circle": "圆型宝石",
+    "droplet": "水滴型宝石",
+    "rune": "卡雷尔符文",
+    "oathRune": "誓约符文",
+    "in": "在{{weapon}}中",
+    "equipped": "已装备",
+    "effect": "效果 {{id}}"
   },
   "saves": {
     "current": "当前存档",

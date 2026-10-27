@@ -211,7 +211,19 @@
     "bolt": "번개",
     "blunt": "타격",
     "thrust": "찌르기",
-    "holds": "최대 {{max}}개"
+    "holds": "최대 {{max}}개",
+    "gems": "보석",
+    "gem": "혈석",
+    "radial": "방사형 혈석",
+    "triangle": "삼각형 혈석",
+    "waning": "이지러진 혈석",
+    "circle": "원형 혈석",
+    "droplet": "물방울형 혈석",
+    "rune": "카렐 문자",
+    "oathRune": "맹약 카렐 문자",
+    "in": "{{weapon}}에 장착",
+    "equipped": "장착 중",
+    "effect": "효과 {{id}}"
   },
   "saves": {
     "current": "현재 저장 데이터",

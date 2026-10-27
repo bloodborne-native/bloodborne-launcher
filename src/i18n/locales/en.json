@@ -410,7 +410,19 @@
     "bolt": "Bolt",
     "blunt": "Blunt",
     "thrust": "Thrust",
-    "holds": "Holds up to {{max}}"
+    "holds": "Holds up to {{max}}",
+    "gems": "Gems",
+    "gem": "Blood gem",
+    "radial": "Radial gem",
+    "triangle": "Triangle gem",
+    "waning": "Waning gem",
+    "circle": "Circle gem",
+    "droplet": "Droplet gem",
+    "rune": "Caryll rune",
+    "oathRune": "Oath rune",
+    "in": "In {{weapon}}",
+    "equipped": "Equipped",
+    "effect": "Effect {{id}}"
   },
   "saves": {
     "current": "Current save",

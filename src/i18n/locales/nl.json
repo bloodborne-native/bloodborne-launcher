@@ -211,7 +211,19 @@
     "bolt": "Bliksem",
     "blunt": "Stomp",
     "thrust": "Steek",
-    "holds": "Tot {{max}}"
+    "holds": "Tot {{max}}",
+    "gems": "Edelstenen",
+    "gem": "Bloedsteen",
+    "radial": "Radiale edelsteen",
+    "triangle": "Driehoekige edelsteen",
+    "waning": "Afnemende edelsteen",
+    "circle": "Ronde edelsteen",
+    "droplet": "Druppeledelsteen",
+    "rune": "Caryll-rune",
+    "oathRune": "Eedrune",
+    "in": "In {{weapon}}",
+    "equipped": "Uitgerust",
+    "effect": "Effect {{id}}"
   },
   "saves": {
     "current": "Huidige spelopslag",

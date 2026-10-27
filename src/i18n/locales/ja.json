@@ -211,7 +211,19 @@
     "bolt": "雷",
     "blunt": "打撃",
     "thrust": "刺突",
-    "holds": "最大 {{max}} 個"
+    "holds": "最大 {{max}} 個",
+    "gems": "宝石",
+    "gem": "血晶石",
+    "radial": "放射型の血晶石",
+    "triangle": "三角型の血晶石",
+    "waning": "欠けた血晶石",
+    "circle": "円型の血晶石",
+    "droplet": "雫型の血晶石",
+    "rune": "カレル文字",
+    "oathRune": "誓約のカレル文字",
+    "in": "{{weapon}}に装着",
+    "equipped": "装備中",
+    "effect": "効果 {{id}}"
   },
   "saves": {
     "current": "現在のセーブデータ",

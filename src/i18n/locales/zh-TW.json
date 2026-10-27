@@ -211,7 +211,19 @@
     "bolt": "雷",
     "blunt": "打擊",
     "thrust": "突刺",
-    "holds": "最多 {{max}} 個"
+    "holds": "最多 {{max}} 個",
+    "gems": "寶石",
+    "gem": "血寶石",
+    "radial": "放射型寶石",
+    "triangle": "三角型寶石",
+    "waning": "殘缺型寶石",
+    "circle": "圓型寶石",
+    "droplet": "水滴型寶石",
+    "rune": "卡雷爾符文",
+    "oathRune": "誓約符文",
+    "in": "在{{weapon}}中",
+    "equipped": "已裝備",
+    "effect": "效果 {{id}}"
   },
   "saves": {
     "current": "目前存檔",

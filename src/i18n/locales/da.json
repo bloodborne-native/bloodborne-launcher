@@ -211,7 +211,19 @@
     "bolt": "Lyn",
     "blunt": "Stump",
     "thrust": "Stik",
-    "holds": "Rummer op til {{max}}"
+    "holds": "Rummer op til {{max}}",
+    "gems": "Ædelsten",
+    "gem": "Blodsten",
+    "radial": "Radial ædelsten",
+    "triangle": "Trekantet ædelsten",
+    "waning": "Aftagende ædelsten",
+    "circle": "Rund ædelsten",
+    "droplet": "Dråbeædelsten",
+    "rune": "Caryll-rune",
+    "oathRune": "Ed-rune",
+    "in": "I {{weapon}}",
+    "equipped": "Udstyret",
+    "effect": "Effekt {{id}}"
   },
   "saves": {
     "current": "Aktuel gemt spil",

@@ -97,7 +97,12 @@ const previewCatalog: CatalogItem[] = [
   { id: 3000, name: "Sample material", category: "material", max: 99, icon: 4, description: null },
   { id: 6100, name: "Sample chalice", category: "chalice", max: 1, icon: 5, description: null },
 ];
-const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprint: "inventory-0", entries: [
+const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprint: "inventory-0", upgrades: [
+  { index: 0, handle: 1, rune: false, shape: 1, location: "inventory", equipped: false, weapon: null, effects: [
+    { slot: 0, id: 1, text: "Sample effect +1%", options: [{ id: 1, text: "Sample effect +1%" }, { id: 2, text: "Sample effect +5%" }, { id: 3, text: "Sample effect +10%" }] }] },
+  { index: 1, handle: 2, rune: false, shape: 63, location: null, equipped: true, weapon: "Sample weapon", effects: [
+    { slot: 0, id: 4, text: "Another sample effect +2%", options: [{ id: 4, text: "Another sample effect +2%" }] }] },
+], entries: [
   { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 } },
   { location: "inventory", index: 2, kind: "item", id: 1230, amount: 18, name: "Sample ammunition", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: 20, icon: 1, stats: { max: 20 } },
   { location: "inventory", index: 3, kind: "weapon", id: 7000200, amount: 1, name: "Sample weapon", description: null, level: 2, imprint: 0, levels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], imprints: [0, 1, 2], imprint_names: ["Sample weapon", "Sample weapon (variant 1)", "Sample weapon (variant 2)"], max: 0, icon: 2, stats: { attack: { physical: 90, arcane: 0, fire: 0, bolt: 0 }, scaling: { strength: 40, skill: 20, bloodtinge: 0, arcane: 0 }, requirements: { strength: 8, skill: 7, bloodtinge: 0, arcane: 0 } } },
@@ -156,6 +161,12 @@ export const mockApi = {
         const item = previewCatalog.find((i) => i.id === change.id);
         previewInventory.entries.push({ location: change.location, index: 100 + previewInventory.entries.length, kind: "item", id: change.id, amount: change.amount,
           name: item?.name ?? null, description: item?.description ?? null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [], max: item?.max ?? 1, icon: item?.icon ?? null, stats: { max: item?.max ?? 1 } });
+        continue;
+      }
+      if (change.type === "effect") {
+        const effect = previewInventory.upgrades[change.upgrade]?.effects.find((e) => e.slot === change.slot);
+        const option = effect?.options.find((o) => o.id === change.effect);
+        if (effect && option) { effect.id = option.id; effect.text = option.text; }
         continue;
       }
       const entry = previewInventory.entries.find((e) => e.location === change.location && e.index === change.index);

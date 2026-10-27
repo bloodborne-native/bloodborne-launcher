@@ -211,7 +211,19 @@
     "bolt": "Błyskawica",
     "blunt": "Obuchowe",
     "thrust": "Kłute",
-    "holds": "Do {{max}}"
+    "holds": "Do {{max}}",
+    "gems": "Klejnoty",
+    "gem": "Klejnot krwi",
+    "radial": "Klejnot promienisty",
+    "triangle": "Klejnot trójkątny",
+    "waning": "Klejnot ubywający",
+    "circle": "Klejnot okrągły",
+    "droplet": "Klejnot kroplowy",
+    "rune": "Runa Caryll",
+    "oathRune": "Runa przysięgi",
+    "in": "W: {{weapon}}",
+    "equipped": "Założony",
+    "effect": "Efekt {{id}}"
   },
   "saves": {
     "current": "Bieżący zapis",

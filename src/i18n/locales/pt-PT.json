@@ -211,7 +211,19 @@
     "bolt": "Raio",
     "blunt": "Contundente",
     "thrust": "Perfurante",
-    "holds": "Até {{max}}"
+    "holds": "Até {{max}}",
+    "gems": "Gemas",
+    "gem": "Gema de sangue",
+    "radial": "Gema radial",
+    "triangle": "Gema triangular",
+    "waning": "Gema minguante",
+    "circle": "Gema circular",
+    "droplet": "Gema gota",
+    "rune": "Runa de Caryll",
+    "oathRune": "Runa de juramento",
+    "in": "Em {{weapon}}",
+    "equipped": "Equipada",
+    "effect": "Efeito {{id}}"
   },
   "saves": {
     "current": "Gravação atual",

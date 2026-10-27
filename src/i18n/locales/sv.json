@@ -211,7 +211,19 @@
     "bolt": "Blixt",
     "blunt": "Trubbig",
     "thrust": "Stick",
-    "holds": "Upp till {{max}}"
+    "holds": "Upp till {{max}}",
+    "gems": "Ädelstenar",
+    "gem": "Blodsten",
+    "radial": "Radiell ädelsten",
+    "triangle": "Triangulär ädelsten",
+    "waning": "Avtagande ädelsten",
+    "circle": "Rund ädelsten",
+    "droplet": "Droppädelsten",
+    "rune": "Caryll-runa",
+    "oathRune": "Edsruna",
+    "in": "I {{weapon}}",
+    "equipped": "Utrustad",
+    "effect": "Effekt {{id}}"
   },
   "saves": {
     "current": "Aktuell sparfil",

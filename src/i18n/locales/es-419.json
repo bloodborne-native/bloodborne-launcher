@@ -211,7 +211,19 @@
     "bolt": "Rayo",
     "blunt": "Contundente",
     "thrust": "Perforante",
-    "holds": "Hasta {{max}}"
+    "holds": "Hasta {{max}}",
+    "gems": "Gemas",
+    "gem": "Gema de sangre",
+    "radial": "Gema radial",
+    "triangle": "Gema triangular",
+    "waning": "Gema menguante",
+    "circle": "Gema circular",
+    "droplet": "Gema de gota",
+    "rune": "Runa de Caryll",
+    "oathRune": "Runa de juramento",
+    "in": "En {{weapon}}",
+    "equipped": "Equipada",
+    "effect": "Efecto {{id}}"
   },
   "saves": {
     "current": "Partida actual",

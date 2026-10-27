@@ -211,7 +211,19 @@
     "bolt": "Lyn",
     "blunt": "Stump",
     "thrust": "Stikk",
-    "holds": "Inntil {{max}}"
+    "holds": "Inntil {{max}}",
+    "gems": "Edelsteiner",
+    "gem": "Blodstein",
+    "radial": "Radial edelstein",
+    "triangle": "Trekantet edelstein",
+    "waning": "Avtagende edelstein",
+    "circle": "Rund edelstein",
+    "droplet": "Dråpeedelstein",
+    "rune": "Caryll-rune",
+    "oathRune": "Ed-rune",
+    "in": "I {{weapon}}",
+    "equipped": "Utstyrt",
+    "effect": "Effekt {{id}}"
   },
   "saves": {
     "current": "Nåværende lagring",

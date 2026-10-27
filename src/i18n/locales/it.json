@@ -211,7 +211,19 @@
     "bolt": "Fulmine",
     "blunt": "Contundente",
     "thrust": "Perforante",
-    "holds": "Fino a {{max}}"
+    "holds": "Fino a {{max}}",
+    "gems": "Gemme",
+    "gem": "Gemma di sangue",
+    "radial": "Gemma radiale",
+    "triangle": "Gemma triangolare",
+    "waning": "Gemma calante",
+    "circle": "Gemma circolare",
+    "droplet": "Gemma a goccia",
+    "rune": "Runa di Caryll",
+    "oathRune": "Runa del giuramento",
+    "in": "In {{weapon}}",
+    "equipped": "Equipaggiata",
+    "effect": "Effetto {{id}}"
   },
   "saves": {
     "current": "Salvataggio attuale",

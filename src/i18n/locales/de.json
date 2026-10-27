@@ -211,7 +211,19 @@
     "bolt": "Blitz",
     "blunt": "Stumpf",
     "thrust": "Stich",
-    "holds": "Bis zu {{max}}"
+    "holds": "Bis zu {{max}}",
+    "gems": "Edelsteine",
+    "gem": "Blutedelstein",
+    "radial": "Radialer Edelstein",
+    "triangle": "Dreieckiger Edelstein",
+    "waning": "Schwindender Edelstein",
+    "circle": "Runder Edelstein",
+    "droplet": "Tropfen-Edelstein",
+    "rune": "Caryll-Rune",
+    "oathRune": "Eid-Rune",
+    "in": "In {{weapon}}",
+    "equipped": "Ausgerüstet",
+    "effect": "Effekt {{id}}"
   },
   "saves": {
     "current": "Aktueller Spielstand",

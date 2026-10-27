@@ -142,11 +142,20 @@ export type InventoryStats = {
   defense?: Record<string, number>; max?: number;
 };
 export type CatalogItem = { id: number; name: string; category: "consumable" | "material" | "chalice"; max: number; icon: number | null; description: string | null };
-export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[] };
+export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[]; upgrades: Gem[] };
+/** A gem or rune (inventory.rs): its shape, effects with their alternatives, and where it is. */
+export type Gem = {
+  index: number; handle: number; rune: boolean;
+  /** Gems: 1 radial, 2 triangle, 4 waning, 8 circle, 63 droplet; runes: 1, 2 (Oath) or 4. */
+  shape: number;
+  effects: { slot: number; id: number; text: string | null; options: { id: number; text: string }[] }[];
+  location: InventoryLocation | null; equipped: boolean; weapon: string | null;
+};
 export type InventoryChange =
   | { type: "amount"; location: InventoryLocation; index: number; amount: number }
   | { type: "weapon"; location: InventoryLocation; index: number; level: number; imprint: number }
-  | { type: "add"; location: InventoryLocation; id: number; amount: number };
+  | { type: "add"; location: InventoryLocation; id: number; amount: number }
+  | { type: "effect"; upgrade: number; slot: number; effect: number };
 export type InventoryEdit = { title_id: string; slot: number; fingerprint: string; changes: InventoryChange[] };
 
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };

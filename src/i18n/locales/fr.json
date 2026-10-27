@@ -211,7 +211,19 @@
     "bolt": "Foudre",
     "blunt": "Contondant",
     "thrust": "Perforant",
-    "holds": "Jusqu'à {{max}}"
+    "holds": "Jusqu'à {{max}}",
+    "gems": "Gemmes",
+    "gem": "Gemme de sang",
+    "radial": "Gemme radiale",
+    "triangle": "Gemme triangulaire",
+    "waning": "Gemme décroissante",
+    "circle": "Gemme circulaire",
+    "droplet": "Gemme goutte",
+    "rune": "Rune de Caryll",
+    "oathRune": "Rune de serment",
+    "in": "Dans {{weapon}}",
+    "equipped": "Équipée",
+    "effect": "Effet {{id}}"
   },
   "saves": {
     "current": "Sauvegarde actuelle",
