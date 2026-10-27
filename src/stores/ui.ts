@@ -5,6 +5,9 @@ export type Tab = "home" | "saves" | "trophies" | "graphics" | "controls" | "gam
 type UiStore = {
   tab: Tab;
   setTab: (tab: Tab) => void;
+  /** The character open in the save editor on the Saves tab ("title:slot"), or none. */
+  editing: string | null;
+  setEditing: (character: string | null) => void;
 };
 
 const TABS: Tab[] = ["home", "saves", "trophies", "graphics", "controls", "game", "online", "profiles", "mods", "patches", "advanced", "log"];
@@ -17,5 +20,7 @@ function initialTab(): Tab {
 
 export const useUiStore = create<UiStore>((set) => ({
   tab: initialTab(),
-  setTab: (tab) => set({ tab }),
+  setTab: (tab) => set({ tab, editing: null }),
+  editing: null,
+  setEditing: (editing) => set({ editing }),
 }));

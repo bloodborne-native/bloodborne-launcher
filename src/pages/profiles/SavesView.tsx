@@ -1,10 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
 import { Message } from "@/components/common";
 import { PageHeader } from "@/components/settings";
 import { Button } from "@/components/ui";
 import { useSaves } from "@/hooks";
+import { api } from "@/lib";
+import { useUiStore } from "@/stores";
+import { SaveEditor } from "@/pages/saves/editor";
 import { CharacterPreview } from "@/pages/saves/CharacterPreview";
 import { SaveProfileCard } from "@/pages/saves/SaveProfileCard";
 
@@ -14,6 +17,14 @@ export function SavesView({ profileId }: { profileId: string }) {
   const client = useQueryClient();
   const { data, error, refetch, isFetching, change, busy, running } = useSaves(profileId);
   const selected = data?.profiles[0];
+  // A character opened in the save editor replaces the page (same query as the character list).
+  const editing = useUiStore((state) => state.editing);
+  const setEditing = useUiStore((state) => state.setEditing);
+  const characters = useQuery({ queryKey: ["characters", profileId, running], queryFn: () => api.listCharacters(profileId), enabled: !running, staleTime: 0 });
+  const character = characters.data?.find((entry) => `${entry.title_id}:${entry.slot}` === editing);
+  if (editing && character) {
+    return <SaveEditor key={character.fingerprint} profileId={profileId} character={character} disabled={running} onClose={() => setEditing(null)} />;
+  }
   return (
     <>
       <PageHeader title={t("nav.saves")} subtitle={selected?.name} actions={

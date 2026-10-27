@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib";
 import { SettingsSection } from "@/components/settings";
-import { EditCharacterDialog } from "@/pages/saves/EditCharacterDialog";
 import { Message } from "@/components/common";
+import { EditCharacterButton } from "@/pages/saves/editor";
 
 export function CharacterPreview({ profileId, running }: { profileId: string; running: boolean }) {
   const { t, i18n } = useTranslation();
@@ -32,7 +32,9 @@ export function CharacterPreview({ profileId, running }: { profileId: string; ru
             <div key={field} className="flex justify-between gap-2"><dt className="text-muted-foreground">{t(`saves.${field}`)}</dt><dd>{number(character[field])}</dd></div>)}
         </dl>
         {!character.stats_consistent && <Message tone="error" className="mt-3 text-xs">{t("saves.inconsistentStats")}</Message>}
-        <div className="mt-4"><EditCharacterDialog profileId={profileId} character={character} disabled={running} /></div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <EditCharacterButton character={character} disabled={running} />
+        </div>
       </div>)}
   </SettingsSection>;
 }

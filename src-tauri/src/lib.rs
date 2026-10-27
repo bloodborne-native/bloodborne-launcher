@@ -26,6 +26,8 @@ mod settings_store;
 mod online_password;
 mod platform;
 mod game_check;
+mod game_data;
+mod inventory;
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
@@ -518,18 +520,88 @@ async fn list_characters(state: State<'_, AppState>, id: String) -> Result<Vec<s
         save_editor::list(&user)
     }).await
 }
+/// The player's game folder, for the save editor's names, stats and icons (game_data.rs).
+fn game_folder(p: &Paths) -> Result<PathBuf, String> {
+    let game = str_setting(&load_settings(p), "game_dir");
+    if game.is_empty() {
+        return Err("Choose the game folder first: the item names come from your game files.".into());
+    }
+    Ok(expand(&game))
+}
+fn item_text(p: &Paths, language: &str) -> Result<game_data::ItemText, String> {
+    game_data::item_text(&game_folder(p)?, language)
+}
+/// An item's icon as a PNG data URL, decoded from the player's game files once per launch.
 #[tauri::command]
-async fn edit_character(state: State<'_, AppState>, id: String, edit: save_editor::Edit) -> Result<(), String> {
+async fn item_icon(state: State<'_, AppState>, icon: u32) -> Result<String, String> {
+    use base64::Engine;
+    static ICONS: Mutex<BTreeMap<(PathBuf, u32), String>> = Mutex::new(BTreeMap::new());
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = game_folder(&state.paths)?;
+        let key = (game.clone(), icon);
+        if let Some(url) = ICONS.lock().map_err(|e| e.to_string())?.get(&key) {
+            return Ok(url.clone());
+        }
+        let png = game_data::icon_png(&game, icon, 128)?;
+        let url = format!("data:image/png;base64,{}", base64::engine::general_purpose::STANDARD.encode(png));
+        ICONS.lock().map_err(|e| e.to_string())?.insert(key, url.clone());
+        Ok(url)
+    }).await
+}
+#[tauri::command]
+async fn item_catalog(state: State<'_, AppState>, language: String) -> Result<Vec<inventory::CatalogItem>, String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = game_folder(&state.paths)?;
+        Ok(inventory::catalog(&game_data::item_text(&game, &language)?, &game_data::game_params(&game)?))
+    }).await
+}
+#[tauri::command]
+async fn character_inventory(state: State<'_, AppState>, id: String, title_id: String, slot: u8, language: String) -> Result<inventory::Inventory, String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = state.game.lock().map_err(|e| e.to_string())?;
+        saves_idle(&game)?;
+        profile_saves(&state.paths, Some(&id))?;
+        let registry = profiles::require(&state.paths.data)?;
+        let user = saves::user_dir(&state.paths.data, &registry.original_user_dir, &id)?;
+        let text = item_text(&state.paths, &language).ok();
+        let params = game_folder(&state.paths).and_then(|game| game_data::game_params(&game)).ok();
+        inventory::read(&user, &title_id, slot, text.as_ref(), params.as_ref())
+    }).await
+}
+/// One edit of a character: its attributes and Blood Echoes, its inventory, or both, applied to
+/// the same staged copy (one backup, one rewrite).
+#[derive(serde::Deserialize)]
+struct SaveEdit {
+    character: Option<save_editor::Edit>,
+    inventory: Option<inventory::Edit>,
+}
+
+#[tauri::command]
+async fn edit_save(state: State<'_, AppState>, id: String, edit: SaveEdit) -> Result<(), String> {
     let state = state.inner().clone();
     blocking(move || {
         let game = state.game.lock().map_err(|e| e.to_string())?;
         saves_idle(&game)?;
         profile_saves(&state.paths, Some(&id))?;
         let p = &state.paths;
+        let SaveEdit { character, inventory: mut items } = edit;
+        if character.is_none() && items.is_none() {
+            return Err("Nothing to change.".into());
+        }
+        // Weapon levels are checked against the game's own weapon list (English is enough).
+        let tables = match items {
+            Some(_) => Some((item_text(p, "en")?, game_data::game_params(&game_folder(p)?)?)),
+            None => None,
+        };
         let registry = profiles::require(&p.data)?;
         let operation = profiles::operation(&p.data, Some(&id), "edit")?;
         let result = (|| {
-            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| save_editor::rewrite(stage, &edit))?;
+            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| {
+                inventory::rewrite_save(stage, character.as_ref(), items.take(), tables.as_ref().map(|(text, params)| (text, params)))
+            })?;
             profiles::list(&p.data, &registry.original_user_dir)?;
             Ok(())
         })();
@@ -1120,7 +1192,7 @@ pub fn run() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, game_icon, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

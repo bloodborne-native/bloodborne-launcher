@@ -28,6 +28,9 @@ serde_json = "1"
 sha2 = "0.10"
 flate2 = "1"
 tokio = { version = "1", features = ["time"] }
+texture2ddecoder = "0.1"
+png = "0.17"
+base64 = "0.22"
 
 # Desktop only: the tray and one launcher at a time.
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]

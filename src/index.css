@@ -135,6 +135,18 @@
   background-color: rgb(255 255 255 / 0.04);
 }
 
+/* A list or panel that scrolls on its own (the save editor): as tall as the window leaves under
+   the page's title, tabs and save bar; narrow windows also leave the top strip and bottom bar. */
+@utility own-scroll {
+  max-height: calc(100dvh - 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  @media (width < 48rem) {
+    max-height: calc(100dvh - 30rem - env(safe-area-inset-bottom));
+    min-height: 12rem;
+  }
+}
+
 /* The window's title bar is hidden (overlay): these strips drag the window. */
 @utility drag {
   -webkit-app-region: drag;
