@@ -277,7 +277,6 @@
     "view": "Vis trofeer",
     "empty": "Ingen opplåsinger registrert ennå.",
     "edited": "Redigert lagring: nye trofeer deaktivert.",
-    "off": "Troféer deaktivert",
     "id": "Trofé {{id}}",
     "local": "Kun lokal registrering. Tidligere fremgang importeres ikke.",
     "error": "Import av trofeer mislyktes.",

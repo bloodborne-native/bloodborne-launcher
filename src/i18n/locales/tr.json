@@ -277,7 +277,6 @@
     "view": "Kupaları görüntüle",
     "empty": "Henüz açılım kaydedilmedi.",
     "edited": "Düzenlenmiş kayıt: yeni kupalar devre dışı.",
-    "off": "Kupalar devre dışı",
     "id": "Kupa {{id}}",
     "local": "Yalnızca yerel kayıt. Önceki ilerleme içe aktarılmaz.",
     "error": "Kupalar içe aktarılamadı.",

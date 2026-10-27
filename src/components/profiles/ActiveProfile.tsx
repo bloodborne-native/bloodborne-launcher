@@ -15,7 +15,7 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
   const setTab = useUiStore((state) => state.setTab);
   const active = data?.profiles.find((profile) => profile.id === data.active);
   const locked = busy || running || !data || data.setup_required;
-  // Trophies off for this save set, or their import failed: a slashed trophy, the reason in the menu.
+  // Trophies off for this save set, or their import failed: a slashed trophy, the reason on hover.
   return (
     <div className={compact ? undefined : "mb-3"}>
       <Menu>
@@ -40,8 +40,6 @@ export function ActiveProfile({ compact = false }: { compact?: boolean }) {
               <TrophyCount profile={profile} className="text-xs text-muted-foreground" iconClassName="size-4" />
             </MenuRadioItem>)}
           </MenuRadioGroup>
-          {active && !active.trophies_eligible && <p className="px-2 py-1 text-xs text-blood-400">{t("trophies.edited")}</p>}
-          {active?.trophy_error && <p role="alert" className="px-2 py-1 text-xs text-destructive">{t("trophies.error")}</p>}
           <MenuSeparator />
           {active && <MenuItem onClick={() => openProfile(active.id, "saves")}>{t("nav.saves")}</MenuItem>}
           {active && <MenuItem onClick={() => openProfile(active.id, "trophies")}>{t("profiles.trophies")}</MenuItem>}

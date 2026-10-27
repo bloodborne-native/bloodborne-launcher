@@ -277,7 +277,6 @@
     "view": "Mostra trofei",
     "empty": "Nessuno sblocco registrato.",
     "edited": "Salvataggio modificato: nuovi trofei disattivati.",
-    "off": "Trofei disattivati",
     "id": "Trofeo {{id}}",
     "local": "Solo registrazione locale. I progressi precedenti non vengono importati.",
     "error": "Importazione dei trofei non riuscita.",

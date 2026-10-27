@@ -476,7 +476,6 @@
     "view": "View trophies",
     "empty": "No unlocks recorded yet.",
     "edited": "Edited save: new trophies disabled.",
-    "off": "Trophies disabled",
     "id": "Trophy {{id}}",
     "local": "Local tracking only. Earlier save progress is not imported.",
     "error": "Trophy import failed.",

@@ -277,7 +277,6 @@
     "view": "Ver troféus",
     "empty": "Ainda não há troféus registados.",
     "edited": "Gravação editada: novos troféus desativados.",
-    "off": "Troféus desativados",
     "id": "Troféu {{id}}",
     "local": "Apenas registo local. O progresso anterior da gravação não é importado.",
     "error": "Falha ao importar troféus.",

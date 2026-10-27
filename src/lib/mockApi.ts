@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit } from "@/lib/types";
+import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, CharacterEdit } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -90,6 +90,13 @@ let nextBackup = 0;
 const previewProfile = new URLSearchParams(window.location.search).get("profile");
 let profileSetup = previewProfile !== null;
 const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: !new URLSearchParams(window.location.search).has("edited"), trophy_unlocks: [], trophy_error: null }] };
+// ?more adds two profiles (one with recorded trophies) for lists of profiles.
+if (new URLSearchParams(window.location.search).has("more")) {
+  const unlock = (trophy_id: number): TrophyUnlock => ({ translations: {}, name: null, description: null, grade: "bronze", group: "base", title_id: "CUSA03173", trophy_id, unlocked_at: 1720000000 });
+  saves.profiles.push(
+    { id: "second", name: "Second hunter", path: `${config.paths.data}/save-profiles/second/user`, bytes: 0, modified: null, backups: [], trophies_eligible: true, trophy_unlocks: [unlock(1), unlock(2), unlock(12)], trophy_error: null },
+    { id: "third", name: "Third", path: `${config.paths.data}/save-profiles/third/user`, bytes: 0, modified: null, backups: [], trophies_eligible: true, trophy_unlocks: [], trophy_error: null });
+}
 let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
   new_game_cycle: 0, stats_consistent: true, fingerprint: "preview" };

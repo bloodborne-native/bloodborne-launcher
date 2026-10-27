@@ -277,7 +277,6 @@
     "view": "Visa troféer",
     "empty": "Inga upplåsningar registrerade ännu.",
     "edited": "Redigerad sparfil: nya troféer inaktiverade.",
-    "off": "Troféer inaktiverade",
     "id": "Trofé {{id}}",
     "local": "Endast lokal registrering. Tidigare framsteg importeras inte.",
     "error": "Import av troféer misslyckades.",
