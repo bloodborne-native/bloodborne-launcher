@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { profilesService } from "@/services";
 import { mockApi } from "@/lib/mockApi";
-import type { ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, CharacterEdit, Inventory, InventoryEdit, CatalogItem } from "@/lib/types";
+import type { ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, Inventory, SaveEdit, CatalogItem } from "@/lib/types";
 
 /** Running inside the Tauri app (else a browser preview with mock data). */
 const inTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -17,10 +17,9 @@ const tauriApi = {
   changeProfile: profilesService.change,
   listSaves: (id?: string) => invoke<SaveList>("list_saves", { id }),
   listCharacters: (id: string) => invoke<Character[]>("list_characters", { id }),
-  editCharacter: (id: string, edit: CharacterEdit) => invoke<void>("edit_character", { id, edit }),
   characterInventory: (id: string, titleId: string, slot: number, language: string) =>
     invoke<Inventory>("character_inventory", { id, titleId, slot, language }),
-  editInventory: (id: string, edit: InventoryEdit) => invoke<void>("edit_inventory", { id, edit }),
+  editSave: (id: string, edit: SaveEdit) => invoke<void>("edit_save", { id, edit }),
   itemCatalog: (language: string) => invoke<CatalogItem[]>("item_catalog", { language }),
   itemIcon: (icon: number) => invoke<string>("item_icon", { icon }),
   changeSave: (change: SaveChange) => invoke<void>("change_save", change),

@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Inventaris bewerken",
     "item": "Voorwerpen",
     "weapon": "Wapens",
     "armor": "Pantser",
@@ -196,7 +195,6 @@
     "inventory": "Inventaris",
     "add": "Voorwerp toevoegen",
     "remove": "Verwijderen",
-    "addTo": "Toevoegen aan",
     "choose": "Kies een voorwerp.",
     "alreadyHeld": "Staat al in dit deel: wijzig liever het aantal.",
     "consumable": "Verbruiksvoorwerpen",
@@ -229,7 +227,19 @@
     "variations": "Afdrukken bij +{{level}}",
     "normal": "Normaal",
     "uncanny": "Onheilspellend",
-    "lost": "Verloren"
+    "lost": "Verloren",
+    "characterTab": "Personage",
+    "current": "Nu",
+    "chosen": "Gekozen",
+    "was": "Nu: {{name}}",
+    "undo": "Ongedaan maken",
+    "gemSlots": "Edelsteenplekken",
+    "noSlots": "Geen open edelsteenplekken.",
+    "chooseWeapon": "Kies een wapen.",
+    "slotsUsed": "Edelstenen: {{used}}/{{count}}",
+    "edited": "Gewijzigd",
+    "added": "toegevoegd",
+    "discard": "Wijzigingen verwerpen"
   },
   "saves": {
     "current": "Huidige spelopslag",

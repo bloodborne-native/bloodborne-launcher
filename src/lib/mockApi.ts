@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit, Inventory, InventoryEdit, CatalogItem } from "@/lib/types";
+import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, Inventory, SaveEdit, CatalogItem } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -149,24 +149,22 @@ export const mockApi = {
   },
   listSaves: (id?: string) => wait({ active: saves.active, profiles: structuredClone(saves.profiles.filter((p) => p.id === (id ?? saves.active))) }),
   listCharacters: (id: string) => wait<Character[]>(saves.profiles.some((p) => p.id === id && p.bytes > 0) ? [structuredClone(previewCharacter)] : []),
-  editCharacter: (id: string, edit: CharacterEdit) => {
-    const profile = saves.profiles.find((p) => p.id === id);
-    if (!profile || edit.fingerprint !== previewCharacter.fingerprint) return Promise.reject("Character changed. Refresh the preview.");
-    profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
-    profile.trophies_eligible = false;
-    const level = edit.vitality + edit.endurance
-      + edit.strength + edit.skill + edit.bloodtinge + edit.arcane - 50;
-    previewCharacter = { ...previewCharacter, ...edit, level, fingerprint: `preview-${nextBackup}` };
-    return wait(undefined);
-  },
   characterInventory: (id: string) => saves.profiles.some((p) => p.id === id && p.bytes > 0)
     ? wait(structuredClone(previewInventory)) : Promise.reject("The character slot is empty."),
-  editInventory: (id: string, edit: InventoryEdit) => {
+  editSave: (id: string, { character, inventory }: SaveEdit) => {
     const profile = saves.profiles.find((p) => p.id === id);
-    if (!profile || edit.fingerprint !== previewInventory.fingerprint) return Promise.reject("The character changed since it was opened. Refresh the inventory.");
+    if (!profile || (!character && !inventory)) return Promise.reject("Nothing to change.");
+    if ((character && character.fingerprint !== previewCharacter.fingerprint) || (inventory && inventory.fingerprint !== previewInventory.fingerprint)) {
+      return Promise.reject("The character changed since it was opened. Refresh the save preview.");
+    }
     profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
     profile.trophies_eligible = false;
-    for (const change of edit.changes) {
+    if (character) {
+      const level = character.vitality + character.endurance + character.strength + character.skill + character.bloodtinge + character.arcane - 50;
+      previewCharacter = { ...previewCharacter, ...character, level };
+    }
+    previewCharacter.fingerprint = `preview-${nextBackup}`;
+    for (const change of inventory?.changes ?? []) {
       if (change.type === "add") {
         const item = previewCatalog.find((i) => i.id === change.id);
         previewInventory.entries.push({ location: change.location, index: 100 + previewInventory.entries.length, kind: "item", id: change.id, amount: change.amount,

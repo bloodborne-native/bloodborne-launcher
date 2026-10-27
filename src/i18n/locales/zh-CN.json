@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "编辑物品栏",
     "item": "道具",
     "weapon": "武器",
     "armor": "防具",
@@ -196,7 +195,6 @@
     "inventory": "物品栏",
     "add": "添加道具",
     "remove": "移除",
-    "addTo": "添加到",
     "choose": "选择一个道具。",
     "alreadyHeld": "此处已有：请改为修改数量。",
     "consumable": "消耗品",
@@ -229,7 +227,19 @@
     "variations": "+{{level}} 时的印记",
     "normal": "普通",
     "uncanny": "诡异",
-    "lost": "失落"
+    "lost": "失落",
+    "characterTab": "角色",
+    "current": "当前",
+    "chosen": "所选",
+    "was": "当前：{{name}}",
+    "undo": "撤销",
+    "gemSlots": "宝石槽",
+    "noSlots": "没有开启的宝石槽。",
+    "chooseWeapon": "请选择武器。",
+    "slotsUsed": "宝石：{{used}}/{{count}}",
+    "edited": "已修改",
+    "added": "已添加",
+    "discard": "放弃更改"
   },
   "saves": {
     "current": "当前存档",

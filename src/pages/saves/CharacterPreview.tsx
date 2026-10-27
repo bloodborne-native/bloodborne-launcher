@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib";
 import { SettingsSection } from "@/components/settings";
-import { EditCharacterDialog } from "@/pages/saves/EditCharacterDialog";
-import { EditInventoryDialog } from "@/pages/saves/EditInventoryDialog";
+import { SaveEditorDialog } from "@/pages/saves/editor";
 
 export function CharacterPreview({ profileId, running }: { profileId: string; running: boolean }) {
   const { t, i18n } = useTranslation();
@@ -33,8 +32,7 @@ export function CharacterPreview({ profileId, running }: { profileId: string; ru
         </dl>
         {!character.stats_consistent && <p className="mt-3 text-xs text-destructive">{t("saves.inconsistentStats")}</p>}
         <div className="mt-4 flex flex-wrap gap-2">
-          <EditCharacterDialog profileId={profileId} character={character} disabled={running} />
-          <EditInventoryDialog profileId={profileId} character={character} disabled={running} />
+          <SaveEditorDialog profileId={profileId} character={character} disabled={running} />
         </div>
       </div>)}
   </SettingsSection>;

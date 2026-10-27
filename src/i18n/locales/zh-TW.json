@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "編輯物品欄",
     "item": "道具",
     "weapon": "武器",
     "armor": "防具",
@@ -196,7 +195,6 @@
     "inventory": "物品欄",
     "add": "新增道具",
     "remove": "移除",
-    "addTo": "新增至",
     "choose": "選擇一個道具。",
     "alreadyHeld": "此處已有：請改為修改數量。",
     "consumable": "消耗品",
@@ -229,7 +227,19 @@
     "variations": "+{{level}} 時的印記",
     "normal": "普通",
     "uncanny": "詭異",
-    "lost": "失落"
+    "lost": "失落",
+    "characterTab": "角色",
+    "current": "目前",
+    "chosen": "所選",
+    "was": "目前：{{name}}",
+    "undo": "復原",
+    "gemSlots": "寶石槽",
+    "noSlots": "沒有開啟的寶石槽。",
+    "chooseWeapon": "請選擇武器。",
+    "slotsUsed": "寶石：{{used}}/{{count}}",
+    "edited": "已修改",
+    "added": "已新增",
+    "discard": "放棄變更"
   },
   "saves": {
     "current": "目前存檔",

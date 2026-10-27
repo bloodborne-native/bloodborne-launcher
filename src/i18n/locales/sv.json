@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Redigera inventarie",
     "item": "Föremål",
     "weapon": "Vapen",
     "armor": "Rustning",
@@ -196,7 +195,6 @@
     "inventory": "Inventarie",
     "add": "Lägg till föremål",
     "remove": "Ta bort",
-    "addTo": "Lägg till i",
     "choose": "Välj ett föremål.",
     "alreadyHeld": "Finns redan här: ändra antalet i stället.",
     "consumable": "Förbrukningsföremål",
@@ -229,7 +227,19 @@
     "variations": "Prägningar vid +{{level}}",
     "normal": "Vanlig",
     "uncanny": "Kuslig",
-    "lost": "Förlorad"
+    "lost": "Förlorad",
+    "characterTab": "Rollfigur",
+    "current": "Nu",
+    "chosen": "Vald",
+    "was": "Nu: {{name}}",
+    "undo": "Ångra",
+    "gemSlots": "Ädelstensplatser",
+    "noSlots": "Inga öppna ädelstensplatser.",
+    "chooseWeapon": "Välj ett vapen.",
+    "slotsUsed": "Ädelstenar: {{used}}/{{count}}",
+    "edited": "Ändrad",
+    "added": "tillagd",
+    "discard": "Förkasta ändringar"
   },
   "saves": {
     "current": "Aktuell sparfil",

@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Edytuj ekwipunek",
     "item": "Przedmioty",
     "weapon": "Broń",
     "armor": "Pancerz",
@@ -196,7 +195,6 @@
     "inventory": "Ekwipunek",
     "add": "Dodaj przedmiot",
     "remove": "Usuń",
-    "addTo": "Dodaj do",
     "choose": "Wybierz przedmiot.",
     "alreadyHeld": "Już jest w tej sekcji: zmień zamiast tego ilość.",
     "consumable": "Przedmioty użytkowe",
@@ -229,7 +227,19 @@
     "variations": "Odciski przy +{{level}}",
     "normal": "Zwykła",
     "uncanny": "Niesamowita",
-    "lost": "Utracona"
+    "lost": "Utracona",
+    "characterTab": "Postać",
+    "current": "Teraz",
+    "chosen": "Wybrane",
+    "was": "Teraz: {{name}}",
+    "undo": "Cofnij",
+    "gemSlots": "Gniazda klejnotów",
+    "noSlots": "Brak otwartych gniazd klejnotów.",
+    "chooseWeapon": "Wybierz broń.",
+    "slotsUsed": "Klejnoty: {{used}}/{{count}}",
+    "edited": "Zmieniono",
+    "added": "dodano",
+    "discard": "Odrzuć zmiany"
   },
   "saves": {
     "current": "Bieżący zapis",

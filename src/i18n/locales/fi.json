@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Muokkaa tavaraluetteloa",
     "item": "Esineet",
     "weapon": "Aseet",
     "armor": "Panssari",
@@ -196,7 +195,6 @@
     "inventory": "Tavaraluettelo",
     "add": "Lisää esine",
     "remove": "Poista",
-    "addTo": "Lisää kohteeseen",
     "choose": "Valitse esine.",
     "alreadyHeld": "On jo tässä osiossa: muuta määrää.",
     "consumable": "Kulutustavarat",
@@ -229,7 +227,19 @@
     "variations": "Leimat tasolla +{{level}}",
     "normal": "Tavallinen",
     "uncanny": "Kummallinen",
-    "lost": "Kadonnut"
+    "lost": "Kadonnut",
+    "characterTab": "Hahmo",
+    "current": "Nyt",
+    "chosen": "Valittu",
+    "was": "Nyt: {{name}}",
+    "undo": "Kumoa",
+    "gemSlots": "Jalokivipaikat",
+    "noSlots": "Ei avoimia jalokivipaikkoja.",
+    "chooseWeapon": "Valitse ase.",
+    "slotsUsed": "Jalokivet: {{used}}/{{count}}",
+    "edited": "Muokattu",
+    "added": "lisätty",
+    "discard": "Hylkää muutokset"
   },
   "saves": {
     "current": "Nykyinen tallennus",

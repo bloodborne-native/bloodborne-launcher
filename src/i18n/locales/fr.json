@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Modifier l'inventaire",
     "item": "Objets",
     "weapon": "Armes",
     "armor": "Armure",
@@ -196,7 +195,6 @@
     "inventory": "Inventaire",
     "add": "Ajouter un objet",
     "remove": "Retirer",
-    "addTo": "Ajouter à",
     "choose": "Choisissez un objet.",
     "alreadyHeld": "Déjà dans cette section : modifiez plutôt sa quantité.",
     "consumable": "Consommables",
@@ -229,7 +227,19 @@
     "variations": "Empreintes à +{{level}}",
     "normal": "Normale",
     "uncanny": "Étrange",
-    "lost": "Perdue"
+    "lost": "Perdue",
+    "characterTab": "Personnage",
+    "current": "Actuel",
+    "chosen": "Choisi",
+    "was": "Actuel : {{name}}",
+    "undo": "Annuler",
+    "gemSlots": "Emplacements de gemmes",
+    "noSlots": "Aucun emplacement de gemme ouvert.",
+    "chooseWeapon": "Choisissez une arme.",
+    "slotsUsed": "Gemmes : {{used}}/{{count}}",
+    "edited": "Modifié",
+    "added": "ajouté",
+    "discard": "Abandonner les modifications"
   },
   "saves": {
     "current": "Sauvegarde actuelle",

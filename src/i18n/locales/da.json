@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Rediger inventar",
     "item": "Genstande",
     "weapon": "Våben",
     "armor": "Rustning",
@@ -196,7 +195,6 @@
     "inventory": "Inventar",
     "add": "Tilføj genstand",
     "remove": "Fjern",
-    "addTo": "Tilføj til",
     "choose": "Vælg en genstand.",
     "alreadyHeld": "Findes allerede her: ret antallet i stedet.",
     "consumable": "Forbrugsgenstande",
@@ -229,7 +227,19 @@
     "variations": "Prægninger ved +{{level}}",
     "normal": "Normal",
     "uncanny": "Uhyggelig",
-    "lost": "Fortabt"
+    "lost": "Fortabt",
+    "characterTab": "Figur",
+    "current": "Nu",
+    "chosen": "Valgt",
+    "was": "Nu: {{name}}",
+    "undo": "Fortryd",
+    "gemSlots": "Ædelstenspladser",
+    "noSlots": "Ingen åbne ædelstenspladser.",
+    "chooseWeapon": "Vælg et våben.",
+    "slotsUsed": "Ædelsten: {{used}}/{{count}}",
+    "edited": "Ændret",
+    "added": "tilføjet",
+    "discard": "Kassér ændringer"
   },
   "saves": {
     "current": "Aktuel gemt spil",

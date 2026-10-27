@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Rediger inventar",
     "item": "Gjenstander",
     "weapon": "Våpen",
     "armor": "Rustning",
@@ -196,7 +195,6 @@
     "inventory": "Inventar",
     "add": "Legg til gjenstand",
     "remove": "Fjern",
-    "addTo": "Legg til i",
     "choose": "Velg en gjenstand.",
     "alreadyHeld": "Finnes allerede her: endre antallet i stedet.",
     "consumable": "Forbruksgjenstander",
@@ -229,7 +227,19 @@
     "variations": "Preginger ved +{{level}}",
     "normal": "Vanlig",
     "uncanny": "Uhyggelig",
-    "lost": "Tapt"
+    "lost": "Tapt",
+    "characterTab": "Figur",
+    "current": "Nå",
+    "chosen": "Valgt",
+    "was": "Nå: {{name}}",
+    "undo": "Angre",
+    "gemSlots": "Edelsteinplasser",
+    "noSlots": "Ingen åpne edelsteinplasser.",
+    "chooseWeapon": "Velg et våpen.",
+    "slotsUsed": "Edelsteiner: {{used}}/{{count}}",
+    "edited": "Endret",
+    "added": "lagt til",
+    "discard": "Forkast endringer"
   },
   "saves": {
     "current": "Nåværende lagring",

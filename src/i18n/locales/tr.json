@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Envanteri düzenle",
     "item": "Eşyalar",
     "weapon": "Silahlar",
     "armor": "Zırh",
@@ -196,7 +195,6 @@
     "inventory": "Envanter",
     "add": "Eşya ekle",
     "remove": "Kaldır",
-    "addTo": "Şuraya ekle",
     "choose": "Bir eşya seçin.",
     "alreadyHeld": "Zaten bu bölümde: bunun yerine miktarını değiştirin.",
     "consumable": "Tüketilebilirler",
@@ -229,7 +227,19 @@
     "variations": "+{{level}} seviyesinde damgalar",
     "normal": "Normal",
     "uncanny": "Tekinsiz",
-    "lost": "Kayıp"
+    "lost": "Kayıp",
+    "characterTab": "Karakter",
+    "current": "Şimdi",
+    "chosen": "Seçilen",
+    "was": "Şimdi: {{name}}",
+    "undo": "Geri al",
+    "gemSlots": "Mücevher yuvaları",
+    "noSlots": "Açık mücevher yuvası yok.",
+    "chooseWeapon": "Bir silah seçin.",
+    "slotsUsed": "Mücevherler: {{used}}/{{count}}",
+    "edited": "Değiştirildi",
+    "added": "eklendi",
+    "discard": "Değişiklikleri at"
   },
   "saves": {
     "current": "Mevcut kayıt",

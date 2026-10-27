@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "Inventar bearbeiten",
     "item": "Gegenstände",
     "weapon": "Waffen",
     "armor": "Rüstung",
@@ -196,7 +195,6 @@
     "inventory": "Inventar",
     "add": "Gegenstand hinzufügen",
     "remove": "Entfernen",
-    "addTo": "Hinzufügen zu",
     "choose": "Wähle einen Gegenstand.",
     "alreadyHeld": "Schon in diesem Bereich: Ändere stattdessen die Anzahl.",
     "consumable": "Verbrauchsgegenstände",
@@ -229,7 +227,19 @@
     "variations": "Prägungen bei +{{level}}",
     "normal": "Normal",
     "uncanny": "Unheimlich",
-    "lost": "Verloren"
+    "lost": "Verloren",
+    "characterTab": "Charakter",
+    "current": "Jetzt",
+    "chosen": "Gewählt",
+    "was": "Jetzt: {{name}}",
+    "undo": "Rückgängig",
+    "gemSlots": "Edelsteinplätze",
+    "noSlots": "Keine offenen Edelsteinplätze.",
+    "chooseWeapon": "Wähle eine Waffe.",
+    "slotsUsed": "Edelsteine: {{used}}/{{count}}",
+    "edited": "Geändert",
+    "added": "hinzugefügt",
+    "discard": "Änderungen verwerfen"
   },
   "saves": {
     "current": "Aktueller Spielstand",

@@ -571,40 +571,37 @@ async fn character_inventory(state: State<'_, AppState>, id: String, title_id: S
         inventory::read(&user, &title_id, slot, text.as_ref(), params.as_ref())
     }).await
 }
-#[tauri::command]
-async fn edit_inventory(state: State<'_, AppState>, id: String, edit: inventory::Edit) -> Result<(), String> {
-    let state = state.inner().clone();
-    blocking(move || {
-        let game = state.game.lock().map_err(|e| e.to_string())?;
-        saves_idle(&game)?;
-        profile_saves(&state.paths, Some(&id))?;
-        let p = &state.paths;
-        // Weapon levels are checked against the game's own weapon list (English is enough).
-        let text = item_text(p, "en")?;
-        let params = game_data::game_params(&game_folder(p)?)?;
-        let registry = profiles::require(&p.data)?;
-        let operation = profiles::operation(&p.data, Some(&id), "edit")?;
-        let result = (|| {
-            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| inventory::rewrite(stage, &edit, &text, &params))?;
-            profiles::list(&p.data, &registry.original_user_dir)?;
-            Ok(())
-        })();
-        profiles::finish(&p.data, &operation, &result)?;
-        result
-    }).await
+/// One edit of a character: its attributes and Blood Echoes, its inventory, or both, applied to
+/// the same staged copy (one backup, one rewrite).
+#[derive(serde::Deserialize)]
+struct SaveEdit {
+    character: Option<save_editor::Edit>,
+    inventory: Option<inventory::Edit>,
 }
+
 #[tauri::command]
-async fn edit_character(state: State<'_, AppState>, id: String, edit: save_editor::Edit) -> Result<(), String> {
+async fn edit_save(state: State<'_, AppState>, id: String, edit: SaveEdit) -> Result<(), String> {
     let state = state.inner().clone();
     blocking(move || {
         let game = state.game.lock().map_err(|e| e.to_string())?;
         saves_idle(&game)?;
         profile_saves(&state.paths, Some(&id))?;
         let p = &state.paths;
+        let SaveEdit { character, inventory: mut items } = edit;
+        if character.is_none() && items.is_none() {
+            return Err("Nothing to change.".into());
+        }
+        // Weapon levels are checked against the game's own weapon list (English is enough).
+        let tables = match items {
+            Some(_) => Some((item_text(p, "en")?, game_data::game_params(&game_folder(p)?)?)),
+            None => None,
+        };
         let registry = profiles::require(&p.data)?;
         let operation = profiles::operation(&p.data, Some(&id), "edit")?;
         let result = (|| {
-            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| save_editor::rewrite(stage, &edit))?;
+            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| {
+                inventory::rewrite_save(stage, character.as_ref(), items.take(), tables.as_ref().map(|(text, params)| (text, params)))
+            })?;
             profiles::list(&p.data, &registry.original_user_dir)?;
             Ok(())
         })();
@@ -1175,7 +1172,7 @@ pub fn run() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, character_inventory, edit_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

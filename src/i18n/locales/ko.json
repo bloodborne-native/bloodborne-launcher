@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "소지품 편집",
     "item": "아이템",
     "weapon": "무기",
     "armor": "방어구",
@@ -196,7 +195,6 @@
     "inventory": "소지품",
     "add": "아이템 추가",
     "remove": "제거",
-    "addTo": "추가 위치",
     "choose": "아이템을 선택하세요.",
     "alreadyHeld": "이미 여기에 있습니다. 대신 수량을 바꾸세요.",
     "consumable": "소모품",
@@ -229,7 +227,19 @@
     "variations": "+{{level}}의 각인",
     "normal": "일반",
     "uncanny": "기이한",
-    "lost": "잃어버린"
+    "lost": "잃어버린",
+    "characterTab": "캐릭터",
+    "current": "현재",
+    "chosen": "선택",
+    "was": "현재: {{name}}",
+    "undo": "되돌리기",
+    "gemSlots": "혈석 슬롯",
+    "noSlots": "열린 혈석 슬롯이 없습니다.",
+    "chooseWeapon": "무기를 선택하세요.",
+    "slotsUsed": "혈석: {{used}}/{{count}}",
+    "edited": "변경됨",
+    "added": "추가됨",
+    "discard": "변경 취소"
   },
   "saves": {
     "current": "현재 저장 데이터",

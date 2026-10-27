@@ -254,6 +254,12 @@ pub(crate) fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Charac
     }))
 }
 
+/// The fingerprint of a character file in a staged save set (what an edit was opened on).
+pub fn fingerprint(savedata: &Path, title: &str, slot: u8) -> Result<String> {
+    let user = savedata.parent().ok_or("Invalid save staging folder.")?;
+    Ok(format!("{:x}", Sha256::digest(slot_bytes(&slot_path(user, title, slot)?)?)))
+}
+
 pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
     if edit.echoes > 999_999_999 || edit.insight > 99 {
         return Err("Blood Echoes or Insight is outside the game range.".into());

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { Gem } from "@/lib";
-import { gemName } from "@/pages/saves/gemName";
-
+import { gemName } from "@/pages/saves/editor/gemName";
 
 type Props = {
   gem: Gem;

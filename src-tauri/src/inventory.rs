@@ -790,6 +790,35 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
     fs::write(path, bytes).map_err(|e| e.to_string())
 }
 
+/// A character edit and an inventory edit of the same character, applied to one staged save set:
+/// the character's first (it checks the fingerprint both were opened on), then the inventory's
+/// against the rewritten bytes.
+pub fn rewrite_save(
+    savedata: &Path,
+    character: Option<&crate::save_editor::Edit>,
+    items: Option<Edit>,
+    tables: Option<(&ItemText, &GameParams)>,
+) -> Result<()> {
+    let mut items = items;
+    if let Some(character) = character {
+        if let Some(items) = &items {
+            if items.fingerprint != character.fingerprint || items.title_id != character.title_id || items.slot != character.slot {
+                return Err("The character and inventory edits were opened on different files.".into());
+            }
+        }
+        crate::save_editor::rewrite(savedata, character)?;
+        if let Some(items) = items.as_mut() {
+            items.fingerprint = crate::save_editor::fingerprint(savedata, &items.title_id, items.slot)?;
+        }
+    }
+    match (items, tables) {
+        (Some(items), Some((text, params))) => rewrite(savedata, &items, text, params),
+        (Some(_), None) => Err("The game's item tables are needed to edit the inventory.".into()),
+        (None, _) if character.is_some() => Ok(()),
+        (None, _) => Err("Nothing to change.".into()),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1091,6 +1120,30 @@ mod tests {
         let held = gem_entry(&after, 0xC080_0041).unwrap().unwrap();
         assert_eq!(word(&after, inventory + usize::from(held) * ENTRY + 8).unwrap(), 0x8001_E460);
         assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.0).unwrap(), 6);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn character_and_inventory_in_one_edit() {
+        let bytes = sample();
+        let fingerprint = format!("{:x}", Sha256::digest(&bytes));
+        let (root, savedata) = staged(bytes.clone());
+        let character = crate::save_editor::Edit {
+            title_id: "CUSA03173".into(), slot: 0, fingerprint: fingerprint.clone(),
+            echoes: 5000, insight: 3, vitality: 12, endurance: 11, strength: 22, skill: 9, bloodtinge: 6, arcane: 7,
+        };
+        let items = |fingerprint: &str| Edit {
+            title_id: "CUSA03173".into(), slot: 0, fingerprint: fingerprint.into(),
+            changes: vec![Change::Amount { location: Location::Inventory, index: 1, amount: 9 }],
+        };
+        // Opened on other bytes: refused, nothing written.
+        assert!(rewrite_save(&savedata, Some(&character), Some(items("other")), Some((&text(), &params()))).is_err());
+        assert_eq!(fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap(), bytes);
+        rewrite_save(&savedata, Some(&character), Some(items(&fingerprint)), Some((&text(), &params()))).unwrap();
+        let after = fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap();
+        let parsed = crate::save_editor::parse(&after, "CUSA03173", 0).unwrap().unwrap();
+        assert_eq!((parsed.echoes, parsed.insight), (5000, 3));
+        assert_eq!(word(&after, BASE + INVENTORY_FROM_NAME + ENTRY + 12).unwrap(), 9);
         fs::remove_dir_all(root).unwrap();
     }
 

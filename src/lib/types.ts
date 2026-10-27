@@ -164,6 +164,8 @@ export type InventoryChange =
   | { type: "equip"; upgrade: number; location: InventoryLocation; index: number; slot: number }
   | { type: "unequip"; upgrade: number };
 export type InventoryEdit = { title_id: string; slot: number; fingerprint: string; changes: InventoryChange[] };
+/** One edit of a character: attributes and Blood Echoes, inventory changes, or both (one backup). */
+export type SaveEdit = { character: CharacterEdit | null; inventory: InventoryEdit | null };
 
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };
 export type ProfileChange = { action: "initialize" | "create" | "select" | "rename" | "delete"; id: string; name?: string };

@@ -178,7 +178,6 @@
     }
   },
   "inventory": {
-    "edit": "所持品を編集",
     "item": "アイテム",
     "weapon": "武器",
     "armor": "防具",
@@ -196,7 +195,6 @@
     "inventory": "所持品",
     "add": "アイテムを追加",
     "remove": "削除",
-    "addTo": "追加先",
     "choose": "アイテムを選んでください。",
     "alreadyHeld": "すでにここにあります。数量を変更してください。",
     "consumable": "消費アイテム",
@@ -229,7 +227,19 @@
     "variations": "+{{level}}での銘",
     "normal": "通常",
     "uncanny": "異質",
-    "lost": "失われた"
+    "lost": "失われた",
+    "characterTab": "キャラクター",
+    "current": "現在",
+    "chosen": "選択",
+    "was": "現在：{{name}}",
+    "undo": "元に戻す",
+    "gemSlots": "血晶石スロット",
+    "noSlots": "開いている血晶石スロットはありません。",
+    "chooseWeapon": "武器を選んでください。",
+    "slotsUsed": "血晶石：{{used}}/{{count}}",
+    "edited": "変更済み",
+    "added": "追加",
+    "discard": "変更を破棄"
   },
   "saves": {
     "current": "現在のセーブデータ",

@@ -377,7 +377,6 @@
     }
   },
   "inventory": {
-    "edit": "Edit inventory",
     "item": "Items",
     "weapon": "Weapons",
     "armor": "Armor",
@@ -395,7 +394,6 @@
     "inventory": "Inventory",
     "add": "Add item",
     "remove": "Remove",
-    "addTo": "Add to",
     "choose": "Choose an item.",
     "alreadyHeld": "Already in this section: change its amount instead.",
     "consumable": "Consumables",
@@ -428,7 +426,19 @@
     "variations": "Imprints at +{{level}}",
     "normal": "Normal",
     "uncanny": "Uncanny",
-    "lost": "Lost"
+    "lost": "Lost",
+    "characterTab": "Character",
+    "current": "Now",
+    "chosen": "Chosen",
+    "was": "Now: {{name}}",
+    "undo": "Undo",
+    "gemSlots": "Gem slots",
+    "noSlots": "No open gem slots.",
+    "chooseWeapon": "Choose a weapon.",
+    "slotsUsed": "Gems: {{used}}/{{count}}",
+    "edited": "Edited",
+    "added": "added",
+    "discard": "Discard changes"
   },
   "saves": {
     "current": "Current save",
