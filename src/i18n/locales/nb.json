@@ -177,6 +177,23 @@
       "effect_ssr": "Skjermromsrefleksjoner", "effect_ssrHint": "Fantes ikke i originalspillet", "effect_bloom": "Bloom (glød)"
     }
   },
+  "inventory": {
+    "edit": "Rediger inventar",
+    "item": "Gjenstander",
+    "weapon": "Våpen",
+    "armor": "Rustning",
+    "storage": "Lager",
+    "search": "Søk",
+    "noNames": "Navnene kommer fra spillfilene dine: velg spillmappen på Hjem for å se dem.",
+    "reading": "Leser inventaret …",
+    "empty": "Ingenting her.",
+    "unnamed": "Ukjent gjenstand ({{id}})",
+    "amount": "Antall",
+    "level": "Nivå",
+    "imprint": "Preg",
+    "armorReadOnly": "Kan ikke redigeres ennå",
+    "changes": "Endringer: {{count}}"
+  },
   "saves": {
     "current": "Nåværende lagring",
     "noBackups": "Ingen sikkerhetskopier ennå.",

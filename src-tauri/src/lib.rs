@@ -26,6 +26,8 @@ mod settings_store;
 mod online_password;
 mod platform;
 mod game_check;
+mod game_data;
+mod inventory;
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
@@ -516,6 +518,49 @@ async fn list_characters(state: State<'_, AppState>, id: String) -> Result<Vec<s
         let registry = profiles::require(&state.paths.data)?;
         let user = saves::user_dir(&state.paths.data, &registry.original_user_dir, &id)?;
         save_editor::list(&user)
+    }).await
+}
+/// The game's item texts for the save editor, read from the player's dump (game_data.rs).
+fn item_text(p: &Paths, language: &str) -> Result<game_data::ItemText, String> {
+    let s = load_settings(p);
+    let game = str_setting(&s, "game_dir");
+    if game.is_empty() {
+        return Err("Choose the game folder first: the item names come from your game files.".into());
+    }
+    game_data::item_text(&expand(&game), language)
+}
+#[tauri::command]
+async fn character_inventory(state: State<'_, AppState>, id: String, title_id: String, slot: u8, language: String) -> Result<inventory::Inventory, String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = state.game.lock().map_err(|e| e.to_string())?;
+        saves_idle(&game)?;
+        profile_saves(&state.paths, Some(&id))?;
+        let registry = profiles::require(&state.paths.data)?;
+        let user = saves::user_dir(&state.paths.data, &registry.original_user_dir, &id)?;
+        let text = item_text(&state.paths, &language).ok();
+        inventory::read(&user, &title_id, slot, text.as_ref())
+    }).await
+}
+#[tauri::command]
+async fn edit_inventory(state: State<'_, AppState>, id: String, edit: inventory::Edit) -> Result<(), String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let game = state.game.lock().map_err(|e| e.to_string())?;
+        saves_idle(&game)?;
+        profile_saves(&state.paths, Some(&id))?;
+        let p = &state.paths;
+        // Weapon levels are checked against the game's own weapon list (English is enough).
+        let text = item_text(p, "en")?;
+        let registry = profiles::require(&p.data)?;
+        let operation = profiles::operation(&p.data, Some(&id), "edit")?;
+        let result = (|| {
+            saves::edit(&p.data, &registry.original_user_dir, &id, |stage| inventory::rewrite(stage, &edit, &text))?;
+            profiles::list(&p.data, &registry.original_user_dir)?;
+            Ok(())
+        })();
+        profiles::finish(&p.data, &operation, &result)?;
+        result
     }).await
 }
 #[tauri::command]
@@ -1100,7 +1145,7 @@ pub fn run() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_character, character_inventory, edit_inventory, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

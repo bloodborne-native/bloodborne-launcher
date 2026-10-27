@@ -124,6 +124,19 @@ export type Character = {
 export type CharacterEdit = { title_id: string; slot: number; fingerprint: string; echoes: number; insight: number;
   vitality: number; endurance: number; strength: number; skill: number; bloodtinge: number; arcane: number };
 
+/** A character's inventory and storage (inventory.rs); names come from the player's game files. */
+export type InventoryLocation = "inventory" | "storage";
+export type InventoryEntry = {
+  location: InventoryLocation; index: number; kind: "item" | "weapon" | "armor" | "upgrade";
+  id: number; amount: number; name: string | null; description: string | null;
+  level: number; imprint: number; levels: number[]; imprints: number[]; imprint_names: string[];
+};
+export type Inventory = { title_id: string; slot: number; fingerprint: string; entries: InventoryEntry[] };
+export type InventoryChange =
+  | { type: "amount"; location: InventoryLocation; index: number; amount: number }
+  | { type: "weapon"; location: InventoryLocation; index: number; level: number; imprint: number };
+export type InventoryEdit = { title_id: string; slot: number; fingerprint: string; changes: InventoryChange[] };
+
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };
 export type ProfileChange = { action: "initialize" | "create" | "select" | "rename" | "delete"; id: string; name?: string };
 

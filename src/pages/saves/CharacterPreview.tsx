@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib";
 import { SettingsSection } from "@/components/settings";
 import { EditCharacterDialog } from "@/pages/saves/EditCharacterDialog";
+import { EditInventoryDialog } from "@/pages/saves/EditInventoryDialog";
 
 export function CharacterPreview({ profileId, running }: { profileId: string; running: boolean }) {
   const { t, i18n } = useTranslation();
@@ -31,7 +32,10 @@ export function CharacterPreview({ profileId, running }: { profileId: string; ru
             <div key={field} className="flex justify-between gap-2"><dt className="text-muted-foreground">{t(`saves.${field}`)}</dt><dd>{number(character[field])}</dd></div>)}
         </dl>
         {!character.stats_consistent && <p className="mt-3 text-xs text-destructive">{t("saves.inconsistentStats")}</p>}
-        <div className="mt-4"><EditCharacterDialog profileId={profileId} character={character} disabled={running} /></div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <EditCharacterDialog profileId={profileId} character={character} disabled={running} />
+          <EditInventoryDialog profileId={profileId} character={character} disabled={running} />
+        </div>
       </div>)}
   </SettingsSection>;
 }

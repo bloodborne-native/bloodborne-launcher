@@ -177,6 +177,23 @@
       "effect_ssr": "Odbicia w przestrzeni ekranu", "effect_ssrHint": "Nie było w oryginalnej grze", "effect_bloom": "Bloom (poświata)"
     }
   },
+  "inventory": {
+    "edit": "Edytuj ekwipunek",
+    "item": "Przedmioty",
+    "weapon": "Broń",
+    "armor": "Pancerz",
+    "storage": "Magazyn",
+    "search": "Szukaj",
+    "noNames": "Nazwy pochodzą z plików twojej gry: wybierz folder gry na stronie głównej, aby je zobaczyć.",
+    "reading": "Odczytywanie ekwipunku…",
+    "empty": "Nic tu nie ma.",
+    "unnamed": "Nieznany przedmiot ({{id}})",
+    "amount": "Ilość",
+    "level": "Poziom",
+    "imprint": "Piętno",
+    "armorReadOnly": "Jeszcze nie do edycji",
+    "changes": "Zmiany: {{count}}"
+  },
   "saves": {
     "current": "Bieżący zapis",
     "noBackups": "Brak kopii zapasowych.",

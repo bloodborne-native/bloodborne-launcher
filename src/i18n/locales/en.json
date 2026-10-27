@@ -376,6 +376,23 @@
       "effect_bloom": "Bloom"
     }
   },
+  "inventory": {
+    "edit": "Edit inventory",
+    "item": "Items",
+    "weapon": "Weapons",
+    "armor": "Armor",
+    "storage": "Storage",
+    "search": "Search",
+    "noNames": "Names come from your game files: choose the game folder on Home to see them.",
+    "reading": "Reading the inventory…",
+    "empty": "Nothing here.",
+    "unnamed": "Unknown item ({{id}})",
+    "amount": "Amount",
+    "level": "Level",
+    "imprint": "Imprint",
+    "armorReadOnly": "Not editable yet",
+    "changes": "Changes: {{count}}"
+  },
   "saves": {
     "current": "Current save",
     "noBackups": "No backups yet.",

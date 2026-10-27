@@ -177,6 +177,23 @@
       "effect_ssr": "スクリーンスペース反射", "effect_ssrHint": "オリジナルのゲームにはない機能", "effect_bloom": "ブルーム"
     }
   },
+  "inventory": {
+    "edit": "所持品を編集",
+    "item": "アイテム",
+    "weapon": "武器",
+    "armor": "防具",
+    "storage": "倉庫",
+    "search": "検索",
+    "noNames": "名前はゲームファイルから読み込まれます。ホームでゲームフォルダを選ぶと表示されます。",
+    "reading": "所持品を読み込んでいます…",
+    "empty": "ここには何もありません。",
+    "unnamed": "不明なアイテム（{{id}}）",
+    "amount": "数量",
+    "level": "強化値",
+    "imprint": "刻印",
+    "armorReadOnly": "まだ編集できません",
+    "changes": "変更: {{count}}"
+  },
   "saves": {
     "current": "現在のセーブデータ",
     "noBackups": "バックアップはまだありません。",

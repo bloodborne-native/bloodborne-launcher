@@ -362,6 +362,23 @@
       "effect_bloom": "Bloom (brilho)"
     }
   },
+  "inventory": {
+    "edit": "Editar inventário",
+    "item": "Itens",
+    "weapon": "Armas",
+    "armor": "Armadura",
+    "storage": "Depósito",
+    "search": "Buscar",
+    "noNames": "Os nomes vêm dos arquivos do seu jogo: escolha a pasta do jogo em Início para vê-los.",
+    "reading": "Lendo o inventário…",
+    "empty": "Nada aqui.",
+    "unnamed": "Item desconhecido ({{id}})",
+    "amount": "Quantidade",
+    "level": "Nível",
+    "imprint": "Marca",
+    "armorReadOnly": "Ainda não editável",
+    "changes": "Alterações: {{count}}"
+  },
   "saves": {
     "current": "Save atual",
     "noBackups": "Nenhum backup ainda.",

@@ -177,6 +177,23 @@
       "effect_ssr": "Skærmrumsrefleksioner", "effect_ssrHint": "Fandtes ikke i originalspillet", "effect_bloom": "Bloom (glød)"
     }
   },
+  "inventory": {
+    "edit": "Rediger inventar",
+    "item": "Genstande",
+    "weapon": "Våben",
+    "armor": "Rustning",
+    "storage": "Opbevaring",
+    "search": "Søg",
+    "noNames": "Navnene kommer fra dine spilfiler: vælg spilmappen på Hjem for at se dem.",
+    "reading": "Læser inventaret…",
+    "empty": "Intet her.",
+    "unnamed": "Ukendt genstand ({{id}})",
+    "amount": "Antal",
+    "level": "Niveau",
+    "imprint": "Prægning",
+    "armorReadOnly": "Kan ikke redigeres endnu",
+    "changes": "Ændringer: {{count}}"
+  },
   "saves": {
     "current": "Aktuel gemt spil",
     "noBackups": "Ingen sikkerhedskopier endnu.",

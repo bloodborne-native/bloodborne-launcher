@@ -177,6 +177,23 @@
       "effect_ssr": "Riflessi in screen space", "effect_ssrHint": "Non presente nel gioco originale", "effect_bloom": "Bloom (bagliore)"
     }
   },
+  "inventory": {
+    "edit": "Modifica inventario",
+    "item": "Oggetti",
+    "weapon": "Armi",
+    "armor": "Armatura",
+    "storage": "Deposito",
+    "search": "Cerca",
+    "noNames": "I nomi vengono dai file del tuo gioco: scegli la cartella del gioco in Home per vederli.",
+    "reading": "Lettura dell'inventario…",
+    "empty": "Qui non c'è niente.",
+    "unnamed": "Oggetto sconosciuto ({{id}})",
+    "amount": "Quantità",
+    "level": "Livello",
+    "imprint": "Impronta",
+    "armorReadOnly": "Non ancora modificabile",
+    "changes": "Modifiche: {{count}}"
+  },
   "saves": {
     "current": "Salvataggio attuale",
     "noBackups": "Nessuna copia di backup disponibile.",

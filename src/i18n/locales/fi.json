@@ -177,6 +177,23 @@
       "effect_ssr": "Ruutuavaruuden heijastukset", "effect_ssrHint": "Ei alkuperäisessä pelissä", "effect_bloom": "Bloom (hehku)"
     }
   },
+  "inventory": {
+    "edit": "Muokkaa tavaraluetteloa",
+    "item": "Esineet",
+    "weapon": "Aseet",
+    "armor": "Panssari",
+    "storage": "Varasto",
+    "search": "Hae",
+    "noNames": "Nimet tulevat pelitiedostoistasi: valitse pelikansio Koti-sivulla nähdäksesi ne.",
+    "reading": "Luetaan tavaraluetteloa…",
+    "empty": "Täällä ei ole mitään.",
+    "unnamed": "Tuntematon esine ({{id}})",
+    "amount": "Määrä",
+    "level": "Taso",
+    "imprint": "Leima",
+    "armorReadOnly": "Ei vielä muokattavissa",
+    "changes": "Muutokset: {{count}}"
+  },
   "saves": {
     "current": "Nykyinen tallennus",
     "noBackups": "Ei vielä varmuuskopioita.",

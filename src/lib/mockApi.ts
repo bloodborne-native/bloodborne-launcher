@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit } from "@/lib/types";
+import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, Character, CharacterEdit, Inventory, InventoryEdit } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -90,6 +90,14 @@ let nextBackup = 0;
 const previewProfile = new URLSearchParams(window.location.search).get("profile");
 let profileSetup = previewProfile !== null;
 const saves: SaveList = { active: "original", profiles: [{ id: "original", name: previewProfile ?? "", path: config.paths.saves, bytes: new URLSearchParams(window.location.search).has("fresh") ? 0 : 12582912, modified: 1720000000, backups: [], trophies_eligible: true, trophy_unlocks: [], trophy_error: null }] };
+// Placeholder names: the real ones come from the player's game files (no game text here).
+const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprint: "inventory-0", entries: [
+  { location: "inventory", index: 1, kind: "item", id: 1000, amount: 17, name: "Sample item", description: "A sample item for the preview.", level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
+  { location: "inventory", index: 2, kind: "item", id: 1230, amount: 18, name: "Sample ammunition", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
+  { location: "inventory", index: 3, kind: "weapon", id: 7000200, amount: 1, name: "Sample weapon", description: null, level: 2, imprint: 0, levels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], imprints: [0, 1, 2], imprint_names: ["Sample weapon", "Sample weapon (variant 1)", "Sample weapon (variant 2)"] },
+  { location: "inventory", index: 4, kind: "armor", id: 230000, amount: 1, name: "Sample hood", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
+  { location: "storage", index: 1, kind: "item", id: 1200, amount: 4, name: "Sample stored item", description: null, level: 0, imprint: 0, levels: [], imprints: [], imprint_names: [] },
+] };
 let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
   new_game_cycle: 0, stats_consistent: true, fingerprint: "preview" };
@@ -128,6 +136,22 @@ export const mockApi = {
     const level = edit.vitality + edit.endurance
       + edit.strength + edit.skill + edit.bloodtinge + edit.arcane - 50;
     previewCharacter = { ...previewCharacter, ...edit, level, fingerprint: `preview-${nextBackup}` };
+    return wait(undefined);
+  },
+  characterInventory: (id: string) => saves.profiles.some((p) => p.id === id && p.bytes > 0)
+    ? wait(structuredClone(previewInventory)) : Promise.reject("The character slot is empty."),
+  editInventory: (id: string, edit: InventoryEdit) => {
+    const profile = saves.profiles.find((p) => p.id === id);
+    if (!profile || edit.fingerprint !== previewInventory.fingerprint) return Promise.reject("The character changed since it was opened. Refresh the inventory.");
+    profile.backups.unshift({ id: `b-${++nextBackup}`, created: Math.floor(Date.now() / 1000), bytes: profile.bytes });
+    profile.trophies_eligible = false;
+    for (const change of edit.changes) {
+      const entry = previewInventory.entries.find((e) => e.location === change.location && e.index === change.index);
+      if (!entry) continue;
+      if (change.type === "amount") entry.amount = change.amount;
+      else { entry.level = change.level; entry.imprint = change.imprint; }
+    }
+    previewInventory.fingerprint = `inventory-${nextBackup}`;
     return wait(undefined);
   },
   changeSave: (change: SaveChange) => {

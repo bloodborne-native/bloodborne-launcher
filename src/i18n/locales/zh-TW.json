@@ -177,6 +177,23 @@
       "effect_ssr": "螢幕空間反射", "effect_ssrHint": "原版遊戲中沒有", "effect_bloom": "泛光 (Bloom)"
     }
   },
+  "inventory": {
+    "edit": "編輯物品欄",
+    "item": "道具",
+    "weapon": "武器",
+    "armor": "防具",
+    "storage": "倉庫",
+    "search": "搜尋",
+    "noNames": "名稱來自你的遊戲檔案：在首頁選擇遊戲資料夾即可顯示。",
+    "reading": "正在讀取物品欄…",
+    "empty": "這裡什麼都沒有。",
+    "unnamed": "未知道具（{{id}}）",
+    "amount": "數量",
+    "level": "強化等級",
+    "imprint": "印記",
+    "armorReadOnly": "暫不可編輯",
+    "changes": "變更：{{count}}"
+  },
   "saves": {
     "current": "目前存檔",
     "noBackups": "尚無備份。",

@@ -177,6 +177,23 @@
       "effect_ssr": "화면 공간 반사", "effect_ssrHint": "원작 게임에는 없던 효과", "effect_bloom": "블룸"
     }
   },
+  "inventory": {
+    "edit": "소지품 편집",
+    "item": "아이템",
+    "weapon": "무기",
+    "armor": "방어구",
+    "storage": "보관함",
+    "search": "검색",
+    "noNames": "이름은 게임 파일에서 가져옵니다. 홈에서 게임 폴더를 선택하면 표시됩니다.",
+    "reading": "소지품을 읽는 중…",
+    "empty": "여기에는 아무것도 없습니다.",
+    "unnamed": "알 수 없는 아이템 ({{id}})",
+    "amount": "수량",
+    "level": "강화 수치",
+    "imprint": "각인",
+    "armorReadOnly": "아직 편집할 수 없습니다",
+    "changes": "변경: {{count}}"
+  },
   "saves": {
     "current": "현재 저장 데이터",
     "noBackups": "아직 백업이 없습니다.",

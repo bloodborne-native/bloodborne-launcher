@@ -177,6 +177,23 @@
       "effect_ssr": "Screen-space reflecties", "effect_ssrHint": "Niet in het originele spel", "effect_bloom": "Bloom (gloed)"
     }
   },
+  "inventory": {
+    "edit": "Inventaris bewerken",
+    "item": "Voorwerpen",
+    "weapon": "Wapens",
+    "armor": "Pantser",
+    "storage": "Opslag",
+    "search": "Zoeken",
+    "noNames": "De namen komen uit je spelbestanden: kies de spelmap op Start om ze te zien.",
+    "reading": "Inventaris wordt gelezen…",
+    "empty": "Hier is niets.",
+    "unnamed": "Onbekend voorwerp ({{id}})",
+    "amount": "Aantal",
+    "level": "Niveau",
+    "imprint": "Afdruk",
+    "armorReadOnly": "Nog niet bewerkbaar",
+    "changes": "Wijzigingen: {{count}}"
+  },
   "saves": {
     "current": "Huidige spelopslag",
     "noBackups": "Nog geen back-ups.",

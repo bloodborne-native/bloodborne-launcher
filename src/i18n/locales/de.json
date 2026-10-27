@@ -177,6 +177,23 @@
       "effect_ssr": "Bildschirmraum-Reflexionen", "effect_ssrHint": "Nicht im Originalspiel", "effect_bloom": "Bloom (Überstrahlung)"
     }
   },
+  "inventory": {
+    "edit": "Inventar bearbeiten",
+    "item": "Gegenstände",
+    "weapon": "Waffen",
+    "armor": "Rüstung",
+    "storage": "Lager",
+    "search": "Suchen",
+    "noNames": "Die Namen stammen aus deinen Spieldateien: Wähle unter Start den Spielordner, um sie zu sehen.",
+    "reading": "Inventar wird gelesen …",
+    "empty": "Hier ist nichts.",
+    "unnamed": "Unbekannter Gegenstand ({{id}})",
+    "amount": "Anzahl",
+    "level": "Stufe",
+    "imprint": "Prägung",
+    "armorReadOnly": "Noch nicht bearbeitbar",
+    "changes": "Änderungen: {{count}}"
+  },
   "saves": {
     "current": "Aktueller Spielstand",
     "noBackups": "Noch keine Sicherungskopien.",

@@ -177,6 +177,23 @@
       "effect_ssr": "屏幕空间反射", "effect_ssrHint": "原版游戏中没有", "effect_bloom": "泛光 (Bloom)"
     }
   },
+  "inventory": {
+    "edit": "编辑物品栏",
+    "item": "道具",
+    "weapon": "武器",
+    "armor": "防具",
+    "storage": "仓库",
+    "search": "搜索",
+    "noNames": "名称来自你的游戏文件：在主页选择游戏文件夹即可显示。",
+    "reading": "正在读取物品栏…",
+    "empty": "这里什么也没有。",
+    "unnamed": "未知道具（{{id}}）",
+    "amount": "数量",
+    "level": "强化等级",
+    "imprint": "印记",
+    "armorReadOnly": "暂不可编辑",
+    "changes": "更改：{{count}}"
+  },
   "saves": {
     "current": "当前存档",
     "noBackups": "暂无备份。",

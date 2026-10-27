@@ -177,6 +177,23 @@
       "effect_ssr": "Ekran alanı yansımaları", "effect_ssrHint": "Orijinal oyunda yoktu", "effect_bloom": "Bloom (ışıma)"
     }
   },
+  "inventory": {
+    "edit": "Envanteri düzenle",
+    "item": "Eşyalar",
+    "weapon": "Silahlar",
+    "armor": "Zırh",
+    "storage": "Depo",
+    "search": "Ara",
+    "noNames": "İsimler oyun dosyalarınızdan gelir: görmek için Ana Sayfa'da oyun klasörünü seçin.",
+    "reading": "Envanter okunuyor…",
+    "empty": "Burada bir şey yok.",
+    "unnamed": "Bilinmeyen eşya ({{id}})",
+    "amount": "Miktar",
+    "level": "Seviye",
+    "imprint": "Damga",
+    "armorReadOnly": "Henüz düzenlenemez",
+    "changes": "Değişiklikler: {{count}}"
+  },
   "saves": {
     "current": "Mevcut kayıt",
     "noBackups": "Henüz yedek yok.",

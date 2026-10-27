@@ -59,7 +59,7 @@ fn real_dir(path: &Path) -> Result<bool> {
     }
 }
 
-fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
+pub(crate) fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
     if !TITLES.contains(&title) || slot > 9 {
         return Err("Unsupported Bloodborne save slot.".into());
     }
@@ -75,7 +75,7 @@ fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
     Ok(set.join(format!("userdata{slot:04}")))
 }
 
-fn slot_bytes(path: &Path) -> Result<Vec<u8>> {
+pub(crate) fn slot_bytes(path: &Path) -> Result<Vec<u8>> {
     let meta = fs::symlink_metadata(path).map_err(|e| e.to_string())?;
     if !meta.is_file() || meta.file_type().is_symlink() || meta.len() != SLOT_BYTES as u64 {
         return Err("Unsupported Bloodborne character file.".into());
@@ -99,7 +99,7 @@ fn number(bytes: &[u8], base: usize, relative: isize) -> Result<u32> {
     Ok(u32::from_le_bytes(raw))
 }
 
-fn character_base(bytes: &[u8]) -> Result<Option<usize>> {
+pub(crate) fn character_base(bytes: &[u8]) -> Result<Option<usize>> {
     if bytes.len() != SLOT_BYTES {
         return Err("Unsupported Bloodborne character file.".into());
     }
@@ -126,7 +126,7 @@ fn character_base(bytes: &[u8]) -> Result<Option<usize>> {
     Ok(Some(base))
 }
 
-fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
+pub(crate) fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
     let Some(base) = character_base(bytes)? else {
         return Ok(None);
     };

@@ -177,6 +177,23 @@
       "effect_ssr": "Skärmrymdsreflektioner", "effect_ssrHint": "Fanns inte i originalspelet", "effect_bloom": "Bloom (glöd)"
     }
   },
+  "inventory": {
+    "edit": "Redigera inventarie",
+    "item": "Föremål",
+    "weapon": "Vapen",
+    "armor": "Rustning",
+    "storage": "Förråd",
+    "search": "Sök",
+    "noNames": "Namnen kommer från dina spelfiler: välj spelmappen under Hem för att se dem.",
+    "reading": "Läser inventariet …",
+    "empty": "Inget här.",
+    "unnamed": "Okänt föremål ({{id}})",
+    "amount": "Antal",
+    "level": "Nivå",
+    "imprint": "Prägel",
+    "armorReadOnly": "Kan inte redigeras än",
+    "changes": "Ändringar: {{count}}"
+  },
   "saves": {
     "current": "Aktuell sparfil",
     "noBackups": "Inga säkerhetskopior ännu.",
