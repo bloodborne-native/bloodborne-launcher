@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { Droplet, Eye } from "lucide-react";
-import portrait from "@/assets/character-portrait.webp";
+import { HunterFigure } from "@/pages/saves/HunterFigure";
 import type { Character } from "@/lib";
 import { Message } from "@/components/common";
 import { EditCharacterButton } from "@/pages/saves/editor";
 
 const ATTRIBUTES = ["vitality", "endurance", "strength", "skill", "bloodtinge", "arcane"] as const;
 
-/** One character: a portrait (a hooded statue from the launcher's own night-street picture; no game art), its name and where it is, its
+/** One character: a portrait (a drawn, generic hunter silhouette; no game art), its name and where it is, its
  * level, playtime and journey, the six attributes, Insight and Blood Echoes, and the editor. */
 export function CharacterCard({ character, disabled }: { character: Character; disabled: boolean }) {
   const { t, i18n } = useTranslation();
@@ -16,8 +16,7 @@ export function CharacterCard({ character, disabled }: { character: Character; d
   return (
     <div className="flex flex-col gap-5 rounded-2xl surface p-4 sm:flex-row sm:p-5">
       <div className="relative hidden w-32 shrink-0 overflow-hidden rounded-xl sm:block" aria-hidden="true">
-        <img src={portrait} alt="" draggable={false} className="absolute inset-0 size-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-t from-night-950/70 to-transparent" />
+        <HunterFigure className="absolute inset-0 size-full" />
       </div>
       <div className="min-w-0 flex-1 space-y-4">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
