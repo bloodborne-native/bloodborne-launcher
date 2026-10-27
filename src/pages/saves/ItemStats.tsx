@@ -9,19 +9,37 @@ const DAMAGE = { physical: "inventory.physical", arcane: "saves.arcane", fire: "
   blunt: "inventory.blunt", thrust: "inventory.thrust" } as const;
 const ATTRIBUTE = { strength: "saves.strength", skill: "saves.skill", bloodtinge: "saves.bloodtinge", arcane: "saves.arcane" } as const;
 
-type Props = { name: string; description: string | null; icon: number | null; stats: InventoryStats | null; children: ReactNode };
+type Stats = keyof Omit<InventoryStats, "max">;
+type Props = {
+  name: string; description: string | null; icon: number | null; stats: InventoryStats | null;
+  /** The numbers after the pending change (a weapon's other level or imprint), shown beside the current ones. */
+  preview?: InventoryStats | null;
+  children: ReactNode;
+};
 
 /** A hover card over an inventory row: the icon, the name, the description and the game's numbers. */
-export function ItemStats({ name, description, icon, stats, children }: Props) {
+export function ItemStats({ name, description, icon, stats, preview, children }: Props) {
   const { t } = useTranslation();
-  const group = (title: string, values: Record<string, number> | undefined, label: (key: string) => string) => {
-    const shown = Object.entries(values ?? {}).filter(([, value]) => value > 0);
-    if (!shown.length) return null;
+  const group = (title: string, part: Stats, label: (key: string) => string) => {
+    const now = stats?.[part] ?? {};
+    const next = preview?.[part];
+    const keys = [...new Set([...Object.keys(now), ...Object.keys(next ?? {})])]
+      .filter((key) => (now[key] ?? 0) > 0 || (next?.[key] ?? 0) > 0);
+    if (!keys.length) return null;
     return <div>
       <p className="mb-1 font-medium">{title}</p>
       <dl className="grid grid-cols-2 gap-x-4 gap-y-0.5">
-        {shown.map(([key, value]) => <div key={key} className="flex justify-between gap-2">
-          <dt className="text-muted-foreground">{label(key)}</dt><dd className="tabular-nums">{value}</dd></div>)}
+        {keys.map((key) => {
+          const value = now[key] ?? 0;
+          const after = next?.[key] ?? value;
+          return <div key={key} className="flex justify-between gap-2">
+            <dt className="text-muted-foreground">{label(key)}</dt>
+            <dd className="tabular-nums">{after === value ? value : <>
+              <span className="text-muted-foreground">{value} → </span>
+              <span className={after > value ? "text-emerald-500" : "text-destructive"}>{after}</span>
+            </>}</dd>
+          </div>;
+        })}
       </dl>
     </div>;
   };
@@ -35,10 +53,10 @@ export function ItemStats({ name, description, icon, stats, children }: Props) {
         <p className="text-sm font-medium">{name}</p>
       </div>
       {description && <p className="whitespace-pre-line text-muted-foreground">{description}</p>}
-      {group(t("inventory.attack"), stats?.attack, damage)}
-      {group(t("inventory.scaling"), stats?.scaling, attribute)}
-      {group(t("inventory.requirements"), stats?.requirements, attribute)}
-      {group(t("inventory.defense"), stats?.defense, damage)}
+      {group(t("inventory.attack"), "attack", damage)}
+      {group(t("inventory.scaling"), "scaling", attribute)}
+      {group(t("inventory.requirements"), "requirements", attribute)}
+      {group(t("inventory.defense"), "defense", damage)}
       {stats?.max ? <p className="text-muted-foreground">{t("inventory.holds", { max: stats.max })}</p> : null}
     </TooltipContent>
   </Tooltip>;

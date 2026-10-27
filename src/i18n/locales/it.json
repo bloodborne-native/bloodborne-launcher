@@ -223,7 +223,9 @@
     "oathRune": "Runa del giuramento",
     "in": "In {{weapon}}",
     "equipped": "Equipaggiata",
-    "effect": "Effetto {{id}}"
+    "effect": "Effetto {{id}}",
+    "gemSlot": "Slot gemma {{slot}}",
+    "emptySlot": "Slot {{slot}}: vuoto"
   },
   "saves": {
     "current": "Salvataggio attuale",

@@ -422,7 +422,9 @@
     "oathRune": "Oath rune",
     "in": "In {{weapon}}",
     "equipped": "Equipped",
-    "effect": "Effect {{id}}"
+    "effect": "Effect {{id}}",
+    "gemSlot": "Gem slot {{slot}}",
+    "emptySlot": "Slot {{slot}}: empty"
   },
   "saves": {
     "current": "Current save",

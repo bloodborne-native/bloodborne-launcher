@@ -223,7 +223,9 @@
     "oathRune": "Edsruna",
     "in": "I {{weapon}}",
     "equipped": "Utrustad",
-    "effect": "Effekt {{id}}"
+    "effect": "Effekt {{id}}",
+    "gemSlot": "Ädelstensplats {{slot}}",
+    "emptySlot": "Plats {{slot}}: tom"
   },
   "saves": {
     "current": "Aktuell sparfil",

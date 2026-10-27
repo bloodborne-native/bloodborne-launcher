@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import type { Gem } from "@/lib";
+import { gemName } from "@/pages/saves/gemName";
 
-// The shapes' texts (gems: radial 1, triangle 2, waning 4, circle 8, droplet 63).
-const SHAPES = { 1: "inventory.radial", 2: "inventory.triangle", 4: "inventory.waning", 8: "inventory.circle", 63: "inventory.droplet" } as const;
 
 type Props = {
   gem: Gem;
@@ -15,8 +14,7 @@ type Props = {
 /** One gem or rune: its shape, where it is, and its effects, each with the strengths the game has. */
 export function GemRow({ gem, chosen, disabled, onChoose }: Props) {
   const { t } = useTranslation();
-  const kind = gem.rune ? (gem.shape === 2 ? t("inventory.oathRune") : t("inventory.rune"))
-    : gem.shape in SHAPES ? t(SHAPES[gem.shape as keyof typeof SHAPES]) : t("inventory.gem");
+  const kind = gemName(t, gem);
   const where = gem.weapon ? t("inventory.in", { weapon: gem.weapon })
     : gem.equipped ? t("inventory.equipped")
     : gem.location === "storage" ? t("inventory.storage") : t("inventory.inventory");

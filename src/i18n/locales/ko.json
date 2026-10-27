@@ -223,7 +223,9 @@
     "oathRune": "맹약 카렐 문자",
     "in": "{{weapon}}에 장착",
     "equipped": "장착 중",
-    "effect": "효과 {{id}}"
+    "effect": "효과 {{id}}",
+    "gemSlot": "혈석 슬롯 {{slot}}",
+    "emptySlot": "슬롯 {{slot}}: 비어 있음"
   },
   "saves": {
     "current": "현재 저장 데이터",

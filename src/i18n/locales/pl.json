@@ -223,7 +223,9 @@
     "oathRune": "Runa przysięgi",
     "in": "W: {{weapon}}",
     "equipped": "Założony",
-    "effect": "Efekt {{id}}"
+    "effect": "Efekt {{id}}",
+    "gemSlot": "Gniazdo klejnotu {{slot}}",
+    "emptySlot": "Gniazdo {{slot}}: puste"
   },
   "saves": {
     "current": "Bieżący zapis",

@@ -223,7 +223,9 @@
     "oathRune": "Руна клятвы",
     "in": "В: {{weapon}}",
     "equipped": "Надет",
-    "effect": "Эффект {{id}}"
+    "effect": "Эффект {{id}}",
+    "gemSlot": "Гнездо камня {{slot}}",
+    "emptySlot": "Гнездо {{slot}}: пусто"
   },
   "saves": {
     "current": "Текущее сохранение",

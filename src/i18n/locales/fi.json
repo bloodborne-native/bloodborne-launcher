@@ -223,7 +223,9 @@
     "oathRune": "Valariimu",
     "in": "Kohteessa {{weapon}}",
     "equipped": "Varustettu",
-    "effect": "Vaikutus {{id}}"
+    "effect": "Vaikutus {{id}}",
+    "gemSlot": "Jalokivipaikka {{slot}}",
+    "emptySlot": "Paikka {{slot}}: tyhjä"
   },
   "saves": {
     "current": "Nykyinen tallennus",

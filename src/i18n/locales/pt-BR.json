@@ -408,7 +408,9 @@
     "oathRune": "Runa de juramento",
     "in": "Em {{weapon}}",
     "equipped": "Equipada",
-    "effect": "Efeito {{id}}"
+    "effect": "Efeito {{id}}",
+    "gemSlot": "Encaixe de gema {{slot}}",
+    "emptySlot": "Encaixe {{slot}}: vazio"
   },
   "saves": {
     "current": "Save atual",

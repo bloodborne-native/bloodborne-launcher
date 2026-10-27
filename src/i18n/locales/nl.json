@@ -223,7 +223,9 @@
     "oathRune": "Eedrune",
     "in": "In {{weapon}}",
     "equipped": "Uitgerust",
-    "effect": "Effect {{id}}"
+    "effect": "Effect {{id}}",
+    "gemSlot": "Edelsteenplek {{slot}}",
+    "emptySlot": "Plek {{slot}}: leeg"
   },
   "saves": {
     "current": "Huidige spelopslag",

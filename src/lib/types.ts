@@ -136,6 +136,11 @@ export type InventoryEntry = {
   icon: number | null;
   /** The hover card's numbers, from the game's parameter tables. */
   stats: InventoryStats | null;
+  /** Weapons: the hover card's numbers at each level and imprint, by weapon ID. */
+  variants: Record<string, InventoryStats>;
+  /** Weapons: their open gem slots (shape bits: 1 radial, 2 triangle, 4 waning, 8 circle), with
+   * the gem in each (an index in Inventory.upgrades). */
+  slots: { slot: number; shape: number; gem: number | null }[];
 };
 export type InventoryStats = {
   attack?: Record<string, number>; scaling?: Record<string, number>; requirements?: Record<string, number>;
@@ -155,7 +160,9 @@ export type InventoryChange =
   | { type: "amount"; location: InventoryLocation; index: number; amount: number }
   | { type: "weapon"; location: InventoryLocation; index: number; level: number; imprint: number }
   | { type: "add"; location: InventoryLocation; id: number; amount: number }
-  | { type: "effect"; upgrade: number; slot: number; effect: number };
+  | { type: "effect"; upgrade: number; slot: number; effect: number }
+  | { type: "equip"; upgrade: number; location: InventoryLocation; index: number; slot: number }
+  | { type: "unequip"; upgrade: number };
 export type InventoryEdit = { title_id: string; slot: number; fingerprint: string; changes: InventoryChange[] };
 
 export type ProfileList = SaveList & { setup_required: boolean; has_existing_saves: boolean };

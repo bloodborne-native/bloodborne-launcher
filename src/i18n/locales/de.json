@@ -223,7 +223,9 @@
     "oathRune": "Eid-Rune",
     "in": "In {{weapon}}",
     "equipped": "Ausgerüstet",
-    "effect": "Effekt {{id}}"
+    "effect": "Effekt {{id}}",
+    "gemSlot": "Edelsteinplatz {{slot}}",
+    "emptySlot": "Platz {{slot}}: leer"
   },
   "saves": {
     "current": "Aktueller Spielstand",

@@ -223,7 +223,9 @@
     "oathRune": "Ed-rune",
     "in": "I {{weapon}}",
     "equipped": "Utstyrt",
-    "effect": "Effekt {{id}}"
+    "effect": "Effekt {{id}}",
+    "gemSlot": "Edelsteinplass {{slot}}",
+    "emptySlot": "Plass {{slot}}: tom"
   },
   "saves": {
     "current": "Nåværende lagring",

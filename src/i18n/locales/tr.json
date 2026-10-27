@@ -223,7 +223,9 @@
     "oathRune": "Yemin runu",
     "in": "{{weapon}} içinde",
     "equipped": "Kuşanılmış",
-    "effect": "Etki {{id}}"
+    "effect": "Etki {{id}}",
+    "gemSlot": "Mücevher yuvası {{slot}}",
+    "emptySlot": "Yuva {{slot}}: boş"
   },
   "saves": {
     "current": "Mevcut kayıt",

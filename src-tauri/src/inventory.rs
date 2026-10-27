@@ -29,8 +29,11 @@ const INVENTORY_FROM_NAME: usize = 469;
 const STORAGE_FROM_INVENTORY: usize = 34268;
 const FREE_ID: u32 = 0xFFFF_FFFF;
 const BARE_FISTS: u32 = 1_000_000; // the empty hand slots the game keeps as weapons
+const RUNE_SLOTS: u32 = 1000; // the blocks that hold the equipped runes, keyed like weapons
 const UPGRADES_START: usize = 84; // gems and runes, before the weapon table
 const SLOT_BLOCK: usize = 60;
+const SLOT_CLOSED: u32 = 0x8000_0000;
+const NO_GEM: u32 = 0;
 // The counters of a section, from the character name: (entries ever taken, at least those in use;
 // the next ordering number). Adding an entry moves both on.
 const INVENTORY_COUNTERS: (usize, usize) = (453, 34257);
@@ -81,6 +84,19 @@ pub struct Entry {
     pub icon: Option<u32>,
     /// What the hover card shows: from the game's parameter tables.
     pub stats: Option<serde_json::Value>,
+    /// Weapons: the hover card's numbers at each level and imprint it can change to, by weapon ID.
+    pub variants: std::collections::BTreeMap<u32, serde_json::Value>,
+    /// Weapons: their open gem slots.
+    pub slots: Vec<WeaponSlot>,
+}
+
+/// An open gem slot of a weapon: its shape (the gem shapes it takes, as bits: 1 radial, 2
+/// triangle, 4 waning, 8 circle) and the gem in it (its index in `Inventory::upgrades`).
+#[derive(Serialize, Debug)]
+pub struct WeaponSlot {
+    pub slot: u8,
+    pub shape: u32,
+    pub gem: Option<u16>,
 }
 
 /// One item the save editor can add (catalog).
@@ -349,6 +365,10 @@ pub enum Change {
     /// A gem's or rune's effect (by its position among the record's six) changed to another of
     /// the same category.
     Effect { upgrade: u16, slot: u8, effect: u32 },
+    /// A gem from the inventory into an empty, open slot of a weapon whose shape takes it.
+    Equip { upgrade: u16, location: Location, index: u16, slot: u8 },
+    /// A gem out of its weapon's slot, back into the inventory.
+    Unequip { upgrade: u16 },
 }
 
 #[derive(Deserialize)]
@@ -430,6 +450,8 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                 max: 0,
                 icon: None,
                 stats: None,
+                variants: Default::default(),
+                slots: Vec::new(),
             };
             if let Some(params) = params {
                 entry.icon = icon_of(kind, item, params);
@@ -461,6 +483,13 @@ fn entries(bytes: &[u8], text: Option<&ItemText>, params: Option<&GameParams>) -
                             .iter()
                             .map(|&i| text.weapons[&weapon_id(base, 0, i)].clone())
                             .collect();
+                        if let Some(params) = params {
+                            entry.variants = (0..=2)
+                                .flat_map(|i| (0..=10).map(move |l| weapon_id(base, l, i)))
+                                .filter(|id| text.weapons.contains_key(id))
+                                .filter_map(|id| Some((id, stats_of(Kind::Weapon, id, params)?)))
+                                .collect();
+                        }
                     }
                     Kind::Upgrade => {}
                 }
@@ -482,14 +511,59 @@ fn item_max(params: &GameParams, id: u32, location: Location) -> Option<u32> {
 
 pub fn read(user: &Path, title: &str, slot: u8, text: Option<&ItemText>, params: Option<&GameParams>) -> Result<Inventory> {
     let bytes = slot_bytes(&slot_path(user, title, slot)?)?;
-    let entries = entries(&bytes, text, params)?;
+    let mut entries = entries(&bytes, text, params)?;
+    let upgrades = upgrades(&bytes, &entries, text, params)?;
+    for entry in entries.iter_mut().filter(|e| e.kind == Kind::Weapon) {
+        let at = section(&bytes, entry.location)? + usize::from(entry.index) * ENTRY;
+        // A weapon without its block is shown without slots (and its level cannot change).
+        let Ok(block) = slot_block(&bytes, word(&bytes, at + 4)?, word(&bytes, at + 8)?) else {
+            continue;
+        };
+        for slot in 0..5u8 {
+            let (shape, gem) = slot_at(&bytes, block, slot)?;
+            if shape != SLOT_CLOSED && shape != 0 {
+                let gem = upgrades.iter().find(|u| gem != NO_GEM && u.handle == gem).map(|u| u.index);
+                entry.slots.push(WeaponSlot { slot, shape, gem });
+            }
+        }
+    }
     Ok(Inventory {
         title_id: title.into(),
         slot,
         fingerprint: format!("{:x}", Sha256::digest(&bytes)),
-        upgrades: upgrades(&bytes, &entries, text, params)?,
+        upgrades,
         entries,
     })
+}
+
+/// A slot of a slot block: (its shape, the handle of the gem in it or 0).
+fn slot_at(bytes: &[u8], block: usize, slot: u8) -> Result<(u32, u32)> {
+    let at = block + 20 + usize::from(slot) * 8;
+    Ok((word(bytes, at)?, word(bytes, at + 4)?))
+}
+
+/// Where a gem's handle is held: the inventory entry (index) that refers to it.
+fn gem_entry(bytes: &[u8], handle: u32) -> Result<Option<u16>> {
+    let start = section(bytes, Location::Inventory)?;
+    for index in 0..capacity(Location::Inventory) {
+        if word(bytes, start + index * ENTRY + 4)? == handle && word(bytes, start + index * ENTRY + 8)? != FREE_ID {
+            return Ok(Some(index as u16));
+        }
+    }
+    Ok(None)
+}
+
+/// The weapon slot that holds a gem: (block offset, slot), from the weapons' blocks only.
+fn gem_slot(bytes: &[u8], handle: u32) -> Result<Option<(usize, u8)>> {
+    let base = character_base(bytes)?.ok_or("The character slot is empty.")?;
+    let blocks = slot_blocks(bytes, base.saturating_sub(147))?;
+    let mut found = blocks.iter().filter(|(at, id, _)| word(bytes, *at).map(|h| h >> 16 == 0x8080).unwrap_or(false) && *id != RUNE_SLOTS)
+        .flat_map(|(at, _, slots)| slots.iter().enumerate().filter(|(_, (_, gem))| *gem == handle).map(move |(i, _)| (*at, i as u8)));
+    match (found.next(), found.next()) {
+        (Some(slot), None) => Ok(Some(slot)),
+        (None, _) => Ok(None),
+        _ => Err("The gem is in more than one slot.".into()),
+    }
 }
 
 /// The 60-byte block above the inventory for this handle and ID: exactly one, or an error.
@@ -508,10 +582,15 @@ fn slot_block(bytes: &[u8], handle: u32, id: u32) -> Result<usize> {
     }
 }
 
-/// Adds an item in the section's first free entry: the game's handle and ID words, the amount,
-/// the next ordering number, and both counters moved on. An item the section already holds is
-/// refused (its amount is what to change).
+/// Adds an item in the section's first free entry. An item the section already holds is refused
+/// (its amount is what to change).
 fn add_item(bytes: &mut [u8], location: Location, id: u32, amount: u32) -> Result<u16> {
+    add_entry(bytes, location, 0xB000_0000 | id, 0x4000_0000 | id, amount)
+}
+
+/// Writes an entry in the section's first free one: the handle and ID words, the amount, the next
+/// ordering number, and both counters moved on.
+fn add_entry(bytes: &mut [u8], location: Location, new_handle: u32, new_id: u32, amount: u32) -> Result<u16> {
     let base = character_base(bytes)?.ok_or("The character slot is empty.")?;
     let start = section(bytes, location)?;
     let (count_at, next_at) = match location {
@@ -530,7 +609,7 @@ fn add_item(bytes: &mut [u8], location: Location, id: u32, amount: u32) -> Resul
             continue;
         }
         used += 1;
-        if kind_of(handle, entry_id) == Some((Kind::Item, id)) {
+        if handle == new_handle {
             return Err("The character already has this item: change its amount instead.".into());
         }
     }
@@ -542,8 +621,8 @@ fn add_item(bytes: &mut [u8], location: Location, id: u32, amount: u32) -> Resul
     let index = free.ok_or("This section is full.")?;
     let at = start + index * ENTRY;
     bytes[at] = next as u8;
-    bytes[at + 4..at + 8].copy_from_slice(&(0xB000_0000 | id).to_le_bytes());
-    bytes[at + 8..at + 12].copy_from_slice(&(0x4000_0000 | id).to_le_bytes());
+    bytes[at + 4..at + 8].copy_from_slice(&new_handle.to_le_bytes());
+    bytes[at + 8..at + 12].copy_from_slice(&new_id.to_le_bytes());
     bytes[at + 12..at + 16].copy_from_slice(&amount.to_le_bytes());
     bytes[count_at..count_at + 4].copy_from_slice(&(count + 1).to_le_bytes());
     bytes[next_at..next_at + 4].copy_from_slice(&(next + 1).to_le_bytes());
@@ -619,6 +698,50 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
                 bytes[field..field + 4].copy_from_slice(&effect.to_le_bytes());
                 expected_effects.push((field, effect));
             }
+            Change::Equip { upgrade, location, index, slot } => {
+                let records = upgrade_records(&bytes)?;
+                let &(_, handle, rune, shape, _) = records.get(usize::from(upgrade)).ok_or("Unknown gem.")?;
+                if rune {
+                    return Err("Runes are not equipped in weapons.".into());
+                }
+                let held = gem_entry(&bytes, handle)?.ok_or("Only a gem in the inventory can be equipped.")?;
+                if usize::from(index) >= capacity(location) || slot >= 5 {
+                    return Err("Invalid weapon slot.".into());
+                }
+                let at = section(&bytes, location)? + usize::from(index) * ENTRY;
+                let (weapon_handle, id) = (word(&bytes, at + 4)?, word(&bytes, at + 8)?);
+                if !matches!(kind_of(weapon_handle, id), Some((Kind::Weapon, _))) || id == BARE_FISTS {
+                    return Err("Gems go in weapons.".into());
+                }
+                let block = slot_block(&bytes, weapon_handle, id)?;
+                let (slot_shape, current) = slot_at(&bytes, block, slot)?;
+                // A slot takes the gem shapes of its bits; droplet gems (all bits) fit any open slot.
+                if slot_shape == SLOT_CLOSED || u32::from(shape) & slot_shape == 0 {
+                    return Err("This slot does not take this gem's shape.".into());
+                }
+                if current != NO_GEM {
+                    return Err("This slot already holds a gem: take it out first.".into());
+                }
+                let entry = section(&bytes, Location::Inventory)? + usize::from(held) * ENTRY;
+                bytes[entry + 4..entry + 8].copy_from_slice(&0u32.to_le_bytes());
+                bytes[entry + 8..entry + 12].copy_from_slice(&FREE_ID.to_le_bytes());
+                bytes[entry + 12..entry + 16].copy_from_slice(&0u32.to_le_bytes());
+                let field = block + 24 + usize::from(slot) * 8;
+                bytes[field..field + 4].copy_from_slice(&handle.to_le_bytes());
+                expected_effects.push((field, handle));
+            }
+            Change::Unequip { upgrade } => {
+                let records = upgrade_records(&bytes)?;
+                let &(record, handle, ..) = records.get(usize::from(upgrade)).ok_or("Unknown gem.")?;
+                let (block, slot) = gem_slot(&bytes, handle)?.ok_or("This gem is not in a weapon.")?;
+                let field = block + 24 + usize::from(slot) * 8;
+                bytes[field..field + 4].copy_from_slice(&NO_GEM.to_le_bytes());
+                // The inventory entry of a gem carries the record's second word as its ID.
+                let source = word(&bytes, record + 4)?;
+                let index = add_entry(&mut bytes, Location::Inventory, handle, source, 1)?;
+                expected_effects.push((field, NO_GEM));
+                expected.push((Location::Inventory, index, source, 1));
+            }
             Change::Add { location, id, amount } => {
                 let kind = params.goods.get(id, "goodsType").ok_or("This item is not in the game's tables.")? as u32;
                 if !GOODS_ADDABLE.iter().any(|(k, _)| *k == kind) || id > 0x00FF_FFFF {
@@ -637,7 +760,9 @@ pub fn rewrite(savedata: &Path, edit: &Edit, text: &ItemText, params: &GameParam
     let after = entries(&bytes, None, None)?;
     crate::save_editor::parse(&bytes, &edit.title_id, edit.slot)?
         .ok_or("Character validation failed after editing.")?;
-    for (field, effect) in expected_effects {
+    // A field written twice (a gem out of a slot, another into it) keeps the last value.
+    let last: std::collections::HashMap<usize, u32> = expected_effects.into_iter().collect();
+    for (field, effect) in last {
         if word(&bytes, field)? != effect {
             return Err("Gem validation failed after editing.".into());
         }
@@ -709,6 +834,10 @@ mod tests {
         let block = BASE - 400;
         put(&mut bytes, block, 0x8080_0050);
         put(&mut bytes, block + 4, 2_000_000);
+        // Its slots: radial, triangle, then closed.
+        for (slot, shape) in [1, 2, SLOT_CLOSED, SLOT_CLOSED, SLOT_CLOSED].into_iter().enumerate() {
+            put(&mut bytes, block + 20 + slot * 8, shape);
+        }
         bytes
     }
 
@@ -918,6 +1047,74 @@ mod tests {
         let after = fs::read(savedata.join("1/CUSA03173/SPRJ0005/userdata0000")).unwrap();
         assert_eq!(word(&after, UPGRADES_START + 16).unwrap(), 126207);
         fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn gems_equip_into_fitting_slots_and_back() {
+        let bytes = sample();
+        let block = BASE - 400;
+        let (root, savedata) = staged(bytes.clone());
+        let path = savedata.join("1/CUSA03173/SPRJ0005/userdata0000");
+        let edit = |changes| Edit {
+            title_id: "CUSA03173".into(),
+            slot: 0,
+            fingerprint: format!("{:x}", Sha256::digest(fs::read(&path).unwrap())),
+            changes,
+        };
+        let equip = |slot| Change::Equip { upgrade: 0, location: Location::Inventory, index: 2, slot };
+        // A radial gem does not fit the triangle slot, nor a closed one.
+        assert!(rewrite(&savedata, &edit(vec![equip(1)]), &text(), &params()).is_err());
+        assert!(rewrite(&savedata, &edit(vec![equip(2)]), &text(), &params()).is_err());
+        rewrite(&savedata, &edit(vec![equip(0)]), &text(), &params()).unwrap();
+        let after = fs::read(&path).unwrap();
+        assert_eq!(word(&after, block + 24).unwrap(), 0xC080_0041);
+        let inventory = BASE + INVENTORY_FROM_NAME;
+        assert_eq!(word(&after, inventory + 5 * ENTRY + 8).unwrap(), FREE_ID);
+        let read_back = read(&root.join("user"), "CUSA03173", 0, Some(&text()), Some(&params())).unwrap();
+        let weapon = read_back.entries.iter().find(|e| e.kind == Kind::Weapon).unwrap();
+        assert_eq!((weapon.slots.len(), weapon.slots[0].gem), (2, Some(0)));
+        assert!(read_back.upgrades[0].equipped && read_back.upgrades[0].location.is_none());
+        // Equipped, it is no longer in the inventory to equip again; taken out, it is back.
+        assert!(rewrite(&savedata, &edit(vec![equip(0)]), &text(), &params()).is_err());
+        rewrite(&savedata, &edit(vec![Change::Unequip { upgrade: 0 }]), &text(), &params()).unwrap();
+        let after = fs::read(&path).unwrap();
+        assert_eq!(word(&after, block + 24).unwrap(), NO_GEM);
+        let held = gem_entry(&after, 0xC080_0041).unwrap().unwrap();
+        assert_eq!(word(&after, inventory + usize::from(held) * ENTRY + 8).unwrap(), 0x8001_E460);
+        assert_eq!(word(&after, BASE + INVENTORY_COUNTERS.0).unwrap(), 6);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    /// A gem taken out of its weapon, and an inventory gem put in another weapon's fitting slot,
+    /// on a scratch copy (never the player's own):
+    /// BB_TEST_SAVE_USER=<copy> BB_CHECK_GAME=<dump> cargo test real_gem_equip -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn real_gem_equip() {
+        let user = std::path::PathBuf::from(std::env::var("BB_TEST_SAVE_USER").expect("BB_TEST_SAVE_USER"));
+        let game = std::env::var("BB_CHECK_GAME").expect("BB_CHECK_GAME");
+        let text = crate::game_data::item_text(Path::new(&game), "en").unwrap();
+        let params = crate::game_data::game_params(Path::new(&game)).unwrap();
+        let title = std::env::var("BB_TEST_SAVE_TITLE").unwrap_or_else(|_| "CUSA00207".into());
+        let before = read(&user, &title, 0, Some(&text), Some(&params)).unwrap();
+        let mut changes = Vec::new();
+        let out = before.upgrades.iter().find(|g| !g.rune && g.weapon.is_some()).map(|g| g.index);
+        if let Some(gem) = out {
+            println!("unequip gem {gem}");
+            changes.push(Change::Unequip { upgrade: gem });
+        }
+        let gem = before.upgrades.iter().find(|g| !g.rune && g.location == Some(Location::Inventory)).unwrap();
+        let (weapon, slot) = before.entries.iter().filter(|e| e.location == Location::Inventory)
+            .flat_map(|e| e.slots.iter().map(move |s| (e, s)))
+            .find(|(_, s)| (s.gem.is_none() || s.gem == out) && u32::from(gem.shape) & s.shape != 0)
+            .unwrap();
+        println!("equip gem {} (shape {}) into {:?} slot {}", gem.index, gem.shape, weapon.name, slot.slot);
+        changes.push(Change::Equip { upgrade: gem.index, location: weapon.location, index: weapon.index, slot: slot.slot });
+        let edit = Edit { title_id: title.clone(), slot: 0, fingerprint: before.fingerprint.clone(), changes };
+        rewrite(&user.join("savedata"), &edit, &text, &params).unwrap();
+        for g in read(&user, &title, 0, Some(&text), Some(&params)).unwrap().upgrades.iter().filter(|g| !g.rune) {
+            println!("after: gem {} {:?} {:?}", g.index, g.location, g.weapon);
+        }
     }
 
     /// A gem effect raised to its strongest kind on a scratch copy (never the player's own):

@@ -223,7 +223,9 @@
     "oathRune": "Runa de juramento",
     "in": "En {{weapon}}",
     "equipped": "Equipada",
-    "effect": "Efecto {{id}}"
+    "effect": "Efecto {{id}}",
+    "gemSlot": "Ranura de gema {{slot}}",
+    "emptySlot": "Ranura {{slot}}: vacía"
   },
   "saves": {
     "current": "Partida actual",

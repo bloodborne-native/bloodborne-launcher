@@ -223,7 +223,9 @@
     "oathRune": "誓约符文",
     "in": "在{{weapon}}中",
     "equipped": "已装备",
-    "effect": "效果 {{id}}"
+    "effect": "效果 {{id}}",
+    "gemSlot": "宝石槽 {{slot}}",
+    "emptySlot": "槽 {{slot}}：空"
   },
   "saves": {
     "current": "当前存档",

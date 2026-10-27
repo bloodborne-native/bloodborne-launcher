@@ -223,7 +223,9 @@
     "oathRune": "Rune de serment",
     "in": "Dans {{weapon}}",
     "equipped": "Équipée",
-    "effect": "Effet {{id}}"
+    "effect": "Effet {{id}}",
+    "gemSlot": "Emplacement de gemme {{slot}}",
+    "emptySlot": "Emplacement {{slot}} : vide"
   },
   "saves": {
     "current": "Sauvegarde actuelle",
