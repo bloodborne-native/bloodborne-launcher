@@ -30,6 +30,9 @@ export type Settings = {
   metal_hud: boolean;
   /** macOS: "moltenvk" (default) or "metal" (the Metal backend's frame path). */
   renderer: string;
+  /** How the game's code runs: "translated" (bbcpu's translator) or "recompiled" (the library built
+   * on the Recompiled code page, used only while it matches the game and the recompiler). */
+  cpu: "translated" | "recompiled";
   online: boolean;
   online_pool: "seamless" | "huntersdream";
   online_server: string;
@@ -183,3 +186,25 @@ export type ProfileList = SaveList & { setup_required: boolean; has_existing_sav
 export type ProfileChange = { action: "initialize" | "create" | "select" | "rename" | "delete"; id: string; name?: string };
 
 export type ReleaseInfo = { version: string; tag: string; newer: boolean; notes: string };
+
+/** The recompiled library (recomp.rs): its state and record, and the disk it takes. */
+export type RecompStatus = {
+  status: {
+    state: "none" | "ready" | "stale" | "building";
+    /** stale: built from another copy of the game, or by another recompiler version. */
+    reason: "game" | "recompiler" | null;
+    library: { built: string; seconds: number; functions: number; size: number; compiler: string } | null;
+    /** Whether this build of the app has the recompiler. */
+    available: boolean;
+  };
+  disk_used: number;
+  disk_needed: number;
+};
+/** A build's progress (the "recomp-progress" event). */
+export type RecompProgress = {
+  step: "download" | "unpack" | "check" | "extract" | "scan" | "generate" | "compile" | "link" | "done" | "error" | "cancelled";
+  done?: number;
+  total?: number;
+  functions?: number;
+  message?: string;
+};

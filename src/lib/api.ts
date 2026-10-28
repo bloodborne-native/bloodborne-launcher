@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { profilesService } from "@/services";
 import { mockApi } from "@/lib/mockApi";
-import type { ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, Inventory, SaveEdit, CatalogItem } from "@/lib/types";
+import type { ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, Inventory, SaveEdit, CatalogItem, RecompStatus, RecompProgress } from "@/lib/types";
 
 /** Running inside the Tauri app (else a browser preview with mock data). */
 const inTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -44,6 +44,12 @@ const tauriApi = {
   launch: (password?: string) => invoke<void>("launch", { password }),
   saveOnlinePassword: (password: string) => invoke<void>("save_online_password", { password }),
   stop: () => invoke<void>("stop"),
+  recompStatus: () => invoke<RecompStatus>("recomp_status"),
+  /** Resolves when the build ends; its progress comes as onRecompProgress events. */
+  recompBuild: () => invoke<void>("recomp_build"),
+  recompCancel: () => invoke<void>("recomp_cancel"),
+  recompDelete: () => invoke<void>("recomp_delete"),
+  onRecompProgress: (handler: (progress: RecompProgress) => void) => listen<RecompProgress>("recomp-progress", (e) => handler(e.payload)),
   onOutput: (handler: (line: string) => void) => listen<string>("game-output", (e) => handler(e.payload)),
   onState: (handler: (state: GameState) => void) => listen<GameState>("game-state", (e) => handler(e.payload)),
 };

@@ -28,6 +28,7 @@ mod platform;
 mod game_check;
 mod game_data;
 mod inventory;
+mod recomp;
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
@@ -129,6 +130,7 @@ fn default_settings() -> Map<String, Value> {
         "trophy_notifications": true,
         "metal_hud": false,
         "renderer": "metal",
+        "cpu": "translated",
         "online": false,
         "online_pool": "seamless",
         "online_server": "play.seamlesshunt.com:31313",
@@ -191,6 +193,8 @@ struct Game {
 struct AppState {
     paths: Paths,
     game: Arc<Mutex<Game>>,
+    /// Building the recompiled library (recomp.rs).
+    recomp: recomp::Jobs,
 }
 
 fn settings_file(p: &Paths) -> PathBuf {
@@ -548,6 +552,32 @@ async fn item_icon(state: State<'_, AppState>, icon: u32) -> Result<String, Stri
         ICONS.lock().map_err(|e| e.to_string())?.insert(key, url.clone());
         Ok(url)
     }).await
+}
+#[tauri::command]
+async fn recomp_status(state: State<'_, AppState>) -> Result<Value, String> {
+    let state = state.inner().clone();
+    blocking(move || {
+        let p = &state.paths;
+        let game_dir = expand(&str_setting(&load_settings(p), "game_dir"));
+        let status = recomp::status(&p.data, &p.python, &p.game_root, &game_dir, &state.recomp);
+        Ok(json!({"status": status, "disk_used": recomp::disk_use(&p.data), "disk_needed": recomp::DISK_NEEDED}))
+    }).await
+}
+#[tauri::command]
+async fn recomp_build(app: AppHandle, state: State<'_, AppState>) -> Result<(), String> {
+    let state = state.inner().clone();
+    let p = state.paths.clone();
+    let game_dir = expand(&str_setting(&load_settings(&p), "game_dir"));
+    recomp::build(app, p.data, p.python, p.game_root, game_dir, state.recomp).await
+}
+#[tauri::command]
+fn recomp_cancel(state: State<'_, AppState>) -> Result<(), String> {
+    recomp::cancel(&state.recomp)
+}
+#[tauri::command]
+async fn recomp_delete(state: State<'_, AppState>) -> Result<(), String> {
+    let state = state.inner().clone();
+    blocking(move || recomp::delete(&state.paths.data, &state.recomp)).await
 }
 #[tauri::command]
 async fn item_catalog(state: State<'_, AppState>, language: String) -> Result<Vec<inventory::CatalogItem>, String> {
@@ -1075,9 +1105,30 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
     }
     // The in-game menu and the launcher keep each other's settings (BBSET lines both ways).
     cmd.env("BB_SETTINGS_CHANNEL", "1");
+    // The recompiled library, when chosen and built from this game by this recompiler; otherwise
+    // the translator runs the game's code, and the log's first line says why.
+    let mut note = None;
+    if str_setting(&s, "cpu") == "recompiled" {
+        let game_dir = expand(&str_setting(&s, "game_dir"));
+        match recomp::ready_library(&p.data, &p.python, &p.game_root, &game_dir, &state.recomp) {
+            Ok(library) => {
+                cmd.env("BB_RECOMP_LIB", library);
+            }
+            Err(reason) => note = Some(format!("Launcher: recompiled code is chosen but not used: {reason}. The translator runs the game's code.")),
+        }
+    }
     let mut child = cmd.spawn().map_err(|e| format!("Could not start the game: {e}"))?;
     game.input = child.stdin.take();
     let log = Arc::new(Mutex::new(fs::File::create(&log_path).ok()));
+    if let Some(note) = note {
+        if let Ok(mut f) = log.lock() {
+            if let Some(f) = f.as_mut() {
+                use std::io::Write;
+                let _ = writeln!(f, "{note}");
+            }
+        }
+        let _ = app.emit("game-output", note);
+    }
     for stream in [child.stdout.take().map(|s| Box::new(s) as Box<dyn std::io::Read + Send>),
                    child.stderr.take().map(|s| Box::new(s) as Box<dyn std::io::Read + Send>)]
         .into_iter()
@@ -1166,7 +1217,7 @@ pub fn run() {
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .manage(AppState { paths, game: Arc::new(Mutex::new(Game { child: None, input: None })) })
+        .manage(AppState { paths, game: Arc::new(Mutex::new(Game { child: None, input: None })), recomp: Default::default() })
         // `--play` (macOS: `open Bloodborne.app --args --play`): start the game at once (shortcuts,
         // scripted tests).
         .setup(|app| {
@@ -1192,6 +1243,7 @@ pub fn run() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, game_icon, list_mods, save_mods, list_patches,
+            recomp_status, recomp_build, recomp_cancel, recomp_delete,
             save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {

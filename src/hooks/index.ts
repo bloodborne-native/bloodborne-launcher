@@ -16,3 +16,4 @@ export * from "@/hooks/useTrayLabels";
 export * from "@/hooks/useRelease";
 export * from "@/hooks/useOpenRelease";
 export * from "@/hooks/useCanHover";
+export * from "@/hooks/useRecomp";

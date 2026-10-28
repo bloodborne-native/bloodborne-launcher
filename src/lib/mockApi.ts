@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, Inventory, SaveEdit, CatalogItem } from "@/lib/types";
+import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, Inventory, SaveEdit, CatalogItem, RecompProgress, RecompStatus } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -28,6 +28,7 @@ const config: Config = {
     trophy_notifications: true,
     metal_hud: false,
     renderer: "metal",
+    cpu: "translated",
     online: false,
     online_pool: "seamless",
     online_server: "play.seamlesshunt.com:31313",
@@ -139,6 +140,40 @@ const previewInventory: Inventory = { title_id: "CUSA03173", slot: 0, fingerprin
 let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunter", level: 17, vitality: 12, endurance: 11, strength: 22,
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
   new_game_cycle: 0, stats_consistent: true, fingerprint: "preview" };
+
+// The recompiled library in the preview: ?recomp=ready or ?recomp=stale; a build runs in seconds.
+const previewRecompState = new URLSearchParams(window.location.search).get("recomp");
+const previewLibrary = { built: "2026-10-28T10:15:00+00:00", seconds: 742, functions: 241821, size: 330459824, compiler: "clang version 23.1.4" };
+const previewRecomp: RecompStatus = {
+  status: { state: previewRecompState === "ready" ? "ready" : previewRecompState === "stale" ? "stale" : "none",
+    reason: previewRecompState === "stale" ? "game" : null, library: previewRecompState ? previewLibrary : null, available: true },
+  disk_used: previewRecompState ? previewLibrary.size : 0, disk_needed: 3_000_000_000,
+};
+const previewRecompListeners = new Set<(progress: RecompProgress) => void>();
+let previewRecompCancelled = false;
+async function previewRecompBuild() {
+  previewRecompCancelled = false;
+  previewRecomp.status.state = "building";
+  const send = (progress: RecompProgress) => previewRecompListeners.forEach((handler) => handler(progress));
+  const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const steps: RecompProgress[] = [
+    ...Array.from({ length: 10 }, (_, i) => ({ step: "download" as const, done: (i + 1) * 6_977_710, total: 69_777_108 })),
+    { step: "unpack" }, { step: "check" }, { step: "extract" }, { step: "scan" }, { step: "generate", functions: 241821 },
+    ...Array.from({ length: 49 }, (_, i) => ({ step: "compile" as const, done: Math.min(384, i * 8), total: 384 })),
+    { step: "link" },
+  ];
+  for (const progress of steps) {
+    if (previewRecompCancelled) {
+      previewRecomp.status.state = "none";
+      send({ step: "cancelled" });
+      throw new Error("cancelled");
+    }
+    send(progress);
+    await pause(progress.step === "compile" ? 250 : 400);
+  }
+  Object.assign(previewRecomp, { status: { ...previewRecomp.status, state: "ready", reason: null, library: previewLibrary }, disk_used: previewLibrary.size });
+  send({ step: "done" });
+}
 
 export const mockApi = {
   setTrayLabels: () => wait(undefined),
@@ -293,6 +328,14 @@ export const mockApi = {
   launch: (_password?: string) => wait(undefined),
   saveOnlinePassword: (password: string) => wait(void (config.online_password_saved = password !== "")),
   stop: () => wait(undefined),
+  recompStatus: () => wait(structuredClone(previewRecomp)),
+  recompBuild: () => previewRecompBuild(),
+  recompCancel: () => wait(void (previewRecompCancelled = true)),
+  recompDelete: () => wait(void Object.assign(previewRecomp, { status: { ...previewRecomp.status, state: "none", reason: null, library: null }, disk_used: 0 })),
+  onRecompProgress: (handler: (progress: RecompProgress) => void) => {
+    previewRecompListeners.add(handler);
+    return Promise.resolve(() => void previewRecompListeners.delete(handler));
+  },
   onOutput: (_handler: (line: string) => void) => Promise.resolve(() => {}),
   onState: (_handler: (state: GameState) => void) => Promise.resolve(() => {}),
 };

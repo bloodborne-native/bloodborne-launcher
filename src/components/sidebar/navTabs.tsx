@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Users, Gamepad2, House, MonitorCog, Package, Save, ScrollText, Settings2, Swords, Trophy, Wrench, Globe2 } from "lucide-react";
+import { Users, Cpu, Gamepad2, House, MonitorCog, Package, Save, ScrollText, Settings2, Swords, Trophy, Wrench, Globe2 } from "lucide-react";
 import type { Tab } from "@/stores";
 
 /** Online play is shown once the runtime's online module ships (bloodborne-mac ROADMAP, "Online"). */
@@ -22,6 +22,7 @@ export const NAV_GROUPS: { title: "nav.groupSettings" | "nav.groupDeveloper" | n
     { id: "controls", icon: <Gamepad2 /> },
     { id: "game", icon: <Swords /> },
     { id: "mods", icon: <Package /> },
+    { id: "recomp", icon: <Cpu /> },
   ] },
   { title: "nav.groupDeveloper", tabs: [
     { id: "patches", icon: <Wrench /> },
