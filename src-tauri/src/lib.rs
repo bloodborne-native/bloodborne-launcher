@@ -345,7 +345,7 @@ async fn load_config(state: State<'_ , AppState>) -> Result<Value, String> {
             "saves": selected_user_dir(p).unwrap_or_default(),
         },
         "bundled": p.bundled,
-        "version": env!("CARGO_PKG_VERSION"),
+        "version": updates::installed_version(), // a candidate's too (0.9.0-rc.2)
         "platform": std::env::consts::OS,
         "memory_mb": system_memory_mb(),
         "running": state.game.lock().map(|g| g.child.is_some()).unwrap_or(false),

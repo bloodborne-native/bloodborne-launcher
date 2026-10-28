@@ -2,18 +2,21 @@
 
 [← Documentation](README.md)
 
-The launcher checks the stable releases of
+The launcher checks the releases of
 [bloodborne-mac](https://github.com/bloodborne-native/bloodborne-mac/releases) against the version
-built into the installed app: `CARGO_PKG_VERSION`, the launcher's version, which bloodborne-mac's
-`packaging/version.sh` keeps equal to the app's (semantic version order; drafts and prereleases
-ignored; launcher commits never notify).
+built into the installed app (semantic version order; drafts ignored; launcher commits never
+notify). That version is the release tag the package was built from (`BB_RELEASE_TAG`, which
+bloodborne-mac's `packaging/macos.sh` passes when it builds a `v*` tag), else `CARGO_PKG_VERSION`,
+which `packaging/version.sh` keeps equal to the app's.
 
-**Release candidates.** A candidate's tag (`v0.9.0-rc.2`) is not written into the files:
-`version.sh` keeps the release's number (`0.9.0`) there and the tag alone makes it a candidate. So a
-candidate build reports `0.9.0`; it is not told about newer candidates (prereleases are ignored),
-and the final `v0.9.0` is not newer than it (equal versions). Testers of a candidate find the
-final release on the release page themselves. This is a known gap; closing it needs the candidate
-number in the build or a prerelease channel.
+- **A release build** checks GitHub's latest stable release (candidates ignored).
+- **A release-candidate build** (`v0.9.0-rc.2`: the version files carry the release's number, the
+  tag makes it a candidate) checks the 20 most recent releases, candidates included, and offers the
+  highest above its own: a newer candidate, or the final release, which semantic versions order
+  after its candidates. Advanced → Updates shows the candidate's full version. Builds before this
+  (0.9.0 RC 1 and RC 2) report `0.9.0` and were not told about 0.9.0.
+- Local and test packages (`git describe` versions) check as release builds of the launcher's
+  version.
 
 - After profile setup it checks at startup and every six hours while visible.
 - A newer release opens a changelog modal (the release's GitHub notes as Markdown: headings,
@@ -25,7 +28,8 @@ number in the build or a prerelease channel.
 - Offline, rate limits and bad responses show a retryable status and never block Play. Requests
   carry no account, token or player data; 10-second timeout, 512 KiB limit.
 
-Rust fetches GitHub's latest-release endpoint (reqwest, rustls); TanStack Query shares the result
-(six-hour freshness). Only validated stable tags on the app's release page are opened. Native
-tests cover version order, build metadata, draft and prerelease exclusion, bad responses, missing
-notes and link validation. Browser preview: `?update&lang=en` supplies a synthetic newer release.
+Rust fetches GitHub's latest-release endpoint, or for a candidate the release list (reqwest,
+rustls); TanStack Query shares the result (six-hour freshness). Only validated tags on the app's
+release page are opened: stable ones, and for a candidate build candidates' too. Native tests cover
+version order, build metadata, draft and prerelease exclusion, a candidate's newer candidates and
+final release, bad responses, missing notes and link validation. Browser preview: `?update&lang=en` supplies a synthetic newer release.

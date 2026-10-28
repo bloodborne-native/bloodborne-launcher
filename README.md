@@ -44,8 +44,6 @@ Not done yet:
 
 - Import and export of complete save sets; managing the backup history (backups are not pruned).
 - Game integration on Windows, Linux and Android.
-- Release-candidate builds are not told about newer candidates or the final release
-  ([Updates](docs/UPDATES.md)).
 
 The whole project's status and next steps:
 [STATUS](https://github.com/bloodborne-native/bloodborne-mac/blob/main/docs/STATUS.md) and
