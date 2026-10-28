@@ -315,8 +315,9 @@ fn effect_options(id: u32, text: &ItemText, params: &GameParams) -> Vec<EffectOp
 const UPGRADE: usize = 40;
 const NO_EFFECT: u32 = 0xFFFF_FFFF;
 const GEM_SHAPES: [u8; 5] = [1, 2, 4, 8, 63];
-// Runes: 1 and 2 (Oath) as known, 4 seen in a real save.
-const RUNE_SHAPES: [u8; 3] = [1, 2, 4];
+// Runes: 1 and 2 (Oath) as known, 4 seen in a real save, 16 written by the game for that same
+// rune (a save it wrote back in a test run).
+const RUNE_SHAPES: [u8; 4] = [1, 2, 4, 16];
 
 /// A gem or rune record: (its offset, handle, whether a rune, shape, effect IDs).
 type Record = (usize, u32, bool, u8, [u32; 6]);
