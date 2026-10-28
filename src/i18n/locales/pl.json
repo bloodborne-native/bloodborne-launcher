@@ -406,7 +406,7 @@
     "recompiledHint": "Używa biblioteki zbudowanej poniżej. Jeśli nie pasuje do twojej gry, kod jest tłumaczony, a dziennik podaje powód.",
     "modeNeedsLibrary": "Zbuduj bibliotekę poniżej, aby wybrać Skompilowany.",
     "libraryTitle": "Biblioteka",
-    "buildHint": "Budowanie pobiera kompilator o rozmiarze 70 MB, trwa około 12 minut na szybkim urządzeniu (dłużej przy mniejszej liczbie rdzeni) i wymaga w tym czasie około 3 GB wolnego miejsca. Potem biblioteka zajmuje około 330 MB, a kompilator jest usuwany. Możesz dalej korzystać z launchera, ale gra podczas budowania będzie wolna.",
+    "buildHint": "Budowanie pobiera kompilator o rozmiarze 70 MB, trwa około 14 minut na szybkim urządzeniu (dłużej przy mniejszej liczbie rdzeni) i wymaga w tym czasie około 3 GB wolnego miejsca. Potem biblioteka zajmuje około 330 MB, a kompilator jest usuwany. Możesz dalej korzystać z launchera, ale gra podczas budowania będzie wolna.",
     "none": "Jeszcze nie zbudowano.",
     "ready": "Zbudowano {{date}}: funkcje: {{functions}}, {{size}}.",
     "staleGame": "Zbudowano z innej kopii gry. Zbuduj ponownie, aby jej użyć.",

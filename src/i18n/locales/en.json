@@ -619,7 +619,7 @@
     "recompiledHint": "Uses the library built below. If it doesn't match your game, the game's code is translated instead, and the log says why.",
     "modeNeedsLibrary": "Build the library below to choose Recompiled.",
     "libraryTitle": "The library",
-    "buildHint": "Building downloads a 70 MB compiler, takes about 12 minutes on a fast device (longer with fewer cores), and needs about 3 GB of free space while it runs. Afterwards the library takes about 330 MB and the compiler is deleted. You can keep using the launcher, but playing while it builds will be slow.",
+    "buildHint": "Building downloads a 70 MB compiler, takes about 14 minutes on a fast device (longer with fewer cores), and needs about 3 GB of free space while it runs. Afterwards the library takes about 330 MB and the compiler is deleted. You can keep using the launcher, but playing while it builds will be slow.",
     "none": "Not built yet.",
     "ready": "Built on {{date}}: {{functions}} functions, {{size}}.",
     "staleGame": "Built from another copy of the game. Build it again to use it.",

@@ -402,7 +402,7 @@
     "recompiledHint": "Käyttää alla rakennettua kirjastoa. Jos se ei vastaa peliäsi, koodi muunnetaan sen sijaan, ja loki kertoo syyn.",
     "modeNeedsLibrary": "Rakenna kirjasto alla valitaksesi Uudelleenkäännetty.",
     "libraryTitle": "Kirjasto",
-    "buildHint": "Rakentaminen lataa 70 Mt:n kääntäjän, kestää noin 12 minuuttia nopealla laitteella (kauemmin, jos ytimiä on vähemmän) ja tarvitsee noin 3 Gt vapaata tilaa sen ajan. Sen jälkeen kirjasto vie noin 330 Mt ja kääntäjä poistetaan. Voit käyttää käynnistintä sillä välin, mutta pelaaminen rakentamisen aikana on hidasta.",
+    "buildHint": "Rakentaminen lataa 70 Mt:n kääntäjän, kestää noin 14 minuuttia nopealla laitteella (kauemmin, jos ytimiä on vähemmän) ja tarvitsee noin 3 Gt vapaata tilaa sen ajan. Sen jälkeen kirjasto vie noin 330 Mt ja kääntäjä poistetaan. Voit käyttää käynnistintä sillä välin, mutta pelaaminen rakentamisen aikana on hidasta.",
     "none": "Ei vielä rakennettu.",
     "ready": "Rakennettu {{date}}: {{functions}} funktiota, {{size}}.",
     "staleGame": "Rakennettu toisesta pelikopiosta. Rakenna se uudelleen käyttääksesi sitä.",

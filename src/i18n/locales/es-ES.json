@@ -402,7 +402,7 @@
     "recompiledHint": "Usa la biblioteca creada abajo. Si no coincide con tu juego, el código se traduce y el registro indica por qué.",
     "modeNeedsLibrary": "Crea la biblioteca abajo para elegir Recompilado.",
     "libraryTitle": "La biblioteca",
-    "buildHint": "La creación descarga un compilador de 70 MB, tarda unos 12 minutos en un dispositivo rápido (más con menos núcleos) y necesita unos 3 GB libres mientras se ejecuta. Después, la biblioteca ocupa unos 330 MB y el compilador se borra. Puedes seguir usando el launcher, pero jugar mientras se crea irá lento.",
+    "buildHint": "La creación descarga un compilador de 70 MB, tarda unos 14 minutos en un dispositivo rápido (más con menos núcleos) y necesita unos 3 GB libres mientras se ejecuta. Después, la biblioteca ocupa unos 330 MB y el compilador se borra. Puedes seguir usando el launcher, pero jugar mientras se crea irá lento.",
     "none": "Aún no se ha creado.",
     "ready": "Creada el {{date}}: {{functions}} funciones, {{size}}.",
     "staleGame": "Creada a partir de otra copia del juego. Créala de nuevo para usarla.",

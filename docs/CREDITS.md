@@ -79,3 +79,11 @@ Grade emblems use the existing lucide-react dependency; the notification styling
 The game displays notifications in its own ImGui overlay using a copy of the reviewed public
 catalog. The launcher keeps the unlock history and trophy list; no separate notification
 window or helper is packaged.
+
+## LLVM toolchain
+
+The Recompiled code page downloads clang and `ld64.lld` from
+[LLVM](https://llvm.org) 23.1.4 (Apache-2.0 with LLVM exception), trimmed from LLVM's official
+release by bloodborne-recomp's `tools/recomp/toolchain.sh` and published with LLVM's licence as
+that repository's `toolchain-llvm-23.1.4` release. The launcher does not ship it; it deletes the
+toolchain once the library is built.

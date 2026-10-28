@@ -402,7 +402,7 @@
     "recompiledHint": "Använder biblioteket som byggs nedan. Om det inte passar ditt spel översätts koden i stället, och loggen säger varför.",
     "modeNeedsLibrary": "Bygg biblioteket nedan för att välja Omkompilerad.",
     "libraryTitle": "Biblioteket",
-    "buildHint": "Bygget laddar ned en kompilator på 70 MB, tar ungefär 12 minuter på en snabb enhet (längre med färre kärnor) och behöver ungefär 3 GB ledigt utrymme medan det pågår. Efteråt tar biblioteket ungefär 330 MB och kompilatorn tas bort. Du kan använda launchern under tiden, men spelet går långsamt medan det byggs.",
+    "buildHint": "Bygget laddar ned en kompilator på 70 MB, tar ungefär 14 minuter på en snabb enhet (längre med färre kärnor) och behöver ungefär 3 GB ledigt utrymme medan det pågår. Efteråt tar biblioteket ungefär 330 MB och kompilatorn tas bort. Du kan använda launchern under tiden, men spelet går långsamt medan det byggs.",
     "none": "Inte byggt än.",
     "ready": "Byggt {{date}}: {{functions}} funktioner, {{size}}.",
     "staleGame": "Byggt från en annan kopia av spelet. Bygg det igen för att använda det.",

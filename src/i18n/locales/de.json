@@ -402,7 +402,7 @@
     "recompiledHint": "Verwendet die unten erstellte Bibliothek. Passt sie nicht zu deinem Spiel, wird der Code übersetzt, und das Protokoll nennt den Grund.",
     "modeNeedsLibrary": "Erstelle unten die Bibliothek, um Rekompiliert zu wählen.",
     "libraryTitle": "Die Bibliothek",
-    "buildHint": "Beim Erstellen wird ein Compiler mit 70 MB heruntergeladen. Es dauert auf einem schnellen Gerät etwa 12 Minuten (mit weniger Kernen länger) und braucht währenddessen etwa 3 GB freien Speicher. Danach belegt die Bibliothek etwa 330 MB, und der Compiler wird gelöscht. Du kannst den Launcher weiter benutzen, aber Spielen während des Erstellens ist langsam.",
+    "buildHint": "Beim Erstellen wird ein Compiler mit 70 MB heruntergeladen. Es dauert auf einem schnellen Gerät etwa 14 Minuten (mit weniger Kernen länger) und braucht währenddessen etwa 3 GB freien Speicher. Danach belegt die Bibliothek etwa 330 MB, und der Compiler wird gelöscht. Du kannst den Launcher weiter benutzen, aber Spielen während des Erstellens ist langsam.",
     "none": "Noch nicht erstellt.",
     "ready": "Erstellt am {{date}}: {{functions}} Funktionen, {{size}}.",
     "staleGame": "Aus einer anderen Kopie des Spiels erstellt. Erstelle sie neu, um sie zu verwenden.",

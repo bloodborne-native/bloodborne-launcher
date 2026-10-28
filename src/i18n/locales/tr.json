@@ -402,7 +402,7 @@
     "recompiledHint": "Aşağıda oluşturulan kitaplığı kullanır. Oyununuzla eşleşmezse kod çevrilir ve kayıt nedenini söyler.",
     "modeNeedsLibrary": "Yeniden derlenmiş seçeneği için aşağıdaki kitaplığı oluşturun.",
     "libraryTitle": "Kitaplık",
-    "buildHint": "Oluşturma 70 MB'lık bir derleyici indirir, hızlı bir cihazda yaklaşık 12 dakika sürer (daha az çekirdekle daha uzun) ve sürerken yaklaşık 3 GB boş alan gerektirir. Sonrasında kitaplık yaklaşık 330 MB yer kaplar ve derleyici silinir. Başlatıcıyı kullanmaya devam edebilirsiniz, ancak oluşturma sırasında oynamak yavaş olur.",
+    "buildHint": "Oluşturma 70 MB'lık bir derleyici indirir, hızlı bir cihazda yaklaşık 14 dakika sürer (daha az çekirdekle daha uzun) ve sürerken yaklaşık 3 GB boş alan gerektirir. Sonrasında kitaplık yaklaşık 330 MB yer kaplar ve derleyici silinir. Başlatıcıyı kullanmaya devam edebilirsiniz, ancak oluşturma sırasında oynamak yavaş olur.",
     "none": "Henüz oluşturulmadı.",
     "ready": "{{date}} tarihinde oluşturuldu: {{functions}} işlev, {{size}}.",
     "staleGame": "Oyunun başka bir kopyasından oluşturuldu. Kullanmak için yeniden oluşturun.",

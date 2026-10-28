@@ -402,7 +402,7 @@
     "recompiledHint": "Usa la libreria creata qui sotto. Se non corrisponde al tuo gioco, il codice viene tradotto e il log spiega perché.",
     "modeNeedsLibrary": "Crea la libreria qui sotto per scegliere Ricompilato.",
     "libraryTitle": "La libreria",
-    "buildHint": "La creazione scarica un compilatore da 70 MB, richiede circa 12 minuti su un dispositivo veloce (di più con meno core) e serve circa 3 GB di spazio libero mentre è in corso. Dopo, la libreria occupa circa 330 MB e il compilatore viene eliminato. Puoi continuare a usare il launcher, ma giocare durante la creazione sarà lento.",
+    "buildHint": "La creazione scarica un compilatore da 70 MB, richiede circa 14 minuti su un dispositivo veloce (di più con meno core) e serve circa 3 GB di spazio libero mentre è in corso. Dopo, la libreria occupa circa 330 MB e il compilatore viene eliminato. Puoi continuare a usare il launcher, ma giocare durante la creazione sarà lento.",
     "none": "Non ancora creata.",
     "ready": "Creata il {{date}}: {{functions}} funzioni, {{size}}.",
     "staleGame": "Creata da un'altra copia del gioco. Creala di nuovo per usarla.",

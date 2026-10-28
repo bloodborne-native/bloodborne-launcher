@@ -11,6 +11,7 @@ These pages are for working on the launcher.
   trophies, edited saves and the save-editor roadmap.
 - [The launcher while the game runs](LAUNCHER_LIFECYCLE.md): hiding to the menu bar, the tray menu.
 - [Trophy notifications](OVERLAY.md): the game's overlay and the launcher's tracking role.
+- [Recompiled code](RECOMPILED_CODE.md): building the recompiled library on the device, and using it.
 - [New-version notifications](UPDATES.md)
 - [Credits and license](CREDITS.md)
 

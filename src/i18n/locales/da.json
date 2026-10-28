@@ -402,7 +402,7 @@
     "recompiledHint": "Bruger biblioteket bygget nedenfor. Passer det ikke til dit spil, oversættes koden i stedet, og loggen siger hvorfor.",
     "modeNeedsLibrary": "Byg biblioteket nedenfor for at vælge Genkompileret.",
     "libraryTitle": "Biblioteket",
-    "buildHint": "Bygningen henter en compiler på 70 MB, tager cirka 12 minutter på en hurtig enhed (længere med færre kerner) og kræver cirka 3 GB ledig plads, mens den kører. Bagefter fylder biblioteket cirka 330 MB, og compileren slettes. Du kan bruge launcheren imens, men spillet kører langsomt, mens der bygges.",
+    "buildHint": "Bygningen henter en compiler på 70 MB, tager cirka 14 minutter på en hurtig enhed (længere med færre kerner) og kræver cirka 3 GB ledig plads, mens den kører. Bagefter fylder biblioteket cirka 330 MB, og compileren slettes. Du kan bruge launcheren imens, men spillet kører langsomt, mens der bygges.",
     "none": "Ikke bygget endnu.",
     "ready": "Bygget {{date}}: {{functions}} funktioner, {{size}}.",
     "staleGame": "Bygget ud fra en anden kopi af spillet. Byg det igen for at bruge det.",

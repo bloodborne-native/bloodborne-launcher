@@ -402,7 +402,7 @@
     "recompiledHint": "Gebruikt de bibliotheek die hieronder gemaakt is. Past die niet bij je spel, dan wordt de code vertaald en staat in het logboek waarom.",
     "modeNeedsLibrary": "Maak hieronder de bibliotheek om Hercompileerd te kiezen.",
     "libraryTitle": "De bibliotheek",
-    "buildHint": "Het maken downloadt een compiler van 70 MB, duurt ongeveer 12 minuten op een snel apparaat (langer met minder kernen) en heeft ongeveer 3 GB vrije ruimte nodig zolang het loopt. Daarna neemt de bibliotheek ongeveer 330 MB in en wordt de compiler verwijderd. Je kunt de launcher blijven gebruiken, maar spelen tijdens het maken gaat traag.",
+    "buildHint": "Het maken downloadt een compiler van 70 MB, duurt ongeveer 14 minuten op een snel apparaat (langer met minder kernen) en heeft ongeveer 3 GB vrije ruimte nodig zolang het loopt. Daarna neemt de bibliotheek ongeveer 330 MB in en wordt de compiler verwijderd. Je kunt de launcher blijven gebruiken, maar spelen tijdens het maken gaat traag.",
     "none": "Nog niet gemaakt.",
     "ready": "Gemaakt op {{date}}: {{functions}} functies, {{size}}.",
     "staleGame": "Gemaakt uit een andere kopie van het spel. Maak hem opnieuw om hem te gebruiken.",
