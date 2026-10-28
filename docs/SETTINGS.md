@@ -2,38 +2,40 @@
 
 [← Documentation](README.md)
 
+Where the settings are stored, how they reach the game and how they stay in step with the in-game
+menu. Which page shows which setting: [Pages](PAGES.md).
+
 ## Where they live
 
-All settings are rows of the `settings` table in `launcher.db` (scopes `launcher` and `game`),
-shared by all profiles (`src-tauri/src/settings_store.rs`). `bbport.ini` (game settings, for
-`run.sh` and the runtime) and `launcher.json` are written from them; on first start they are
-imported from those files once. Launcher options reach the game as environment variables
-(`main.rs`: for example `renderer` → `BB_METAL_FRAME`, `fps_limit` → `BB_FPS_LIMIT`).
+All settings are rows of the `settings` table in `launcher.db`, shared by all profiles
+(`src-tauri/src/settings_store.rs`). The scope `launcher` holds the launcher's options (JSON
+values); the scope `game` holds the game's (`bbport.ini`'s keys and text values). `bbport.ini`
+(read by `run.sh` and the runtime) and `launcher.json` are written from the table; on the first
+start of a launcher with the table they are imported from those files once.
 
-**While the game runs** the launcher and the in-game menu exchange changes as lines on the game's
+## How they reach the game
+
+Game settings reach the game through `bbport.ini`. Launcher options reach it as environment
+variables set in `game_environment` (`src-tauri/src/lib.rs`), for example `renderer` →
+`BB_METAL_FRAME` and `BB_METAL_NATIVE_BOOT` (both set either way on macOS), `fps_limit` →
+`BB_FPS_LIMIT`, `trophy_notifications` → `BB_TROPHY_OVERLAY`, and the active profile's folders
+and name → `BB_USER_DIR`, `BB_GPU_USER_DIR` and `BB_USER_NAME`. **Extra environment variables**
+(Advanced) are added after the options and before the profile's variables, which they cannot
+override.
+
+## Sync with the game
+
+While the game runs, the launcher and the in-game menu exchange changes as lines on the game's
 standard streams: `BBSET key=value` for game settings and `BBSET launcher:key=value` for the
-launcher options the menu shows (fullscreen, display, presentation, frame-rate mode and limit,
-Metal HUD, draw pipeline, readbacks, preupload, renderer: `GAME_SYNCED` in
-`settings_store.rs`). Each side applies what it can at once; the menu offers a restart for the
+launcher options the menu shows: fullscreen, display, presentation, frame-rate mode and limit,
+the Metal HUD, draw pipeline, readbacks, preupload and renderer (`GAME_SYNCED` in
+`settings_store.rs`). The backend stores what the menu sends before the interface hears of it
+(`src/stores/game.ts`). Each side applies what it can at once; the menu offers a restart for the
 rest.
 
-## Tabs
+## The memory estimate
 
-Settings are grouped by what the player controls. Moving a control never changes its stored key,
-default or effect; translations move with it in all 20 locales.
-
-| Tab | Contents |
-|---|---|
-| Home | Game folder and edition, a summary of the main settings. The active profile is the widget above Play (sidebar; the bottom bar on phones): its name and recorded trophies, and a menu to switch profile or open its saves, its trophies or all profiles |
-| Graphics | Aspect ratio (Auto, 4:3, 16:10, 16:9, 21:9, 32:9) and the output resolutions of that ratio, with the memory estimate; monitor, fullscreen, presentation, frame-rate mode and limit, FPS counter (size, position), Metal HUD; upscaling (off by default; FSR 3.1; on macOS MetalFX, and FSR 4.1.1 on Metal when `bb-gpu-capabilities --fsr411` says this Mac can run it, with a button that takes AMD's two files from the player's own DLL into the data folder's `fsr4_411`; with the Metal renderer only MetalFX and off, and a saved FSR choice shows and runs as MetalFX), sharpening, motion vectors, model detail, effects (all but SSR switch while the game runs) |
-| Controls | Controller choice and controller/keyboard bindings |
-| Game | Game language, skipping intro videos, the active profile's save folder |
-| Online | The pool (Seamless Hunt or The Hunter's Dream), the account, the servers and UPnP; a note that seamless co-op (BBSC) is not supported yet and why. A profile with an edited save set cannot go online. The Seamless Hunt password is saved only after the player accepts a warning that it is stored unencrypted on this device, in its own file readable by their account alone (`online_password.rs`, not in the database, its backups or launcher.json); otherwise Play asks for it each time and it goes to that launch only |
-| Profiles | Profiles, each with Saves · Backups and Trophies |
-| Mods, Patches | Mods and their order; third-party patches |
-| Advanced | Launcher language and hiding during gameplay, updates, trophy notifications; the renderer (native Metal by default, or MoltenVK as a fallback; the launcher sets `BB_METAL_FRAME` and `BB_METAL_NATIVE_BOOT` either way) and other performance options, live resolution; free camera, debug menu, logs, profiling, extra environment variables; data folders |
-| Log | The game's output |
-
-The memory estimate (`src/lib/data/memory.ts`) computes what the game will use as `run.sh` sizes
-it, plus the renderer's measured share, against the Mac's memory; the in-game menu computes the
-same (`MemoryEstimate` in the runtime's `bbport_overlay.cpp`). Keep the three in step.
+`src/lib/data/memory.ts` computes what the game will use at the chosen output resolution, as
+`run.sh` sizes it, plus the renderer's measured share, against the device's memory; Graphics shows
+it under the resolution. The in-game menu computes the same (`MemoryEstimate` in the runtime's
+`gpu/shim/bbport_overlay.cpp`). Keep the three in step.
