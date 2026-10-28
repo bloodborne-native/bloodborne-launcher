@@ -7,20 +7,21 @@ The player's view is the app's [Profiles and saves](https://github.com/bloodborn
 
 ## Roadmap
 
-Completed stages: **2/4 (50%)** `██████████░░░░░░░░░░`
+Completed stages: **3/4 (75%)** `███████████████░░░░░`
 
 | Stage | Scope | Status |
 |---|---|---|
 | S0 | Profile ownership, first-profile setup, complete save sets, active selection, backup and restore, deletion, local trophies | Done |
 | S1 | Read-only character preview: name, level, attributes, playtime, progression | Done |
 | S2 | Import/export and backup history management (pruning) | Planned |
-| S3 | Editor for verified fields, with edited-save lineage | Offensive attributes, Blood Echoes and Insight editing done; defensive attributes and items planned |
+| S3 | Editor for verified fields, with edited-save lineage | Done: attributes, Blood Echoes, Insight, items, weapons, armor, gems and runes |
 
 ## Profiles
 
 A profile is an identity with exactly one complete save set (which can hold several
 characters), its backups and its trophy history. Profiles are created, renamed, selected and
-deleted in the Profiles tab; the active one is shown next to Play and on Home. Names are trimmed
+deleted in the Profiles tab; the active one is shown above Play, and its saves and trophies have
+tabs of their own (Saves, Trophies). Names are trimmed
 and compared in Unicode lowercase for duplicates; ids and paths never change on rename. New
 profiles start empty: saves are never copied between profiles.
 
@@ -89,6 +90,31 @@ character file. The launcher edits a staged copy of the whole set, verifies the 
 backs up the live set, marks the staged set edited and then swaps it into place with a
 rollback copy. An interrupted swap blocks the profile and names the recovery folder.
 
+The inventory editor (`src-tauri/src/inventory.rs`; format facts checked against
+Noxde/Bloodborne-save-editor d8d0365) reads names, icons and values from the player's own game
+files (`game_data.rs`: item texts and the parameter tables) and is closed until it can. One edit
+carries character and inventory changes together (`edit_save`).
+
+- **Entries:** the inventory (1,983 entries) and storage (1,984), 16 bytes each, follow the
+  character name; amounts are limited by the game's `maxNum` (99 in storage).
+- **The table before the character:** 4,096 entries from byte 84, each a gem or rune record (40
+  bytes), a weapon's or armor piece's block (60 bytes, its five gem slots) or a free entry (8
+  bytes). The character starts 620 bytes after the table, so it moves when the table grows.
+- **Weapons:** a level or imprint change rewrites the ID in the entry and the block, and sets the
+  block's slots from the game's `WeaponGenParam` (one row per weapon ID): each slot's shape where
+  it first opens. A gem in a slot that closes or no longer fits must come out first; equipping
+  into a slot the level already has opens it.
+- **Adding:** items take a free entry. Weapons and armor reuse a free block of their kind that no
+  entry or other byte refers to. A gem takes a free 8-byte table entry: everything after it moves
+  32 bytes on and the fixed-size file (1,310,720 bytes) drops its last 32; gems are applied last
+  in an edit, and the checked offsets move with them. Its source (the record's second word and
+  the entry's ID) is `0x80000000` with the `GemGenParam` row of a gem with that one fixed effect.
+  The game loaded such a save and wrote it back with the gem (renumbering every gem's handle).
+  Additions are refused for files holding two copies of the character.
+- **Gem and rune icons:** the shape's first icon in the menu set (3000 radial, 3200 triangle, 3400
+  waning, 3600 circle, 4000 droplet; runes from 3000) plus the first effect's `gemIconIdOffset`.
+  Rune shapes 1, 2, 4 and 16 are accepted (16 written by the game).
+
 Database transactions do not make folder copies atomic: this is not a power-loss guarantee.
 
 ## Trophies and edited saves
@@ -106,8 +132,9 @@ The rule, approved on 2026-10-13: **an edited save never unlocks trophies.** The
 runtime refuses to record and the launcher refuses to import while it is present. The editor
 warns before applying a change, writes the marker before publishing the edited save and never
 offers a way to make an edited save eligible again; a clean pre-edit backup keeps its own
-eligibility. Earned history is never removed by a restore. Whether edited saves may go online is
-undecided.
+eligibility. Earned history is never removed by a restore. An edited save plays offline only
+(maintainer, 2026-10-26): the launcher refuses online play for it and the runtime's online module
+checks the marker again.
 
 ## Checks
 
