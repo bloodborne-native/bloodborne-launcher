@@ -225,7 +225,12 @@ async fn run(app: &AppHandle, data: &Path, python: &Path, script: &Path, game_di
     }
     // Two cores stay free, so the device stays responsive while it builds.
     let jobs_count = std::thread::available_parallelism().map(|n| n.get().saturating_sub(2).max(1)).unwrap_or(4);
-    let mut child = Command::new(python)
+    let mut command = Command::new(python);
+    // Its own process group, so a cancel stops the compilers it started too (they kept compiling
+    // after the script was killed).
+    #[cfg(unix)]
+    std::os::unix::process::CommandExt::process_group(&mut command, 0);
+    let mut child = command
         .arg(script)
         .args(["--game".as_ref(), game_dir.as_os_str(), "--work".as_ref(), root.as_os_str(), "--toolchain".as_ref(), toolchain.as_os_str()])
         .arg("--jobs")
@@ -279,6 +284,9 @@ pub fn cancel(jobs: &Jobs) -> Result<()> {
     let mut job = jobs.lock().map_err(|e| e.to_string())?;
     job.cancel.store(true, Ordering::Relaxed);
     if let Some(child) = job.child.as_mut() {
+        // The script's process group: the script and the compilers it runs.
+        #[cfg(unix)]
+        let _ = Command::new("kill").arg("-TERM").arg(format!("-{}", child.id())).status();
         let _ = child.kill();
     }
     Ok(())

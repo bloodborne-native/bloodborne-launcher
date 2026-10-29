@@ -567,7 +567,12 @@ async fn recomp_status(state: State<'_, AppState>) -> Result<Value, String> {
 async fn recomp_build(app: AppHandle, state: State<'_, AppState>) -> Result<(), String> {
     let state = state.inner().clone();
     let p = state.paths.clone();
-    let game_dir = expand(&str_setting(&load_settings(&p), "game_dir"));
+    // The settings are read through the database's own runtime (database::block): on a worker
+    // thread, as the other commands do. Called here on the async runtime it panicked ("Cannot
+    // start a runtime from within a runtime"), the build never began and the page waited on its
+    // first step for good (bloodborne-mac issue #9).
+    let settings_paths = p.clone();
+    let game_dir = blocking(move || Ok(expand(&str_setting(&load_settings(&settings_paths), "game_dir")))).await?;
     recomp::build(app, p.data, p.python, p.game_root, game_dir, state.recomp).await
 }
 #[tauri::command]

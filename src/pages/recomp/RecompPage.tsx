@@ -15,11 +15,12 @@ export function RecompPage() {
   const set = useSetting();
   const { data } = useRecompStatus();
   const progress = useRecompStore((s) => s.progress);
+  const running = useRecompStore((s) => s.running);
   const build = useRecompBuild();
   const cancel = useRecompCancel();
   const remove = useRecompDelete();
   const status = data?.status;
-  const building = status?.state === "building" || build.isPending;
+  const building = status?.state === "building" || build.isPending || running;
   const library = status?.library;
   const ready = status?.state === "ready";
   const noGame = !settings.game_dir;
