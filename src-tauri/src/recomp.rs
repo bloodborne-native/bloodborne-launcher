@@ -137,7 +137,16 @@ async fn toolchain(app: &AppHandle, root: &Path, cancel: &AtomicBool) -> Result<
     }
     fs::create_dir_all(root).map_err(|e| e.to_string())?;
     let archive = root.join("toolchain.tar.xz");
-    let client = reqwest::Client::builder().user_agent("bloodborne-launcher").build().map_err(|e| e.to_string())?;
+    // The page shows the download from its first byte; a connection that stops sending fails after a
+    // minute instead of leaving the build waiting with no word (issue #9 of bloodborne-mac: 84 minutes
+    // on the page's first step, no download ever reported).
+    progress(app, json!({"step": "download", "done": 0, "total": 0}));
+    let client = reqwest::Client::builder()
+        .user_agent("bloodborne-launcher")
+        .connect_timeout(std::time::Duration::from_secs(20))
+        .read_timeout(std::time::Duration::from_secs(60))
+        .build()
+        .map_err(|e| e.to_string())?;
     let mut response = client.get(TOOLCHAIN_URL).send().await.map_err(|e| format!("Downloading the compiler: {e}"))?;
     if !response.status().is_success() {
         return Err(format!("Downloading the compiler: {}", response.status()));
