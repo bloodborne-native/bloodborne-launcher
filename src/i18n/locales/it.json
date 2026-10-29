@@ -32,8 +32,6 @@
     "passwordPromptHint": "Password per {{account}}. Verrà usata solo per questa sessione.",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "Non ancora supportato. BBSC mantiene attive le sessioni cooperative attraverso morti, lanterne e combattimenti con i boss, ma si basa su una conoscenza dettagliata del codice del gioco che questo progetto non include. Campane, evocazioni, messaggi e macchie di sangue funzionano senza. Tutti in una sessione BBSC devono averlo installato, quindi non puoi unirti a quelle sessioni senza. Il supporto potrebbe arrivare in futuro, in base allo sviluppo e ai confronti con lo sviluppatore di BBSC.",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "Permette al gioco di chiedere al router di aprire una porta.",
     "server": "shadNet server",

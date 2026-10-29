@@ -32,8 +32,6 @@
     "passwordPromptHint": "Wachtwoord voor {{account}}. Het wordt alleen voor deze sessie gebruikt.",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "Nog niet ondersteund. BBSC houdt co-opsessies gaande door doden, lantaarns en baasgevechten heen, maar steunt op gedetailleerde kennis van de code van het spel die dit project niet bevat. Klokken, oproepen, berichten en bloedvlekken werken zonder. Iedereen in een BBSC-sessie moet het geïnstalleerd hebben, dus zonder kun je die sessies niet betreden. Ondersteuning komt mogelijk later, afhankelijk van verdere ontwikkeling en overleg met de ontwikkelaar van BBSC.",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "Laat het spel je router vragen een poort te openen.",
     "server": "shadNet server",

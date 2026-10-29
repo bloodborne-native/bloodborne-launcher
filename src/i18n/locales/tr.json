@@ -32,8 +32,6 @@
     "passwordPromptHint": "{{account}} için parola. Yalnızca bu oturumda kullanılacak.",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "Henüz desteklenmiyor. BBSC, ortak oyun oturumlarını ölümler, fenerler ve boss savaşları boyunca sürdürür, ancak bu projenin içermediği, oyunun koduna dair ayrıntılı bilgiye dayanır. Çanlar, çağırmalar, mesajlar ve kan lekeleri onsuz da çalışır. BBSC oturumundaki herkesin onu kurmuş olması gerekir, bu yüzden onsuz bu oturumlara katılamazsınız. Destek, ileriki geliştirmelere ve BBSC geliştiricisiyle yapılacak görüşmelere bağlı olarak daha sonra gelebilir.",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "Oyunun yönlendiricinizden bir port açmasını istemesine izin verir.",
     "server": "shadNet server",

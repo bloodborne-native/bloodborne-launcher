@@ -32,8 +32,6 @@
     "passwordPromptHint": "{{account}} 的密码。仅用于本次会话。",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "尚不支持。BBSC 能让合作会话在死亡、灯火和首领战之间持续，但它依赖对游戏代码的详细了解，而本项目不包含这些内容。钟、召唤、讯息和血迹无需它即可使用。BBSC 会话中的每个人都必须安装它，因此没有它就无法加入这些会话。今后可能会支持，取决于后续开发以及与 BBSC 开发者的沟通。",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "允许游戏请求路由器打开端口。",
     "server": "shadNet server",

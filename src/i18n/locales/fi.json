@@ -32,8 +32,6 @@
     "passwordPromptHint": "Tilin {{account}} salasana. Sitä käytetään vain tässä istunnossa.",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "Ei vielä tuettu. BBSC pitää yhteistyöistunnot käynnissä kuolemien, lyhtyjen ja pomotaisteluiden yli, mutta se perustuu yksityiskohtaiseen tietoon pelin koodista, jota tämä projekti ei sisällä. Kellot, kutsut, viestit ja veritahrat toimivat ilman sitä. Kaikilla BBSC-istunnon pelaajilla on oltava se asennettuna, joten et voi liittyä niihin ilman sitä. Tuki voi tulla myöhemmin jatkokehityksen ja BBSC:n kehittäjän kanssa käytävien keskustelujen mukaan.",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "Anna pelin pyytää reititintäsi avaamaan portin.",
     "server": "shadNet server",

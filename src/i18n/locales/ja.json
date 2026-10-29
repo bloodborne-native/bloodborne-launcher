@@ -32,8 +32,6 @@
     "passwordPromptHint": "{{account}} のパスワード。このセッションでのみ使われます。",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "まだ対応していません。BBSC は死亡、灯り、ボス戦をまたいで協力セッションを維持しますが、このプロジェクトに含まれないゲームのコードの詳しい知識に依存しています。鐘、召喚、メッセージ、血痕は BBSC なしでも動作します。BBSC のセッションには全員のインストールが必要なため、BBSC なしではそのセッションに参加できません。今後の開発や BBSC の開発者との話し合いによっては、将来対応する可能性があります。",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "ゲームがルーターにポートの開放を要求できるようにします。",
     "server": "shadNet server",

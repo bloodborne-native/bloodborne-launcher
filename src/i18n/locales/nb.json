@@ -32,8 +32,6 @@
     "passwordPromptHint": "Passord for {{account}}. Det brukes bare i denne økten.",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "Støttes ikke ennå. BBSC holder samarbeidsøkter i gang gjennom dødsfall, lykter og bosskamper, men bygger på detaljert kunnskap om spillets kode som dette prosjektet ikke inneholder. Klokker, tilkallinger, meldinger og blodflekker fungerer uten. Alle i en BBSC-økt må ha det installert, så du kan ikke bli med i slike økter uten. Støtte kan komme senere, avhengig av videre utvikling og samtaler med BBSC-utvikleren.",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "La spillet be ruteren din om å åpne en port.",
     "server": "shadNet server",

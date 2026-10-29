@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui";
 import { PageHeader, SelectRow, SettingsSection, SwitchRow, TextRow } from "@/components/settings";
 import { useConfig, useProfiles, useSetting, useSettingsData } from "@/hooks";
 import { api, queryKeys } from "@/lib";
@@ -41,11 +40,6 @@ export function OnlinePage() {
                   { value: "huntersdream", label: t("online.huntersDream"), literal: true }]}
         onChange={(value) => set("online_pool", value)} />
     </SettingsSection>
-    {/* BBSC is not carried: its code is built on knowledge of the game's own program. */}
-    <Alert className="mb-5">
-      <AlertTitle>{t("online.seamlessCoop")}</AlertTitle>
-      <AlertDescription>{t("online.seamlessCoopUnsupported")}</AlertDescription>
-    </Alert>
     {thd ? <>
       <SettingsSection title={t("online.thdAccount")} description={t("online.thdAccountHint")}>
         <TextRow title={t("online.onlineId")} value={settings.thd_online_id}

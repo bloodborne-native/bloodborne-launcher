@@ -32,8 +32,6 @@
     "passwordPromptHint": "{{account}} 的密碼。僅用於本次工作階段。",
     "coop": "Co-op servers",
     "coopHint": "Change these only if your group uses a different server.",
-    "seamlessCoop": "Seamless co-op (BBSC)",
-    "seamlessCoopUnsupported": "尚未支援。BBSC 能讓合作工作階段在死亡、燈火和首領戰之間持續，但它仰賴對遊戲程式碼的詳細了解，而本專案不包含這些內容。鐘、召喚、訊息和血跡不需要它也能使用。BBSC 工作階段中的每個人都必須安裝它，因此沒有它就無法加入這些工作階段。日後可能會支援，取決於後續開發以及與 BBSC 開發者的討論。",
     "upnp": "Automatic router setup (UPnP)",
     "upnpHint": "允許遊戲要求路由器開啟連接埠。",
     "server": "shadNet server",
