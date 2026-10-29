@@ -8,7 +8,7 @@ const minutes = (ms: number) => Math.max(1, Math.round(ms / 60000));
 /** A running build: its step, a bar (download bytes or files compiled), elapsed time and, while
  * compiling, an estimate from the rate so far. */
 export function RecompProgressBar({ progress }: { progress: RecompProgress }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { startedAt, compileFrom } = useRecompStore();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -17,15 +17,18 @@ export function RecompProgressBar({ progress }: { progress: RecompProgress }) {
   }, []);
   const { step, done = 0, total = 0 } = progress;
   const fraction = total > 0 ? Math.min(1, done / total) : null;
+  const { task, functions } = progress;
   const detail = step === "download" && total > 0
     ? t("recomp.downloadDetail", { done: Math.round(done / 1e6), total: Math.round(total / 1e6) })
-    : step === "compile" && total > 0 ? t("recomp.compileDetail", { done, total }) : null;
+    : step === "compile" && total > 0 ? t("recomp.compileDetail", { done, total })
+    : (step === "scan" || step === "generate") && functions ? t("recomp.functionsDetail", { functions: functions.toLocaleString(i18n.language) })
+    : null;
   // Remaining: the files left at this rate (resumed builds count from where they started).
   const rate = step === "compile" && compileFrom && done > compileFrom.done ? (now - compileFrom.at) / (done - compileFrom.done) : null;
   const left = rate && total > done ? rate * (total - done) : null;
   return <div className="grid gap-2">
     <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
-      <span>{t(`recomp.steps.${step === "done" || step === "error" || step === "cancelled" ? "link" : step}`)}</span>
+      <span>{task ? t(`recomp.tasks.${task}`) : t(`recomp.steps.${step === "done" || step === "error" || step === "cancelled" ? "link" : step}`)}</span>
       {detail && <span className="tabular-nums text-muted-foreground">{detail}</span>}
     </div>
     <div className="h-2 overflow-hidden rounded-full bg-night-600" role="progressbar" aria-valuemin={0} aria-valuemax={100}

@@ -421,6 +421,7 @@
     "elapsed": "{{minutes}} min kulunut",
     "remaining": "Noin {{minutes}} min jäljellä",
     "steps": {
+      "start": "Käännös käynnistyy",
       "download": "Ladataan kääntäjää",
       "unpack": "Puretaan kääntäjää",
       "check": "Tarkistetaan peliäsi",
@@ -429,6 +430,13 @@
       "generate": "Kirjoitetaan pelin funktiot C-kielellä",
       "compile": "Käännetään",
       "link": "Linkitetään kirjastoa"
-    }
+    },
+    "tasks": {
+      "executable": "Luetaan pelin suoritettavaa tiedostoa",
+      "pointers": "Etsitään pelin koodiosoittimia",
+      "functions": "Etsitään pelin funktioita",
+      "imports": "Nimetään pelin tuonteja"
+    },
+    "functionsDetail": "{{functions}} funktiota"
   }
 }

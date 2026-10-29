@@ -609,6 +609,7 @@
     "elapsed": "{{minutes}} min decorridos",
     "remaining": "Cerca de {{minutes}} min restantes",
     "steps": {
+      "start": "Iniciando a compilação",
       "download": "Baixando o compilador",
       "unpack": "Descompactando o compilador",
       "check": "Verificando seu jogo",
@@ -617,6 +618,13 @@
       "generate": "Escrevendo as funções do jogo em C",
       "compile": "Compilando",
       "link": "Ligando a biblioteca"
-    }
+    },
+    "tasks": {
+      "executable": "Lendo o executável do jogo",
+      "pointers": "Procurando ponteiros de código no jogo",
+      "functions": "Procurando as funções do jogo",
+      "imports": "Nomeando as importações do jogo"
+    },
+    "functionsDetail": "{{functions}} funções"
   }
 }

@@ -250,7 +250,7 @@ async fn run(app: &AppHandle, data: &Path, python: &Path, script: &Path, game_di
         for line in BufReader::new(stdout).lines().map_while(std::result::Result::ok) {
             let Ok(event) = serde_json::from_str::<Value>(&line) else { continue };
             match event["event"].as_str() {
-                Some("step") => progress(&app, json!({"step": event["step"], "functions": event["functions"]})),
+                Some("step") => progress(&app, json!({"step": event["step"], "task": event["task"], "functions": event["functions"]})),
                 Some("compile") => progress(&app, json!({"step": "compile", "done": event["done"], "total": event["total"]})),
                 Some("error") => failure = event["message"].as_str().map(str::to_string),
                 _ => {}

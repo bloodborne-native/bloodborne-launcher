@@ -421,6 +421,7 @@
     "elapsed": "{{minutes}} dk geçti",
     "remaining": "Yaklaşık {{minutes}} dk kaldı",
     "steps": {
+      "start": "Derleme başlatılıyor",
       "download": "Derleyici indiriliyor",
       "unpack": "Derleyici açılıyor",
       "check": "Oyununuz kontrol ediliyor",
@@ -429,6 +430,13 @@
       "generate": "Oyunun işlevleri C olarak yazılıyor",
       "compile": "Derleniyor",
       "link": "Kitaplık bağlanıyor"
-    }
+    },
+    "tasks": {
+      "executable": "Oyunun yürütülebilir dosyası okunuyor",
+      "pointers": "Oyundaki kod işaretçileri bulunuyor",
+      "functions": "Oyunun işlevleri bulunuyor",
+      "imports": "Oyunun içe aktarmaları adlandırılıyor"
+    },
+    "functionsDetail": "{{functions}} işlev"
   }
 }

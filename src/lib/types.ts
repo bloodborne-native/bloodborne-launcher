@@ -202,9 +202,11 @@ export type RecompStatus = {
 };
 /** A build's progress (the "recomp-progress" event). */
 export type RecompProgress = {
-  step: "download" | "unpack" | "check" | "extract" | "scan" | "generate" | "compile" | "link" | "done" | "error" | "cancelled";
+  step: "start" | "download" | "unpack" | "check" | "extract" | "scan" | "generate" | "compile" | "link" | "done" | "error" | "cancelled";
+  /** What the step is doing now (extract: executable, pointers; scan: functions, imports). */
+  task?: "executable" | "pointers" | "functions" | "imports" | null;
   done?: number;
   total?: number;
-  functions?: number;
+  functions?: number | null;
   message?: string;
 };

@@ -419,6 +419,7 @@
     "elapsed": "已用 {{minutes}} 分钟",
     "remaining": "约剩 {{minutes}} 分钟",
     "steps": {
+      "start": "正在开始构建",
       "download": "正在下载编译器",
       "unpack": "正在解压编译器",
       "check": "正在检查你的游戏",
@@ -427,6 +428,13 @@
       "generate": "正在把游戏的函数写成 C",
       "compile": "正在编译",
       "link": "正在链接库"
-    }
+    },
+    "tasks": {
+      "executable": "正在读取游戏的可执行文件",
+      "pointers": "正在查找游戏中的代码指针",
+      "functions": "正在查找游戏的函数",
+      "imports": "正在命名游戏的导入项"
+    },
+    "functionsDetail": "{{functions}} 个函数"
   }
 }

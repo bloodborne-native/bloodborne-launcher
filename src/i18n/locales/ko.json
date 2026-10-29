@@ -419,6 +419,7 @@
     "elapsed": "{{minutes}}분 경과",
     "remaining": "약 {{minutes}}분 남음",
     "steps": {
+      "start": "빌드를 시작하는 중",
       "download": "컴파일러 내려받는 중",
       "unpack": "컴파일러 압축 푸는 중",
       "check": "게임 확인 중",
@@ -427,6 +428,13 @@
       "generate": "게임 함수를 C로 작성하는 중",
       "compile": "컴파일하는 중",
       "link": "라이브러리 링크하는 중"
-    }
+    },
+    "tasks": {
+      "executable": "게임 실행 파일을 읽는 중",
+      "pointers": "게임의 코드 포인터를 찾는 중",
+      "functions": "게임의 함수를 찾는 중",
+      "imports": "게임의 가져오기 이름을 지정하는 중"
+    },
+    "functionsDetail": "함수 {{functions}}개"
   }
 }

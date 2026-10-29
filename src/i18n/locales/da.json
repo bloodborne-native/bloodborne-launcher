@@ -421,6 +421,7 @@
     "elapsed": "{{minutes}} min gået",
     "remaining": "Cirka {{minutes}} min tilbage",
     "steps": {
+      "start": "Starter bygningen",
       "download": "Henter compileren",
       "unpack": "Pakker compileren ud",
       "check": "Tjekker dit spil",
@@ -429,6 +430,13 @@
       "generate": "Skriver spillets funktioner som C",
       "compile": "Kompilerer",
       "link": "Linker biblioteket"
-    }
+    },
+    "tasks": {
+      "executable": "Læser spillets eksekverbare fil",
+      "pointers": "Finder kodepegere i spillet",
+      "functions": "Finder spillets funktioner",
+      "imports": "Navngiver spillets importer"
+    },
+    "functionsDetail": "{{functions}} funktioner"
   }
 }

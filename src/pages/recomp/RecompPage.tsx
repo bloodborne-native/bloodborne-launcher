@@ -44,7 +44,7 @@ export function RecompPage() {
       <div className="grid gap-4 px-4 pb-4 pt-1 sm:px-5">
         {status && !status.available ? <Message tone="warning">{t("recomp.unavailable")}</Message>
           : noGame && !library ? <Message tone="warning">{t("recomp.needsGame")}</Message>
-          : building ? (progress ? <RecompProgressBar progress={progress} /> : <p className="text-sm text-muted-foreground">{t("recomp.steps.check")}</p>)
+          : building ? (progress ? <RecompProgressBar progress={progress} /> : <p className="text-sm text-muted-foreground">{t("recomp.steps.start")}</p>)
           : <p className="text-sm">
             {status?.state === "stale" ? t(status.reason === "game" ? "recomp.staleGame" : "recomp.staleRecompiler")
               : library ? t("recomp.ready", { date: new Date(library.built).toLocaleDateString(i18n.language), functions: library.functions.toLocaleString(i18n.language), size: megabytes(library.size) })

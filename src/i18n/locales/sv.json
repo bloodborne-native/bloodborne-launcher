@@ -421,6 +421,7 @@
     "elapsed": "{{minutes}} min har gått",
     "remaining": "Ungefär {{minutes}} min kvar",
     "steps": {
+      "start": "Startar bygget",
       "download": "Laddar ned kompilatorn",
       "unpack": "Packar upp kompilatorn",
       "check": "Kontrollerar ditt spel",
@@ -429,6 +430,13 @@
       "generate": "Skriver spelets funktioner som C",
       "compile": "Kompilerar",
       "link": "Länkar biblioteket"
-    }
+    },
+    "tasks": {
+      "executable": "Läser spelets körbara fil",
+      "pointers": "Hittar kodpekare i spelet",
+      "functions": "Hittar spelets funktioner",
+      "imports": "Namnger spelets importer"
+    },
+    "functionsDetail": "{{functions}} funktioner"
   }
 }

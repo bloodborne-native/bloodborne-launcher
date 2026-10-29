@@ -421,6 +421,7 @@
     "elapsed": "{{minutes}} Min. vergangen",
     "remaining": "Noch etwa {{minutes}} Min.",
     "steps": {
+      "start": "Build wird gestartet",
       "download": "Compiler wird heruntergeladen",
       "unpack": "Compiler wird entpackt",
       "check": "Dein Spiel wird geprüft",
@@ -429,6 +430,13 @@
       "generate": "Funktionen des Spiels werden als C geschrieben",
       "compile": "Kompilieren",
       "link": "Bibliothek wird gelinkt"
-    }
+    },
+    "tasks": {
+      "executable": "Ausführbare Datei des Spiels wird gelesen",
+      "pointers": "Code-Zeiger im Spiel werden gesucht",
+      "functions": "Funktionen des Spiels werden gesucht",
+      "imports": "Importe des Spiels werden benannt"
+    },
+    "functionsDetail": "{{functions}} Funktionen"
   }
 }

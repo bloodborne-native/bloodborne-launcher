@@ -23,7 +23,7 @@ export const useRecompStore = create<RecompState>((set, get) => ({
   startedAt: null,
   compileFrom: null,
   running: false,
-  start: () => set({ progress: { step: "check" }, startedAt: Date.now(), compileFrom: null, running: true }),
+  start: () => set({ progress: { step: "start" }, startedAt: Date.now(), compileFrom: null, running: true }),
   stop: () => set({ running: false }),
   update: (progress) => {
     const state = get();

@@ -421,6 +421,7 @@
     "elapsed": "{{minutes}} min verstreken",
     "remaining": "Nog ongeveer {{minutes}} min",
     "steps": {
+      "start": "Build wordt gestart",
       "download": "Compiler downloaden",
       "unpack": "Compiler uitpakken",
       "check": "Je spel controleren",
@@ -429,6 +430,13 @@
       "generate": "Functies van het spel als C schrijven",
       "compile": "Compileren",
       "link": "Bibliotheek linken"
-    }
+    },
+    "tasks": {
+      "executable": "Uitvoerbaar bestand van het spel lezen",
+      "pointers": "Codeverwijzingen in het spel zoeken",
+      "functions": "Functies van het spel zoeken",
+      "imports": "Imports van het spel benoemen"
+    },
+    "functionsDetail": "{{functions}} functies"
   }
 }

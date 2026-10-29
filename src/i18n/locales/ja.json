@@ -419,6 +419,7 @@
     "elapsed": "{{minutes}} 分経過",
     "remaining": "残り約 {{minutes}} 分",
     "steps": {
+      "start": "ビルドを開始しています",
       "download": "コンパイラーをダウンロード中",
       "unpack": "コンパイラーを展開中",
       "check": "ゲームを確認中",
@@ -427,6 +428,13 @@
       "generate": "ゲームの関数を C で書き出し中",
       "compile": "コンパイル中",
       "link": "ライブラリをリンク中"
-    }
+    },
+    "tasks": {
+      "executable": "ゲームの実行ファイルを読み込んでいます",
+      "pointers": "ゲーム内のコードポインターを探しています",
+      "functions": "ゲームの関数を探しています",
+      "imports": "ゲームのインポートに名前を付けています"
+    },
+    "functionsDetail": "{{functions}} 個の関数"
   }
 }

@@ -419,6 +419,7 @@
     "elapsed": "已過 {{minutes}} 分鐘",
     "remaining": "約剩 {{minutes}} 分鐘",
     "steps": {
+      "start": "正在開始建置",
       "download": "正在下載編譯器",
       "unpack": "正在解壓縮編譯器",
       "check": "正在檢查你的遊戲",
@@ -427,6 +428,13 @@
       "generate": "正在把遊戲的函式寫成 C",
       "compile": "正在編譯",
       "link": "正在連結函式庫"
-    }
+    },
+    "tasks": {
+      "executable": "正在讀取遊戲的執行檔",
+      "pointers": "正在尋找遊戲中的程式碼指標",
+      "functions": "正在尋找遊戲的函式",
+      "imports": "正在命名遊戲的匯入項目"
+    },
+    "functionsDetail": "{{functions}} 個函式"
   }
 }

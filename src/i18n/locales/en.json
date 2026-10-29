@@ -638,6 +638,7 @@
     "elapsed": "{{minutes}} min elapsed",
     "remaining": "About {{minutes}} min left",
     "steps": {
+      "start": "Starting the build",
       "download": "Downloading the compiler",
       "unpack": "Unpacking the compiler",
       "check": "Checking your game",
@@ -646,6 +647,13 @@
       "generate": "Writing the game's functions as C",
       "compile": "Compiling",
       "link": "Linking the library"
-    }
+    },
+    "tasks": {
+      "executable": "Reading the game's executable",
+      "pointers": "Finding code pointers in the game",
+      "functions": "Finding the game's functions",
+      "imports": "Naming the game's imports"
+    },
+    "functionsDetail": "{{functions}} functions"
   }
 }

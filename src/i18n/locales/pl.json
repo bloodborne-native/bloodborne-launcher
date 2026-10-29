@@ -425,6 +425,7 @@
     "elapsed": "Upłynęło: {{minutes}} min",
     "remaining": "Pozostało około {{minutes}} min",
     "steps": {
+      "start": "Uruchamianie kompilacji",
       "download": "Pobieranie kompilatora",
       "unpack": "Rozpakowywanie kompilatora",
       "check": "Sprawdzanie gry",
@@ -433,6 +434,13 @@
       "generate": "Zapisywanie funkcji gry w C",
       "compile": "Kompilowanie",
       "link": "Linkowanie biblioteki"
-    }
+    },
+    "tasks": {
+      "executable": "Odczytywanie pliku wykonywalnego gry",
+      "pointers": "Wyszukiwanie wskaźników kodu w grze",
+      "functions": "Wyszukiwanie funkcji gry",
+      "imports": "Nazywanie importów gry"
+    },
+    "functionsDetail": "Funkcje: {{functions}}"
   }
 }
