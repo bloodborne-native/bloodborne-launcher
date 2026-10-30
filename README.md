@@ -7,7 +7,8 @@ Its source is included as the `launcher/` submodule of
 [bloodborne-mac](https://github.com/bloodborne-native/bloodborne-mac), which packages it as the
 macOS app around the game (`packaging/macos.sh`). Player guides are in the app's
 [docs](https://github.com/bloodborne-native/bloodborne-mac/tree/main/docs/guide); the launcher's
-own design is in [docs](docs/README.md).
+own design is in [docs](docs/README.md). [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) builds it with the game inside as an
+iPhone app (a proof of concept).
 
 The launcher has a game folder check, graphics, controls (controller choice and button mapping),
 game options, online play, user profiles, saves with backups, a save editor, trophies, mods,
@@ -54,7 +55,8 @@ bloodborne-mac; the save feature's stages:
 ## Platforms and screen sizes
 
 The launcher is meant for macOS, Windows and Linux, and later Android and iOS. The game integration
-exists on macOS only; the launcher itself also builds and runs on the iPhone (below).
+exists on macOS, and on the iPhone in [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) (a proof of concept: the
+game runs in the launcher's process; the iOS project is below).
 
 - **System differences** live in `src-tauri/src/platform.rs`: the data folder (macOS
   `~/Library/Application Support/bloodborne_mac`; Linux `$XDG_DATA_HOME/bloodborne-native`, by
