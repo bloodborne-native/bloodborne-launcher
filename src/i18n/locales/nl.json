@@ -78,7 +78,7 @@
     "fpsLimit": "Framerate-limiet",
     "fpsLimitHint": "Zet op 0 voor geen limiet.",
     "title": "Graphics", "subtitle": "Deze instellingen zijn ook in het spel beschikbaar (F1 of L3 + R3).", "display": "Beeld",
-    "outputRes": "Uitvoerresolutie", "outputResHint": "De resolutie op het scherm. Upscaling vult de extra details aan.", "aspectRatio": "Beeldverhouding", "aspectRatioHint": "Bredere schermen tonen meer aan de zijkanten; hogere schermen meer boven en onder. De HUD blijft bij de randen.", "aspectAuto": "Automatisch (dit scherm)", "fullscreen": "Volledig scherm", "monitor": "Monitor", "monitorHint": "Kies welk scherm het spelvenster of de volledige schermmodus gebruikt.", "monitorMain": "Hoofdscherm",
+    "outputRes": "Uitvoerresolutie", "outputResHint": "De resolutie op het scherm. Upscaling vult de extra details aan.", "outputResHintIos": "De resolutie waarin het spel tekent. Op dit apparaat hoogstens 540 lijnen: een groter beeld past niet in wat het systeem een app toestaat.", "aspectRatio": "Beeldverhouding", "aspectRatioHint": "Bredere schermen tonen meer aan de zijkanten; hogere schermen meer boven en onder. De HUD blijft bij de randen.", "aspectAuto": "Automatisch (dit scherm)", "aspectAutoScreen": "Automatisch (dit scherm)", "fullscreen": "Volledig scherm", "monitor": "Monitor", "monitorHint": "Kies welk scherm het spelvenster of de volledige schermmodus gebruikt.", "monitorMain": "Hoofdscherm",
     "memory": "Geschat geheugen",
     "memoryHint": "Geschat geheugengebruik van spel en graphics bij de volgende start, met deze instellingen.",
     "memoryHigh": "Dit gebruikt meer dan 75% van het geheugen van je apparaat. Het spel kan trager worden of afsluiten. Probeer een lagere uitvoerresolutie of kwaliteitsinstelling.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Besturing", "subtitle": "Toewijzingen worden opgeslagen in bbport.ini en gelden als het spel start.",
-    "controller": "Controller", "controllerHint": "De gekozen controller wordt gebruikt zodra hij verbonden is.", "auto": "Automatisch (de eerst verbonden)",
+    "controller": "Controller", "controllerHint": "De gekozen controller wordt gebruikt zodra hij verbonden is.", "touchControls": "Bediening op het scherm", "touchControlsHint": "Knoppen en sticks over het spel, om met aanraking te spelen. Automatisch toont ze zolang er geen controller is aangesloten.", "auto": "Automatisch (de eerst verbonden)",
     "notConnected": "{{name}} (niet verbonden)", "noControllers": "Geen controller gevonden. Verbind er een via USB of Bluetooth en vernieuw daarna.",
     "bindings": "Toewijzingen", "gamepad": "Controller", "keyboard": "Toetsenbord", "assign": "Toewijzen",
     "press": "Druk op een knop of toets… (Esc om te annuleren)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Ruim (standaard)", "precise": "Precies", "off": "Uit" },
     "preupload": { "normal": "Normaal", "full": "Volledig", "fullHint": "Gebruikt ongeveer 3 GB meer GPU-geheugen.", "off": "Uit" },
     "live": { "0": "Uit (sneller)", "1": "Aan", "auto": "Automatisch" },
+    "touch": {
+      "auto": "Automatisch",
+      "on": "Aan",
+      "off": "Uit"
+    },
     "effects": {
       "effect_chromatic_aberration": "Chromatische aberratie", "effect_dof": "Scherptediepte", "effect_motion_blur": "Bewegingsonscherpte",
       "effect_ssao": "Omgevingsocclusie (SSAO)", "effect_game_aa": "Anti-aliasing van het spel", "effect_dynamic_shadows": "Schaduwen van dynamische lichten",

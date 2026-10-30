@@ -23,6 +23,7 @@ const config: Config = {
     readbacks: "",
     preupload: "",
     frame_stats: true,
+    touch_controls: "",
     save_log: false,
     hide_launcher: true,
     trophy_notifications: true,
@@ -56,7 +57,8 @@ const config: Config = {
   },
   bundled: false,
   version: "0.8.0",
-  platform: "macos",
+  // ?platform=ios (browser preview, screenshots): the iOS launcher's pages.
+  platform: typeof window !== "undefined" && new URLSearchParams(window.location.search).get("platform") || "macos",
   memory_mb: 18432,
   running: false,
   online_password_saved: false,

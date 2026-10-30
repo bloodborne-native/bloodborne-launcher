@@ -142,9 +142,11 @@
     "display": "Display",
     "outputRes": "Output resolution",
     "outputResHint": "The resolution shown on screen. Upscaling fills in the extra detail.",
+    "outputResHintIos": "The resolution the game draws at. On this device at most 540 lines tall: a larger picture does not fit in what the system allows an app.",
     "aspectRatio": "Aspect ratio",
     "aspectRatioHint": "Wider screens show more at the sides; taller screens show more at the top and bottom. The HUD stays near the edges.",
     "aspectAuto": "Auto (this monitor)",
+    "aspectAutoScreen": "Auto (this screen)",
     "memory": "Estimated memory",
     "memoryHint": "Estimated memory use by the game and graphics at the next launch, with these settings.",
     "memoryHigh": "This uses more than 75% of your device’s memory. The game may slow down or quit. Try a lower output resolution or quality preset.",
@@ -183,6 +185,8 @@
     "subtitle": "Bindings are saved in bbport.ini and take effect when the game starts.",
     "controller": "Controller",
     "controllerHint": "The selected controller will be used when it’s connected.",
+    "touchControls": "On-screen controls",
+    "touchControlsHint": "Buttons and sticks drawn over the game, for playing by touch. Auto shows them while no controller is connected.",
     "auto": "Automatic (first connected)",
     "notConnected": "{{name}} (not connected)",
     "noControllers": "No controller found. Connect one by USB or Bluetooth, then refresh.",
@@ -391,6 +395,11 @@
       "0": "Off (faster)",
       "1": "On",
       "auto": "Auto"
+    },
+    "touch": {
+      "auto": "Auto",
+      "on": "On",
+      "off": "Off"
     },
     "effects": {
       "effect_chromatic_aberration": "Chromatic aberration",

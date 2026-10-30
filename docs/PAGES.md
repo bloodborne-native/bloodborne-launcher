@@ -34,8 +34,8 @@ for it each time and it goes to that launch only.
 
 | Tab | Folder | What it holds |
 |---|---|---|
-| Graphics | `graphics/` | Aspect ratio (Auto, 4:3, 16:10, 16:9, 21:9, 32:9) and the output resolutions of that ratio, with the memory estimate; monitor, fullscreen, presentation; frame-rate mode and limit, FPS counter (size, position), the Metal HUD (macOS); upscaling (below), sharpening and its strength, object motion vectors; model detail; effects (all but SSR switch while the game runs) |
-| Controls | `controls/` | The controller, and controller and keyboard bindings with a reset |
+| Graphics | `graphics/` | Aspect ratio (Auto, 4:3, 16:10, 16:9, 21:9, 32:9) and the output resolutions of that ratio, with the memory estimate; monitor, fullscreen, presentation; frame-rate mode and limit, FPS counter (size, position), the Metal HUD (macOS); upscaling (below), sharpening and its strength, object motion vectors; model detail; effects (all but SSR switch while the game runs). iOS: Auto is the screen's own shape (the default), the resolutions go up to 540 lines (the address space), and there is no monitor, fullscreen, presentation, memory estimate or upscaling |
+| Controls | `controls/` | The on-screen controls on touch devices (Auto: while no controller is connected, On, Off; `BB_TOUCH_CONTROLS`), the controller, and controller and keyboard bindings with a reset |
 | Game | `game/` | The game's language, skipping the intro videos, the active profile's save folder |
 | Mods | `mods/` | Mods on or off, their folder, the list with each mod's switch and order |
 | Recompiled code | `recomp/` | Translated or recompiled game code, and building the library ([Recompiled code](RECOMPILED_CODE.md)) |
@@ -52,5 +52,5 @@ with a row that copies AMD's two files from the player's own DLL into the data f
 | Tab | Folder | What it holds |
 |---|---|---|
 | Patches | `patches/` | Third-party patches, their folder and switches |
-| Advanced | `advanced/` | Launcher: its language, hiding during gameplay ([lifecycle](LAUNCHER_LIFECYCLE.md)), trophy notifications ([Trophies](TROPHIES.md)); updates ([Updates](UPDATES.md)); performance: the renderer (macOS: native Metal by default, MoltenVK as a fallback), draw pipeline, readbacks, preupload, live resolution; diagnostics: free camera, debug menu, frame statistics, saving the log, crash diagnostics, GPU profiling, extra environment variables; the data and backup folders |
+| Advanced | `advanced/` | Launcher: its language, hiding during gameplay (not on iOS, where the game takes the app; [lifecycle](LAUNCHER_LIFECYCLE.md)), trophy notifications ([Trophies](TROPHIES.md)); updates ([Updates](UPDATES.md)); performance: the renderer (macOS: native Metal by default, MoltenVK as a fallback), draw pipeline, readbacks, preupload, live resolution (not on iOS); diagnostics: free camera, debug menu, frame statistics, saving the log, crash diagnostics, GPU profiling, extra environment variables; the data and backup folders |
 | Log | `log/` | The game's output, following it, copy, clear, and the logs folder |

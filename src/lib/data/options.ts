@@ -38,9 +38,31 @@ const OUTPUTS: Record<string, [number, number][]> = {
   "32:9": [[1280, 360], [1920, 540], [2560, 720], [3840, 1080], [5120, 1440], [7680, 2160]],
 };
 
+/** iOS: the tallest output the iPhone's address space allows (bloodborne-ios's app_main.c). */
+export const IOS_MAX_HEIGHT = 540;
+
+/** This device's screen in pixels, landscape (wider than tall). */
+export function screenPixels(): [number, number] {
+  const ratio = window.devicePixelRatio || 1;
+  const a = Math.round(window.screen.width * ratio), b = Math.round(window.screen.height * ratio);
+  return a >= b ? [a, b] : [b, a];
+}
+
+/** The outputs of an aspect ratio. iOS: up to IOS_MAX_HEIGHT lines, and Auto at the screen's own
+ *  ratio (2868 x 1320: 1174 x 540), as the app draws it. */
+function outputSizes(aspect: string, ios: boolean): [number, number][] {
+  if (!ios) return OUTPUTS[aspect] ?? OUTPUTS["16:9"];
+  if (aspect === "auto") {
+    const [w, h] = screenPixels();
+    const ratio = h > 0 ? w / h : 16 / 9;
+    return [360, IOS_MAX_HEIGHT].map((height) => [Math.round((height * ratio) / 2) * 2, height]);
+  }
+  return (OUTPUTS[aspect] ?? OUTPUTS["16:9"]).filter(([, h]) => h <= IOS_MAX_HEIGHT);
+}
+
 /** The output choices of an aspect ratio, with `current` added when it is another size. */
-export function outputOptions(aspect: string, current: string): Option<string>[] {
-  const sizes = OUTPUTS[aspect] ?? OUTPUTS["16:9"];
+export function outputOptions(aspect: string, current: string, ios = false): Option<string>[] {
+  const sizes = outputSizes(aspect, ios);
   const options: Option<string>[] = sizes.map(([w, h]) => ({ value: `${w}x${h}`, label: `${w} × ${h}`, literal: true as const }));
   if (!options.some((o) => o.value === current)) {
     const [w, h] = current.split("x");
@@ -50,9 +72,9 @@ export function outputOptions(aspect: string, current: string): Option<string>[]
 }
 
 /** The output of `aspect` nearest `current` in height (another aspect ratio keeps the height). */
-export function nearestOutput(aspect: string, current: string): string {
+export function nearestOutput(aspect: string, current: string, ios = false): string {
   const height = Number(current.split("x")[1]) || 1080;
-  const sizes = OUTPUTS[aspect] ?? OUTPUTS["16:9"];
+  const sizes = outputSizes(aspect, ios);
   const [w, h] = sizes.reduce((best, s) => (Math.abs(s[1] - height) < Math.abs(best[1] - height) ? s : best));
   return `${w}x${h}`;
 }
@@ -102,6 +124,13 @@ export const GAME_LANGUAGES: Option<string>[] = [
   { value: "9", label: "한국어", literal: true },
   { value: "11", label: "简体中文", literal: true },
   { value: "10", label: "繁體中文", literal: true },
+];
+
+/** The on-screen pad (the launcher setting touch_controls, BB_TOUCH_CONTROLS). */
+export const TOUCH_CONTROLS: Option<string>[] = [
+  { value: "", label: "options.touch.auto" },
+  { value: "1", label: "options.touch.on" },
+  { value: "0", label: "options.touch.off" },
 ];
 
 export const FPS_MODES: Option<string>[] = [

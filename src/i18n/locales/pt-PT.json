@@ -78,7 +78,7 @@
     "fpsLimit": "Limite da taxa de fotogramas",
     "fpsLimitHint": "Use 0 para não limitar.",
     "title": "Gráficos", "subtitle": "Estas definições também estão disponíveis no jogo (F1 ou L3 + R3).", "display": "Ecrã",
-    "outputRes": "Resolução de saída", "outputResHint": "A resolução apresentada no ecrã. O upscaling preenche o detalhe adicional.", "aspectRatio": "Proporção do ecrã", "aspectRatioHint": "Ecrãs mais largos mostram mais nas laterais; ecrãs mais altos mostram mais em cima e em baixo. O HUD fica junto às margens.", "aspectAuto": "Automática (este monitor)", "fullscreen": "Ecrã inteiro", "monitor": "Monitor", "monitorHint": "Escolha que ecrã a janela do jogo ou o modo de ecrã inteiro usa.", "monitorMain": "Ecrã principal",
+    "outputRes": "Resolução de saída", "outputResHint": "A resolução apresentada no ecrã. O upscaling preenche o detalhe adicional.", "outputResHintIos": "A resolução em que o jogo desenha. Neste dispositivo, no máximo 540 linhas: uma imagem maior não cabe no que o sistema permite a uma app.", "aspectRatio": "Proporção do ecrã", "aspectRatioHint": "Ecrãs mais largos mostram mais nas laterais; ecrãs mais altos mostram mais em cima e em baixo. O HUD fica junto às margens.", "aspectAuto": "Automática (este monitor)", "aspectAutoScreen": "Automática (este ecrã)", "fullscreen": "Ecrã inteiro", "monitor": "Monitor", "monitorHint": "Escolha que ecrã a janela do jogo ou o modo de ecrã inteiro usa.", "monitorMain": "Ecrã principal",
     "memory": "Memória estimada",
     "memoryHint": "Utilização de memória estimada do jogo e dos gráficos no próximo arranque, com estas definições.",
     "memoryHigh": "Isto usa mais de 75% da memória do seu dispositivo. O jogo pode ficar lento ou fechar. Experimente uma resolução de saída ou predefinição de qualidade mais baixa.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Controlos", "subtitle": "Os mapeamentos são guardados em bbport.ini e aplicam-se quando o jogo arranca.",
-    "controller": "Comando", "controllerHint": "O comando selecionado será usado quando estiver ligado.", "auto": "Automático (o primeiro ligado)",
+    "controller": "Comando", "controllerHint": "O comando selecionado será usado quando estiver ligado.", "touchControls": "Controlos no ecrã", "touchControlsHint": "Botões e manípulos desenhados sobre o jogo, para jogar por toque. Em Automático, aparecem enquanto nenhum comando estiver ligado.", "auto": "Automático (o primeiro ligado)",
     "notConnected": "{{name}} (desligado)", "noControllers": "Nenhum comando encontrado. Ligue um por USB ou Bluetooth e atualize.",
     "bindings": "Atribuições", "gamepad": "Comando", "keyboard": "Teclado", "assign": "Atribuir",
     "press": "Prima um botão ou tecla… (Esc para cancelar)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Relaxado (predefinido)", "precise": "Preciso", "off": "Desligado" },
     "preupload": { "normal": "Normal", "full": "Completo", "fullHint": "Usa cerca de 3 GB a mais de memória de GPU.", "off": "Desligado" },
     "live": { "0": "Desligada (mais rápido)", "1": "Ligada", "auto": "Automático" },
+    "touch": {
+      "auto": "Automático",
+      "on": "Ligados",
+      "off": "Desligados"
+    },
     "effects": {
       "effect_chromatic_aberration": "Aberração cromática", "effect_dof": "Profundidade de campo", "effect_motion_blur": "Desfocagem de movimento",
       "effect_ssao": "Oclusão ambiente (SSAO)", "effect_game_aa": "Antialiasing do próprio jogo", "effect_dynamic_shadows": "Sombras de luzes dinâmicas",

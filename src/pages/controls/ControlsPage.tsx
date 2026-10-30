@@ -4,13 +4,18 @@ import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/u
 import { PageHeader, SettingsSection } from "@/components/settings";
 import { BindingList } from "@/pages/controls/BindingList";
 import { GamepadPicker } from "@/pages/controls/GamepadPicker";
-import { useIni, useSettingsData } from "@/hooks";
-import { CONTROLS } from "@/lib/data";
+import { SelectRow } from "@/components/settings";
+import { useConfig, useIni, useSetting, useSettingsData } from "@/hooks";
+import { CONTROLS, TOUCH_CONTROLS } from "@/lib/data";
 
 export function ControlsPage() {
   const { t } = useTranslation();
-  const { ini } = useSettingsData();
+  const { ini, settings } = useSettingsData();
+  const { data: config } = useConfig();
   const setIni = useIni();
+  const setSetting = useSetting();
+  // The on-screen pad: on touch devices (the iPhone; Android once it has the launcher).
+  const touch = config?.platform === "ios" || config?.platform === "android";
   const resetAll = () => {
     for (const control of CONTROLS) {
       for (const kind of ["pad", "key"]) {
@@ -30,6 +35,15 @@ export function ControlsPage() {
         }
       />
       <SettingsSection>
+        {touch && (
+          <SelectRow
+            title={t("controls.touchControls")}
+            description={t("controls.touchControlsHint")}
+            value={settings.touch_controls ?? ""}
+            options={TOUCH_CONTROLS}
+            onChange={(v) => setSetting("touch_controls", v)}
+          />
+        )}
         <GamepadPicker />
       </SettingsSection>
       {/* ?keys (browser preview, screenshots): the keyboard's tab first. */}

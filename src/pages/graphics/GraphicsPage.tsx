@@ -20,12 +20,18 @@ export function GraphicsPage() {
   const saved = ini.upscaler ?? "off";
   const upscaler = metal && saved !== "off" && saved !== "metalfx" ? "metalfx" : saved;
   const output = ini.output_res ?? "1920x1080";
-  const aspect = ini.aspect_ratio ?? "16:9";
+  const aspect = ini.aspect_ratio ?? (config?.platform === "ios" ? "auto" : "16:9");
   const preset = Number(ini.preset ?? 2);
   const fsrOff = upscaler === "off";
   // MetalFX and FSR 4.1.1 on Metal are macOS-only; FSR 4.1.1 is offered when this Mac can run it
   // (bb-gpu-capabilities --fsr411), or while it is the setting, so the choice stays visible.
   const macos = config?.platform === "macos";
+  // iOS: one screen and one renderer, at most IOS_MAX_HEIGHT lines (the address space): no
+  // display, window, present mode, memory estimate or upscaler choices; Auto is the screen's shape.
+  const ios = config?.platform === "ios";
+  const aspects = ios
+    ? ASPECT_RATIOS.map((o) => (o.value === "auto" ? { ...o, label: "graphics.aspectAutoScreen" as const } : o))
+    : ASPECT_RATIOS;
   const fsr411 = useFsr411Support(macos);
   const fsr411Ready = fsr411.data?.supported ?? false;
   const fsr411NeedsFiles = !fsr411Ready && (fsr411.data?.reason.includes("initializers") ?? false);
@@ -46,28 +52,32 @@ export function GraphicsPage() {
           title={t("graphics.aspectRatio")}
           description={t("graphics.aspectRatioHint")}
           value={aspect}
-          options={ASPECT_RATIOS}
+          options={aspects}
           onChange={(v) => {
             setIni("aspect_ratio", v);
-            setIni("output_res", nearestOutput(v, output));
+            setIni("output_res", nearestOutput(v, output, ios));
           }}
         />
         <SelectRow
           title={t("graphics.outputRes")}
-          description={`${t("graphics.outputResHint")} ${t("common.restartNote")}`}
+          description={`${t(ios ? "graphics.outputResHintIos" : "graphics.outputResHint")} ${t("common.restartNote")}`}
           value={output}
-          options={outputOptions(aspect, output)}
+          options={outputOptions(aspect, output, ios)}
           onChange={(v) => setIni("output_res", v)}
         />
-        <MemoryEstimate />
-        <DisplayPicker />
-        <SwitchRow title={t("graphics.fullscreen")} checked={settings.fullscreen} onChange={(v) => setSetting("fullscreen", v)} />
-        <SelectRow
-          title={t("graphics.presentMode")}
-          value={settings.present_mode}
-          options={PRESENT_MODES}
-          onChange={(v) => setSetting("present_mode", v)}
-        />
+        {!ios && (
+          <>
+            <MemoryEstimate />
+            <DisplayPicker />
+            <SwitchRow title={t("graphics.fullscreen")} checked={settings.fullscreen} onChange={(v) => setSetting("fullscreen", v)} />
+            <SelectRow
+              title={t("graphics.presentMode")}
+              value={settings.present_mode}
+              options={PRESENT_MODES}
+              onChange={(v) => setSetting("present_mode", v)}
+            />
+          </>
+        )}
       </SettingsSection>
       <SettingsSection title={t("graphics.frameRate")}>
         <SelectRow title={t("graphics.fpsMode")} value={settings.fps_mode} options={FPS_MODES} onChange={(v) => setSetting("fps_mode", v)} />
@@ -83,6 +93,7 @@ export function GraphicsPage() {
             checked={settings.metal_hud ?? false} onChange={(v) => setSetting("metal_hud", v)} />
         )}
       </SettingsSection>
+      {!ios && (
       <SettingsSection title={t("graphics.upscaling")} description={t("graphics.upscalingHint")}>
         <SelectRow title={t("graphics.upscaler")} value={upscaler} options={upscalers} onChange={(v) => setIni("upscaler", v)} />
         {macos && !metal && (fsr411Ready || fsr411NeedsFiles) && <Fsr411FilesRow ready={fsr411Ready} />}
@@ -118,6 +129,7 @@ export function GraphicsPage() {
           disabled={fsrOff}
         />
       </SettingsSection>
+      )}
       <SettingsSection title={t("graphics.detail")}>
         <SelectRow
           title={t("graphics.modelLod")}

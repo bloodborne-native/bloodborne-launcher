@@ -22,6 +22,8 @@ export type Settings = {
   readbacks: string;
   preupload: string;
   frame_stats: boolean;
+  /** The on-screen pad (the runtime's touch controls): "" auto, "1" on, "0" off. */
+  touch_controls: string;
   save_log: boolean;
   /** Automatically hide the launcher during gameplay; does not disable logging. */
   hide_launcher: boolean;

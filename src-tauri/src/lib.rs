@@ -8,6 +8,8 @@
 //! Mods, third-party patches and the game check come from scripts/launcher_api.py (the same code
 //! run.sh uses), controllers from bb-gpu-capabilities (--gamepads, --read-input). The game runs
 //! as `bash run.sh` with the app's own bash and Python; its output is sent to the window.
+// default_settings' json! has more keys than the default macro recursion limit allows.
+#![recursion_limit = "256"]
 mod saves;
 mod character_growth;
 mod save_editor;
@@ -127,6 +129,7 @@ fn default_settings() -> Map<String, Value> {
         "readbacks": "",
         "preupload": "",
         "frame_stats": true,
+        "touch_controls": "",
         "save_log": false,
         "hide_launcher": true,
         "trophy_notifications": true,
@@ -163,8 +166,9 @@ fn default_ini() -> BTreeMap<String, String> {
         ("show_fps", "1"),
         ("fps_size", "small"),
         ("fps_position", "top_center"),
-        ("output_res", "1920x1080"),
-        ("aspect_ratio", "16:9"),
+        // iOS: the screen's own shape (auto), at the 540 lines the iPhone's address space allows.
+        ("output_res", if cfg!(target_os = "ios") { "960x540" } else { "1920x1080" }),
+        ("aspect_ratio", if cfg!(target_os = "ios") { "auto" } else { "16:9" }),
         ("model_lod", "0"),
         ("live_resolution", "0"),
         ("effect_chromatic_aberration", "1"),
@@ -1021,6 +1025,12 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
     }
     if bool_setting(s, "frame_stats") {
         set("BB_FRAME_STATS", "1".into());
+    }
+    // The on-screen pad (the runtime's touch controls): "" shown on a touch screen without a
+    // gamepad, "1" always, "0" never.
+    let touch = str_setting(s, "touch_controls");
+    if touch == "0" || touch == "1" {
+        set("BB_TOUCH_CONTROLS", touch);
     }
     if bool_setting(s, "save_log") {
         set("BB_SAVE_LOG", "1".into());

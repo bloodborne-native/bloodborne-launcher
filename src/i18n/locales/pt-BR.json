@@ -126,9 +126,11 @@
     "display": "Tela",
     "outputRes": "Resolução de saída",
     "outputResHint": "A resolução exibida na tela. O upscaling preenche os detalhes extras.",
+    "outputResHintIos": "A resolução em que o jogo desenha. Neste dispositivo, no máximo 540 linhas: uma imagem maior não cabe no que o sistema permite a um app.",
     "aspectRatio": "Proporção da tela",
     "aspectRatioHint": "Telas mais largas mostram mais nas laterais; telas mais altas mostram mais em cima e embaixo. O HUD fica perto das bordas.",
     "aspectAuto": "Automática (este monitor)",
+    "aspectAutoScreen": "Automática (esta tela)",
     "memory": "Memória estimada",
     "memoryHint": "Uso de memória estimado do jogo e dos gráficos na próxima inicialização, com estas configurações.",
     "memoryHigh": "Isto usa mais de 75% da memória do seu dispositivo. O jogo pode ficar lento ou fechar. Tente uma resolução de saída ou predefinição de qualidade menor.",
@@ -167,6 +169,8 @@
     "subtitle": "Os mapeamentos ficam salvos no bbport.ini e valem quando o jogo inicia.",
     "controller": "Controle",
     "controllerHint": "O controle selecionado será usado quando estiver conectado.",
+    "touchControls": "Controles na tela",
+    "touchControlsHint": "Botões e analógicos desenhados sobre o jogo, para jogar pelo toque. No Automático, aparecem enquanto nenhum controle estiver conectado.",
     "auto": "Automático (o primeiro conectado)",
     "notConnected": "{{name}} (desconectado)",
     "noControllers": "Nenhum controle encontrado. Conecte um por USB ou Bluetooth e atualize.",
@@ -360,6 +364,11 @@
       "0": "Desligada (mais rápido)",
       "1": "Ligada",
       "auto": "Automático"
+    },
+    "touch": {
+      "auto": "Automático",
+      "on": "Ligados",
+      "off": "Desligados"
     },
     "effects": {
       "effect_chromatic_aberration": "Aberração cromática",

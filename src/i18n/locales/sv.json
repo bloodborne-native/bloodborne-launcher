@@ -78,7 +78,7 @@
     "fpsLimit": "Bildfrekvensgräns",
     "fpsLimitHint": "Ange 0 för ingen gräns.",
     "title": "Grafik", "subtitle": "De här inställningarna finns också i spelet (F1 eller L3 + R3).", "display": "Skärm",
-    "outputRes": "Utdataupplösning", "outputResHint": "Upplösningen som visas på skärmen. Uppskalningen fyller i de extra detaljerna.", "aspectRatio": "Bildförhållande", "aspectRatioHint": "Bredare skärmar visar mer åt sidorna, högre skärmar mer upptill och nertill. HUD:en stannar nära kanterna.", "aspectAuto": "Automatiskt (den här skärmen)", "fullscreen": "Helskärm", "monitor": "Skärm", "monitorHint": "Välj vilken skärm spelfönstret eller helskärmsläget använder.", "monitorMain": "Huvudskärm",
+    "outputRes": "Utdataupplösning", "outputResHint": "Upplösningen som visas på skärmen. Uppskalningen fyller i de extra detaljerna.", "outputResHintIos": "Upplösningen spelet ritar i. På den här enheten högst 540 linjer: en större bild ryms inte i det systemet tillåter en app.", "aspectRatio": "Bildförhållande", "aspectRatioHint": "Bredare skärmar visar mer åt sidorna, högre skärmar mer upptill och nertill. HUD:en stannar nära kanterna.", "aspectAuto": "Automatiskt (den här skärmen)", "aspectAutoScreen": "Automatiskt (den här skärmen)", "fullscreen": "Helskärm", "monitor": "Skärm", "monitorHint": "Välj vilken skärm spelfönstret eller helskärmsläget använder.", "monitorMain": "Huvudskärm",
     "memory": "Uppskattat minne",
     "memoryHint": "Uppskattad minnesanvändning för spel och grafik vid nästa start, med de här inställningarna.",
     "memoryHigh": "Det här använder mer än 75 % av enhetens minne. Spelet kan bli långsamt eller avslutas. Prova en lägre utgångsupplösning eller kvalitetsnivå.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Kontroller", "subtitle": "Tilldelningar sparas i bbport.ini och gäller när spelet startar.",
-    "controller": "Handkontroll", "controllerHint": "Den valda handkontrollen används när den är ansluten.", "auto": "Automatiskt (den första anslutna)",
+    "controller": "Handkontroll", "controllerHint": "Den valda handkontrollen används när den är ansluten.", "touchControls": "Skärmkontroller", "touchControlsHint": "Knappar och spakar ritade över spelet, för att spela med pekskärmen. I läget Automatiskt visas de medan ingen handkontroll är ansluten.", "auto": "Automatiskt (den första anslutna)",
     "notConnected": "{{name}} (inte ansluten)", "noControllers": "Ingen handkontroll hittades. Anslut en via USB eller Bluetooth och uppdatera sedan.",
     "bindings": "Tilldelningar", "gamepad": "Handkontroll", "keyboard": "Tangentbord", "assign": "Tilldela",
     "press": "Tryck på en knapp eller tangent… (Esc för att avbryta)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Avslappnad (standard)", "precise": "Exakt", "off": "Av" },
     "preupload": { "normal": "Normal", "full": "Full", "fullHint": "Använder ungefär 3 GB mer GPU-minne.", "off": "Av" },
     "live": { "0": "Av (snabbare)", "1": "På", "auto": "Automatiskt" },
+    "touch": {
+      "auto": "Automatiskt",
+      "on": "På",
+      "off": "Av"
+    },
     "effects": {
       "effect_chromatic_aberration": "Kromatisk aberration", "effect_dof": "Skärpedjup", "effect_motion_blur": "Rörelseoskärpa",
       "effect_ssao": "Omgivningsskuggning (SSAO)", "effect_game_aa": "Spelets egen kantutjämning", "effect_dynamic_shadows": "Skuggor från dynamiska ljus",

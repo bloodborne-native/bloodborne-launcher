@@ -78,7 +78,7 @@
     "fpsLimit": "影格率上限",
     "fpsLimitHint": "設為 0 表示不限制。",
     "title": "圖形", "subtitle": "這些設定在遊戲中也可以變更（F1 或 L3 + R3）。", "display": "顯示",
-    "outputRes": "輸出解析度", "outputResHint": "螢幕上顯示的解析度。超解析度會補足額外的細節。", "aspectRatio": "長寬比", "aspectRatioHint": "較寬的螢幕在兩側顯示更多，較高的螢幕在上下顯示更多。HUD 會停留在邊緣附近。", "aspectAuto": "自動（此顯示器）", "fullscreen": "全螢幕", "monitor": "顯示器", "monitorHint": "選擇遊戲視窗或全螢幕模式使用的螢幕。", "monitorMain": "主顯示器",
+    "outputRes": "輸出解析度", "outputResHint": "螢幕上顯示的解析度。超解析度會補足額外的細節。", "outputResHintIos": "遊戲繪製的解析度。在此裝置上最多 540 行：更大的畫面超出系統允許單一 App 使用的範圍。", "aspectRatio": "長寬比", "aspectRatioHint": "較寬的螢幕在兩側顯示更多，較高的螢幕在上下顯示更多。HUD 會停留在邊緣附近。", "aspectAuto": "自動（此顯示器）", "aspectAutoScreen": "自動（此螢幕）", "fullscreen": "全螢幕", "monitor": "顯示器", "monitorHint": "選擇遊戲視窗或全螢幕模式使用的螢幕。", "monitorMain": "主顯示器",
     "memory": "預估記憶體",
     "memoryHint": "使用這些設定時，下次啟動遊戲和圖形的預估記憶體用量。",
     "memoryHigh": "這會使用超過 75% 的裝置記憶體。遊戲可能變慢或結束。請嘗試較低的輸出解析度或畫質預設。",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "操作", "subtitle": "按鍵配置儲存在 bbport.ini 中，並在遊戲啟動時生效。",
-    "controller": "控制器", "controllerHint": "所選的控制器連接後即會使用。", "auto": "自動（第一個連接的控制器）",
+    "controller": "控制器", "controllerHint": "所選的控制器連接後即會使用。", "touchControls": "螢幕控制", "touchControlsHint": "在遊戲上方顯示按鈕與搖桿，用於觸控遊玩。自動：未連接控制器時顯示。", "auto": "自動（第一個連接的控制器）",
     "notConnected": "{{name}}（未連接）", "noControllers": "找不到控制器。請透過 USB 或藍牙連接，然後重新整理。",
     "bindings": "按鍵指定", "gamepad": "控制器", "keyboard": "鍵盤", "assign": "指定",
     "press": "按下按鈕或按鍵…（Esc 取消）",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "寬鬆（預設）", "precise": "精確", "off": "關" },
     "preupload": { "normal": "一般", "full": "完整", "fullHint": "多佔用約 3 GB GPU 記憶體。", "off": "關" },
     "live": { "0": "關（較快）", "1": "開", "auto": "自動" },
+    "touch": {
+      "auto": "自動",
+      "on": "開",
+      "off": "關"
+    },
     "effects": {
       "effect_chromatic_aberration": "色差", "effect_dof": "景深", "effect_motion_blur": "動態模糊",
       "effect_ssao": "環境光遮蔽（SSAO）", "effect_game_aa": "遊戲內建反鋸齒", "effect_dynamic_shadows": "動態光源陰影",

@@ -27,12 +27,15 @@ export function AdvancedPage() {
           options={languages}
           onChange={(v) => setSetting("ui_language", v)}
         />
-        <SwitchRow
-          title={t("advanced.hideLauncher")}
-          description={t("advanced.hideLauncherHint")}
-          checked={settings.hide_launcher ?? true}
-          onChange={(v) => setSetting("hide_launcher", v)}
-        />
+        {/* iOS: the game replaces the launcher in the app (nothing to hide or show again). */}
+        {config?.platform !== "ios" && (
+          <SwitchRow
+            title={t("advanced.hideLauncher")}
+            description={t("advanced.hideLauncherHint")}
+            checked={settings.hide_launcher ?? true}
+            onChange={(v) => setSetting("hide_launcher", v)}
+          />
+        )}
         <SwitchRow
           title={t("trophies.notifications")}
           description={t("trophies.notificationsHint")}
@@ -54,13 +57,16 @@ export function AdvancedPage() {
         <SelectRow title={t("advanced.drawPipe")} value={settings.draw_pipe} options={DRAW_PIPE} onChange={(v) => setSetting("draw_pipe", v)} />
         <SelectRow title={t("advanced.readbacks")} value={settings.readbacks} options={READBACKS} onChange={(v) => setSetting("readbacks", v)} />
         <SelectRow title={t("advanced.preupload")} value={settings.preupload} options={PREUPLOAD} onChange={(v) => setSetting("preupload", v)} />
-        <SelectRow
-          title={t("advanced.liveResolution")}
-          description={t("advanced.liveResolutionHint")}
-          value={ini.live_resolution ?? "0"}
-          options={LIVE_RESOLUTION}
-          onChange={(v) => setIni("live_resolution", v)}
-        />
+        {/* iOS: the output is set when the game starts (the app's own sizes). */}
+        {config?.platform !== "ios" && (
+          <SelectRow
+            title={t("advanced.liveResolution")}
+            description={t("advanced.liveResolutionHint")}
+            value={ini.live_resolution ?? "0"}
+            options={LIVE_RESOLUTION}
+            onChange={(v) => setIni("live_resolution", v)}
+          />
+        )}
       </SettingsSection>
       <SettingsSection title={t("advanced.diagnostics")}>
         <SwitchRow title={t("advanced.debugCamera")} description={`${t("advanced.debugCameraHint")} ${t("common.restartNote")}`}

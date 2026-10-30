@@ -78,7 +78,7 @@
     "fpsLimit": "Grense for bildefrekvens",
     "fpsLimitHint": "Sett til 0 for ingen grense.",
     "title": "Grafikk", "subtitle": "Disse innstillingene finnes også i spillet (F1 eller L3 + R3).", "display": "Skjerm",
-    "outputRes": "Utdataoppløsning", "outputResHint": "Oppløsningen som vises på skjermen. Oppskaleringen fyller inn de ekstra detaljene.", "aspectRatio": "Bildeformat", "aspectRatioHint": "Bredere skjermer viser mer på sidene; høyere skjermer mer øverst og nederst. HUD-en blir nær kantene.", "aspectAuto": "Automatisk (denne skjermen)", "fullscreen": "Fullskjerm", "monitor": "Skjerm", "monitorHint": "Velg hvilken skjerm spillvinduet eller fullskjermmodusen bruker.", "monitorMain": "Hovedskjerm",
+    "outputRes": "Utdataoppløsning", "outputResHint": "Oppløsningen som vises på skjermen. Oppskaleringen fyller inn de ekstra detaljene.", "outputResHintIos": "Oppløsningen spillet tegner i. På denne enheten høyst 540 linjer: et større bilde får ikke plass innenfor det systemet tillater en app.", "aspectRatio": "Bildeformat", "aspectRatioHint": "Bredere skjermer viser mer på sidene; høyere skjermer mer øverst og nederst. HUD-en blir nær kantene.", "aspectAuto": "Automatisk (denne skjermen)", "aspectAutoScreen": "Automatisk (denne skjermen)", "fullscreen": "Fullskjerm", "monitor": "Skjerm", "monitorHint": "Velg hvilken skjerm spillvinduet eller fullskjermmodusen bruker.", "monitorMain": "Hovedskjerm",
     "memory": "Anslått minne",
     "memoryHint": "Anslått minnebruk for spill og grafikk ved neste start, med disse innstillingene.",
     "memoryHigh": "Dette bruker mer enn 75 % av enhetens minne. Spillet kan bli tregt eller avslutte. Prøv en lavere utgangsoppløsning eller kvalitetsforhåndsinnstilling.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Kontroller", "subtitle": "Tilordninger lagres i bbport.ini og trer i kraft når spillet starter.",
-    "controller": "Kontroller", "controllerHint": "Den valgte kontrolleren brukes når den er tilkoblet.", "auto": "Automatisk (den første tilkoblede)",
+    "controller": "Kontroller", "controllerHint": "Den valgte kontrolleren brukes når den er tilkoblet.", "touchControls": "Skjermkontroller", "touchControlsHint": "Knapper og spaker tegnet over spillet, for å spille med berøring. Automatisk viser dem mens ingen kontroller er tilkoblet.", "auto": "Automatisk (den første tilkoblede)",
     "notConnected": "{{name}} (ikke tilkoblet)", "noControllers": "Fant ingen kontroller. Koble til en via USB eller Bluetooth, og oppdater deretter.",
     "bindings": "Tilordninger", "gamepad": "Kontroller", "keyboard": "Tastatur", "assign": "Tilordne",
     "press": "Trykk på en knapp eller tast… (Esc for å avbryte)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Avslappet (standard)", "precise": "Nøyaktig", "off": "Av" },
     "preupload": { "normal": "Normal", "full": "Full", "fullHint": "Bruker omtrent 3 GB mer GPU-minne.", "off": "Av" },
     "live": { "0": "Av (raskere)", "1": "På", "auto": "Automatisk" },
+    "touch": {
+      "auto": "Automatisk",
+      "on": "På",
+      "off": "Av"
+    },
     "effects": {
       "effect_chromatic_aberration": "Kromatisk aberrasjon", "effect_dof": "Dybdeskarphet", "effect_motion_blur": "Bevegelsesuskarphet",
       "effect_ssao": "Omgivelsesskygge (SSAO)", "effect_game_aa": "Spillets egen kantutjevning", "effect_dynamic_shadows": "Skygger fra dynamisk lys",

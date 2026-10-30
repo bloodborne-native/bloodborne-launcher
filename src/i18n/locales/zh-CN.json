@@ -78,7 +78,7 @@
     "fpsLimit": "帧率上限",
     "fpsLimitHint": "设为 0 表示不限制。",
     "title": "图形", "subtitle": "这些设置在游戏中也可以更改（F1 或 L3 + R3）。", "display": "显示",
-    "outputRes": "输出分辨率", "outputResHint": "屏幕上显示的分辨率。超分辨率会补全额外的细节。", "aspectRatio": "宽高比", "aspectRatioHint": "更宽的屏幕在两侧显示更多，更高的屏幕在上下显示更多。HUD 会停留在边缘附近。", "aspectAuto": "自动（此显示器）", "fullscreen": "全屏", "monitor": "显示器", "monitorHint": "选择游戏窗口或全屏模式使用的屏幕。", "monitorMain": "主显示器",
+    "outputRes": "输出分辨率", "outputResHint": "屏幕上显示的分辨率。超分辨率会补全额外的细节。", "outputResHintIos": "游戏绘制的分辨率。在此设备上最多 540 行：更大的画面超出系统允许单个应用使用的范围。", "aspectRatio": "宽高比", "aspectRatioHint": "更宽的屏幕在两侧显示更多，更高的屏幕在上下显示更多。HUD 会停留在边缘附近。", "aspectAuto": "自动（此显示器）", "aspectAutoScreen": "自动（此屏幕）", "fullscreen": "全屏", "monitor": "显示器", "monitorHint": "选择游戏窗口或全屏模式使用的屏幕。", "monitorMain": "主显示器",
     "memory": "预计内存",
     "memoryHint": "使用这些设置时，下次启动游戏和图形的预计内存占用。",
     "memoryHigh": "这会使用超过 75% 的设备内存。游戏可能变慢或退出。请尝试更低的输出分辨率或画质预设。",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "操作", "subtitle": "按键分配保存在 bbport.ini 中，并在游戏启动时生效。",
-    "controller": "手柄", "controllerHint": "所选的手柄连接后即会使用。", "auto": "自动（第一个连接的手柄）",
+    "controller": "手柄", "controllerHint": "所选的手柄连接后即会使用。", "touchControls": "屏幕控件", "touchControlsHint": "在游戏上方显示按钮和摇杆，用于触屏游玩。自动：未连接手柄时显示。", "auto": "自动（第一个连接的手柄）",
     "notConnected": "{{name}}（未连接）", "noControllers": "未找到手柄。请通过 USB 或蓝牙连接，然后刷新。",
     "bindings": "按键分配", "gamepad": "手柄", "keyboard": "键盘", "assign": "分配",
     "press": "按下按钮或按键…（Esc 取消）",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "宽松（默认）", "precise": "精确", "off": "关" },
     "preupload": { "normal": "普通", "full": "完整", "fullHint": "多占用约 3 GB GPU 内存。", "off": "关" },
     "live": { "0": "关（更快）", "1": "开", "auto": "自动" },
+    "touch": {
+      "auto": "自动",
+      "on": "开",
+      "off": "关"
+    },
     "effects": {
       "effect_chromatic_aberration": "色差", "effect_dof": "景深", "effect_motion_blur": "动态模糊",
       "effect_ssao": "环境光遮蔽（SSAO）", "effect_game_aa": "游戏自带抗锯齿", "effect_dynamic_shadows": "动态光源阴影",

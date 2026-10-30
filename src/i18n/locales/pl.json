@@ -78,7 +78,7 @@
     "fpsLimit": "Limit klatek",
     "fpsLimitHint": "Ustaw 0, aby nie ograniczać.",
     "title": "Grafika", "subtitle": "Te ustawienia są też dostępne w grze (F1 lub L3 + R3).", "display": "Ekran",
-    "outputRes": "Rozdzielczość wyjściowa", "outputResHint": "Rozdzielczość wyświetlana na ekranie. Skalowanie uzupełnia dodatkowe szczegóły.", "aspectRatio": "Proporcje obrazu", "aspectRatioHint": "Szersze ekrany pokazują więcej po bokach, wyższe więcej u góry i u dołu. HUD pozostaje przy krawędziach.", "aspectAuto": "Automatyczne (ten monitor)", "fullscreen": "Pełny ekran", "monitor": "Monitor", "monitorHint": "Wybierz, którego ekranu używa okno gry lub tryb pełnoekranowy.", "monitorMain": "Główny ekran",
+    "outputRes": "Rozdzielczość wyjściowa", "outputResHint": "Rozdzielczość wyświetlana na ekranie. Skalowanie uzupełnia dodatkowe szczegóły.", "outputResHintIos": "Rozdzielczość, w jakiej gra rysuje obraz. Na tym urządzeniu najwyżej 540 linii: większy obraz nie mieści się w tym, na co system pozwala aplikacji.", "aspectRatio": "Proporcje obrazu", "aspectRatioHint": "Szersze ekrany pokazują więcej po bokach, wyższe więcej u góry i u dołu. HUD pozostaje przy krawędziach.", "aspectAuto": "Automatyczne (ten monitor)", "aspectAutoScreen": "Automatyczne (ten ekran)", "fullscreen": "Pełny ekran", "monitor": "Monitor", "monitorHint": "Wybierz, którego ekranu używa okno gry lub tryb pełnoekranowy.", "monitorMain": "Główny ekran",
     "memory": "Szacowana pamięć",
     "memoryHint": "Szacowane użycie pamięci przez grę i grafikę przy następnym uruchomieniu z tymi ustawieniami.",
     "memoryHigh": "To ponad 75% pamięci Twojego urządzenia. Gra może zwolnić lub się zamknąć. Spróbuj niższej rozdzielczości wyjściowej lub ustawienia jakości.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Sterowanie", "subtitle": "Przypisania są zapisywane w bbport.ini i działają od uruchomienia gry.",
-    "controller": "Kontroler", "controllerHint": "Wybrany kontroler będzie używany, gdy zostanie podłączony.", "auto": "Automatycznie (pierwszy podłączony)",
+    "controller": "Kontroler", "controllerHint": "Wybrany kontroler będzie używany, gdy zostanie podłączony.", "touchControls": "Sterowanie na ekranie", "touchControlsHint": "Przyciski i gałki rysowane nad grą, do gry dotykiem. W trybie automatycznym są widoczne, gdy nie jest podłączony żaden kontroler.", "auto": "Automatycznie (pierwszy podłączony)",
     "notConnected": "{{name}} (niepodłączony)", "noControllers": "Nie znaleziono kontrolera. Podłącz go przez USB lub Bluetooth, a potem odśwież.",
     "bindings": "Przypisania", "gamepad": "Kontroler", "keyboard": "Klawiatura", "assign": "Przypisz",
     "press": "Naciśnij przycisk lub klawisz… (Esc, aby anulować)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Swobodny (domyślny)", "precise": "Dokładny", "off": "Wył." },
     "preupload": { "normal": "Normalne", "full": "Pełne", "fullHint": "Używa około 3 GB więcej pamięci GPU.", "off": "Wył." },
     "live": { "0": "Wył. (szybciej)", "1": "Wł.", "auto": "Automatycznie" },
+    "touch": {
+      "auto": "Automatycznie",
+      "on": "Włączone",
+      "off": "Wyłączone"
+    },
     "effects": {
       "effect_chromatic_aberration": "Aberracja chromatyczna", "effect_dof": "Głębia ostrości", "effect_motion_blur": "Rozmycie ruchu",
       "effect_ssao": "Okluzja otoczenia (SSAO)", "effect_game_aa": "Wygładzanie krawędzi gry", "effect_dynamic_shadows": "Cienie od dynamicznych świateł",

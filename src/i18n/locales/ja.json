@@ -78,7 +78,7 @@
     "fpsLimit": "フレームレート上限",
     "fpsLimitHint": "0 で制限なしになります。",
     "title": "グラフィック", "subtitle": "これらの設定はゲーム内（F1 または L3 + R3）でも変更できます。", "display": "画面",
-    "outputRes": "出力解像度", "outputResHint": "画面に表示される解像度です。アップスケーリングが追加のディテールを補います。", "aspectRatio": "アスペクト比", "aspectRatioHint": "横長の画面では左右が、縦長の画面では上下がより多く映ります。HUD は端の近くに表示されます。", "aspectAuto": "自動（このモニター）", "fullscreen": "フルスクリーン", "monitor": "モニター", "monitorHint": "ゲームウインドウまたはフルスクリーンで使う画面を選びます。", "monitorMain": "メインディスプレイ",
+    "outputRes": "出力解像度", "outputResHint": "画面に表示される解像度です。アップスケーリングが追加のディテールを補います。", "outputResHintIos": "ゲームが描画する解像度。このデバイスでは最大 540 ライン：それより大きい画像はシステムがアプリに許す範囲に収まりません。", "aspectRatio": "アスペクト比", "aspectRatioHint": "横長の画面では左右が、縦長の画面では上下がより多く映ります。HUD は端の近くに表示されます。", "aspectAuto": "自動（このモニター）", "aspectAutoScreen": "自動（この画面）", "fullscreen": "フルスクリーン", "monitor": "モニター", "monitorHint": "ゲームウインドウまたはフルスクリーンで使う画面を選びます。", "monitorMain": "メインディスプレイ",
     "memory": "推定メモリ使用量",
     "memoryHint": "この設定で次に起動したときの、ゲームとグラフィックの推定メモリ使用量です。",
     "memoryHigh": "デバイスのメモリの75%以上を使います。ゲームが遅くなったり終了したりすることがあります。出力解像度か画質プリセットを下げてください。",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "操作", "subtitle": "割り当ては bbport.ini に保存され、ゲーム起動時に反映されます。",
-    "controller": "コントローラー", "controllerHint": "選択したコントローラーは接続されると使われます。", "auto": "自動（最初に接続されたもの）",
+    "controller": "コントローラー", "controllerHint": "選択したコントローラーは接続されると使われます。", "touchControls": "画面上のコントロール", "touchControlsHint": "タッチで遊ぶために、ゲームの上にボタンとスティックを表示します。自動では、コントローラーが接続されていない間に表示します。", "auto": "自動（最初に接続されたもの）",
     "notConnected": "{{name}}（未接続）", "noControllers": "コントローラーが見つかりません。USB か Bluetooth で接続してから更新してください。",
     "bindings": "割り当て", "gamepad": "コントローラー", "keyboard": "キーボード", "assign": "割り当て",
     "press": "ボタンかキーを押してください…（Escでキャンセル）",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Relaxed（既定）", "precise": "Precise", "off": "オフ" },
     "preupload": { "normal": "標準", "full": "フル", "fullHint": "GPUメモリを約3 GB多く使います。", "off": "オフ" },
     "live": { "0": "オフ（高速）", "1": "オン", "auto": "自動" },
+    "touch": {
+      "auto": "自動",
+      "on": "オン",
+      "off": "オフ"
+    },
     "effects": {
       "effect_chromatic_aberration": "色収差", "effect_dof": "被写界深度", "effect_motion_blur": "モーションブラー",
       "effect_ssao": "アンビエントオクルージョン（SSAO）", "effect_game_aa": "ゲーム本来のアンチエイリアス", "effect_dynamic_shadows": "動的ライトの影",

@@ -78,7 +78,7 @@
     "fpsLimit": "Kare hızı sınırı",
     "fpsLimitHint": "Sınır olmaması için 0 girin.",
     "title": "Grafik", "subtitle": "Bu ayarlar oyun içinde de bulunur (F1 veya L3 + R3).", "display": "Ekran",
-    "outputRes": "Çıkış çözünürlüğü", "outputResHint": "Ekranda gösterilen çözünürlük. Ölçekleme ek ayrıntıları tamamlar.", "aspectRatio": "En boy oranı", "aspectRatioHint": "Daha geniş ekranlar yanlarda, daha uzun ekranlar üstte ve altta daha fazlasını gösterir. HUD kenarlara yakın kalır.", "aspectAuto": "Otomatik (bu monitör)", "fullscreen": "Tam ekran", "monitor": "Monitör", "monitorHint": "Oyun penceresinin veya tam ekran modunun hangi ekranı kullanacağını seçin.", "monitorMain": "Ana ekran",
+    "outputRes": "Çıkış çözünürlüğü", "outputResHint": "Ekranda gösterilen çözünürlük. Ölçekleme ek ayrıntıları tamamlar.", "outputResHintIos": "Oyunun çizdiği çözünürlük. Bu cihazda en fazla 540 satır: daha büyük bir görüntü, sistemin bir uygulamaya izin verdiği alana sığmaz.", "aspectRatio": "En boy oranı", "aspectRatioHint": "Daha geniş ekranlar yanlarda, daha uzun ekranlar üstte ve altta daha fazlasını gösterir. HUD kenarlara yakın kalır.", "aspectAuto": "Otomatik (bu monitör)", "aspectAutoScreen": "Otomatik (bu ekran)", "fullscreen": "Tam ekran", "monitor": "Monitör", "monitorHint": "Oyun penceresinin veya tam ekran modunun hangi ekranı kullanacağını seçin.", "monitorMain": "Ana ekran",
     "memory": "Tahmini bellek",
     "memoryHint": "Bu ayarlarla bir sonraki başlatmada oyunun ve grafiklerin tahmini bellek kullanımı.",
     "memoryHigh": "Bu, cihazınızın belleğinin %75’inden fazlasını kullanıyor. Oyun yavaşlayabilir veya kapanabilir. Daha düşük bir çıkış çözünürlüğü ya da kalite ön ayarı deneyin.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Kontroller", "subtitle": "Atamalar bbport.ini dosyasına kaydedilir ve oyun başladığında geçerli olur.",
-    "controller": "Kumanda", "controllerHint": "Seçilen kumanda bağlandığında kullanılır.", "auto": "Otomatik (ilk bağlanan)",
+    "controller": "Kumanda", "controllerHint": "Seçilen kumanda bağlandığında kullanılır.", "touchControls": "Ekran kontrolleri", "touchControlsHint": "Dokunarak oynamak için oyunun üzerinde düğmeler ve çubuklar. Otomatik, kumanda bağlı değilken gösterir.", "auto": "Otomatik (ilk bağlanan)",
     "notConnected": "{{name}} (bağlı değil)", "noControllers": "Kumanda bulunamadı. USB veya Bluetooth ile bir kumanda bağlayın, ardından yenileyin.",
     "bindings": "Atamalar", "gamepad": "Kumanda", "keyboard": "Klavye", "assign": "Ata",
     "press": "Bir düğmeye veya tuşa basın… (iptal için Esc)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Esnek (varsayılan)", "precise": "Kesin", "off": "Kapalı" },
     "preupload": { "normal": "Normal", "full": "Tam", "fullHint": "Yaklaşık 3 GB daha fazla GPU belleği kullanır.", "off": "Kapalı" },
     "live": { "0": "Kapalı (daha hızlı)", "1": "Açık", "auto": "Otomatik" },
+    "touch": {
+      "auto": "Otomatik",
+      "on": "Açık",
+      "off": "Kapalı"
+    },
     "effects": {
       "effect_chromatic_aberration": "Renk sapması", "effect_dof": "Alan derinliği", "effect_motion_blur": "Hareket bulanıklığı",
       "effect_ssao": "Ortam perdelemesi (SSAO)", "effect_game_aa": "Oyunun kendi kenar yumuşatması", "effect_dynamic_shadows": "Dinamik ışık gölgeleri",

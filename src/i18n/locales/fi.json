@@ -78,7 +78,7 @@
     "fpsLimit": "Kuvataajuuden raja",
     "fpsLimitHint": "Aseta 0, jos et halua rajaa.",
     "title": "Grafiikka", "subtitle": "Nämä asetukset ovat käytettävissä myös pelissä (F1 tai L3 + R3).", "display": "Näyttö",
-    "outputRes": "Lähtötarkkuus", "outputResHint": "Ruudulla näytettävä resoluutio. Skaalaus täydentää lisäyksityiskohdat.", "aspectRatio": "Kuvasuhde", "aspectRatioHint": "Leveämmät näytöt näyttävät enemmän sivuilta, korkeammat enemmän ylhäältä ja alhaalta. HUD pysyy lähellä reunoja.", "aspectAuto": "Automaattinen (tämä näyttö)", "fullscreen": "Koko näyttö", "monitor": "Näyttö", "monitorHint": "Valitse, mitä näyttöä peli-ikkuna tai koko näytön tila käyttää.", "monitorMain": "Päänäyttö",
+    "outputRes": "Lähtötarkkuus", "outputResHint": "Ruudulla näytettävä resoluutio. Skaalaus täydentää lisäyksityiskohdat.", "outputResHintIos": "Resoluutio, jolla peli piirtää. Tällä laitteella enintään 540 riviä: suurempi kuva ei mahdu siihen, mitä järjestelmä sallii sovellukselle.", "aspectRatio": "Kuvasuhde", "aspectRatioHint": "Leveämmät näytöt näyttävät enemmän sivuilta, korkeammat enemmän ylhäältä ja alhaalta. HUD pysyy lähellä reunoja.", "aspectAuto": "Automaattinen (tämä näyttö)", "aspectAutoScreen": "Automaattinen (tämä näyttö)", "fullscreen": "Koko näyttö", "monitor": "Näyttö", "monitorHint": "Valitse, mitä näyttöä peli-ikkuna tai koko näytön tila käyttää.", "monitorMain": "Päänäyttö",
     "memory": "Arvioitu muisti",
     "memoryHint": "Pelin ja grafiikan arvioitu muistinkäyttö seuraavalla käynnistyksellä näillä asetuksilla.",
     "memoryHigh": "Tämä käyttää yli 75 % laitteesi muistista. Peli voi hidastua tai sulkeutua. Kokeile pienempää lähtöresoluutiota tai laatuasetusta.",
@@ -103,7 +103,7 @@
   },
   "controls": {
     "title": "Ohjaimet", "subtitle": "Määritykset tallennetaan tiedostoon bbport.ini ja tulevat voimaan pelin käynnistyessä.",
-    "controller": "Ohjain", "controllerHint": "Valittua ohjainta käytetään, kun se on liitetty.", "auto": "Automaattinen (ensimmäinen yhdistetty)",
+    "controller": "Ohjain", "controllerHint": "Valittua ohjainta käytetään, kun se on liitetty.", "touchControls": "Kosketusohjaimet", "touchControlsHint": "Pelin päälle piirretyt painikkeet ja sauvat kosketuksella pelaamiseen. Automaattinen näyttää ne, kun ohjainta ei ole yhdistetty.", "auto": "Automaattinen (ensimmäinen yhdistetty)",
     "notConnected": "{{name}} (ei yhdistetty)", "noControllers": "Ohjainta ei löytynyt. Liitä ohjain USB:llä tai Bluetoothilla ja päivitä sitten.",
     "bindings": "Määritykset", "gamepad": "Ohjain", "keyboard": "Näppäimistö", "assign": "Määritä",
     "press": "Paina painiketta tai näppäintä… (Esc peruuttaa)",
@@ -179,6 +179,11 @@
     "readbacks": { "relaxed": "Joustava (oletus)", "precise": "Tarkka", "off": "Pois" },
     "preupload": { "normal": "Normaali", "full": "Täysi", "fullHint": "Käyttää noin 3 Gt enemmän GPU-muistia.", "off": "Pois" },
     "live": { "0": "Pois (nopeampi)", "1": "Päällä", "auto": "Automaattinen" },
+    "touch": {
+      "auto": "Automaattinen",
+      "on": "Päällä",
+      "off": "Pois"
+    },
     "effects": {
       "effect_chromatic_aberration": "Kromaattinen aberraatio", "effect_dof": "Syväterävyys", "effect_motion_blur": "Liike-epäterävyys",
       "effect_ssao": "Ympäristön varjostus (SSAO)", "effect_game_aa": "Pelin oma reunanpehmennys", "effect_dynamic_shadows": "Dynaamisten valojen varjot",
