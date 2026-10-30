@@ -200,9 +200,9 @@ fn locale_tag(value: &str) -> Option<String> {
 
 /// iOS: the game runs in the launcher's own process (no other programs can be started). The app
 /// around the launcher (bloodborne-ios) provides `int bb_ios_start_game(const char *data_dir)`,
-/// called on the main thread: it starts the game, which takes over the app's window, and returns
-/// only if the game could not start (its error code). A launcher built without it (development)
-/// reports that the game is not in this build.
+/// called on the main thread: it prepares the game's window and schedules the game on the main
+/// run loop, then returns 0 (or an error code if the game could not be started). A launcher built
+/// without it (development) reports that the game is not in this build.
 #[cfg(target_os = "ios")]
 pub fn start_in_app(_app: &tauri::AppHandle, data: &Path) -> Result<(), String> {
     use std::ffi::{c_char, c_int, c_void, CString};
@@ -220,13 +220,16 @@ pub fn start_in_app(_app: &tauri::AppHandle, data: &Path) -> Result<(), String> 
     let data = CString::new(data.as_os_str().as_encoded_bytes()).map_err(|e| e.to_string())?;
     // From the main dispatch queue, not app.run_on_main_thread: the game's window loop runs the
     // main run loop itself (SDL's event pump), and inside tao's event handler that re-enters tao's
-    // run-loop observers, which abort the app. From the queue the nested iterations are ordinary
-    // ones to tao, and the launcher's events keep being handled.
+    // run-loop observers, which abort the app. bb_ios_start_game returns at once and the game
+    // runs from a run-loop timer: kept inside this block, it held the main queue and UIKit
+    // delivered no touches to the game.
     struct Start { start: extern "C" fn(*const c_char) -> c_int, data: CString }
     extern "C" fn run(context: *mut c_void) {
         let Start { start, data } = *unsafe { Box::from_raw(context as *mut Start) };
         let code = start(data.as_ptr());
-        eprintln!("Game: could not start ({code})");
+        if code != 0 {
+            eprintln!("Game: could not start ({code})");
+        }
     }
     let context = Box::into_raw(Box::new(Start { start, data })) as *mut c_void;
     unsafe { dispatch_async_f(&_dispatch_main_q, context, run) };
