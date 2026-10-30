@@ -39,7 +39,6 @@ const config: Config = {
     online_upnp: true,
     thd_server: "https://thehuntersdream.com",
     thd_online_id: "",
-    thd_token: "",
     check_updates: true,
     crash_diag: false,
     gpu_profile: false,
@@ -61,6 +60,7 @@ const config: Config = {
   memory_mb: 18432,
   running: false,
   online_password_saved: false,
+  thd_token_saved: false,
 };
 
 let mods: Mod[] = [
@@ -329,10 +329,18 @@ export const mockApi = {
   launch: (_password?: string) => wait(undefined),
   saveOnlinePassword: (password: string) => wait(void (config.online_password_saved = password !== "")),
   thdSignInStart: (_server: string) => wait<ThdSignInStart>({ device_code: "preview", user_code: "PREV-1234", verification_uri: "https://thehuntersdream.com/link", interval: 1, expires_in: 60 }),
-  thdSignInPoll: (_server: string, _deviceCode: string) => wait<ThdSignInPoll>(++previewPolls < 4
-    ? { status: "pending", online_id: null, token: null }
-    : { status: "approved", online_id: "PreviewHunter", token: "preview-token" }),
-  thdSignOut: (_server: string, _token: string) => wait(true),
+  thdSignInPoll: (_server: string, _deviceCode: string) => {
+    const poll = ++previewPolls;
+    if (poll === 2) return wait<ThdSignInPoll>({ status: "retry", online_id: null }); // a failed poll is asked again
+    if (poll < 4) return wait<ThdSignInPoll>({ status: "pending", online_id: null });
+    config.thd_token_saved = true;
+    return wait<ThdSignInPoll>({ status: "approved", online_id: "PreviewHunter" });
+  },
+  thdSignOut: (_server: string) => {
+    config.thd_token_saved = false;
+    previewPolls = 0;
+    return wait(true);
+  },
   stop: () => wait(undefined),
   recompStatus: () => wait(structuredClone(previewRecomp)),
   recompBuild: () => previewRecompBuild(),

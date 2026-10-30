@@ -1,14 +1,17 @@
 //! Sign-in to The Hunter's Dream: the device-code flow of bbhost (src/net/account.cpp). The launcher
 //! asks the account service for a code, opens its /link page, the player approves the code there
 //! with Discord, and the launcher polls until the service hands over the online ID and a token.
-//! The token is a password: it goes to the settings (`thd_token`) like before and nowhere else, and
-//! no message, log line or error here ever contains it.
+//! The token is a password: it is saved in a file of its own (thd_token.rs) by the command that
+//! receives it, never returned to the web page, and no message, log line or error here contains it.
 use std::time::Duration;
 
 use reqwest::Url;
 use serde::Serialize;
 use serde_json::{json, Value};
+use tauri::State;
 use tauri_plugin_opener::OpenerExt;
+
+use crate::{thd_token, AppState};
 
 /// A reply larger than this is not from an account service.
 const MAX_REPLY: usize = 16 * 1024;
@@ -26,10 +29,27 @@ pub struct SignInStart {
 
 #[derive(Serialize)]
 pub struct SignInPoll {
-    /// "pending", "slow_down" or "approved"; a denied or expired link is an error.
+    /// "pending", "slow_down", "retry" (the server could not be reached or sent no usable reply;
+    /// ask again at the next interval) or "approved"; a denied or expired link, or a refusal from
+    /// the server, is an error.
     status: String,
+    /// Set when approved; the token itself stays in the backend.
     online_id: Option<String>,
-    token: Option<String>,
+}
+
+/// Why a call failed: `Transient` can pass by itself, `Final` will not.
+#[derive(Debug, PartialEq)]
+enum Failure {
+    Transient(String),
+    Final(String),
+}
+
+impl Failure {
+    fn message(self) -> String {
+        match self {
+            Failure::Transient(message) | Failure::Final(message) => message,
+        }
+    }
 }
 
 /// The account service's address: https, a host, no credentials in it.
@@ -50,21 +70,24 @@ fn verification_url(server: &Url, uri: &str) -> Result<Url, String> {
     Ok(url)
 }
 
-/// Every account reply carries ResKind (0 = ok); a refusal explains itself in Message.
-fn parse_reply(status: u16, raw: &[u8]) -> Result<Value, String> {
-    let reply: Value = serde_json::from_slice(raw)
-        .map_err(|_| if (200..300).contains(&status) { "The server sent an invalid reply.".to_string() } else { format!("HTTP {status}") })?;
+/// Every account reply carries ResKind (0 = ok); a refusal explains itself in Message. A reply that
+/// is not JSON (a gateway's error page, a cut connection) is transient; a refusal, or a server
+/// without an account service, is final.
+fn parse_reply(status: u16, raw: &[u8]) -> Result<Value, Failure> {
+    let reply: Value = serde_json::from_slice(raw).map_err(|_| {
+        Failure::Transient(if (200..300).contains(&status) { "The server sent an invalid reply.".to_string() } else { format!("HTTP {status}") })
+    })?;
     let Some(kind) = reply.get("ResKind") else {
-        return Err(format!("This server has no account service (HTTP {status})."));
+        return Err(Failure::Final(format!("This server has no account service (HTTP {status}).")));
     };
     if kind.as_i64() != Some(0) {
         let message: String = reply.get("Message").and_then(Value::as_str).unwrap_or("The server refused.").chars().take(200).collect();
-        return Err(message);
+        return Err(Failure::Final(message));
     }
     Ok(reply)
 }
 
-async fn call(server: &Url, path: &str, body: Value) -> Result<Value, String> {
+async fn call(server: &Url, path: &str, body: Value) -> Result<Value, Failure> {
     let client = reqwest::Client::builder()
         .https_only(true)
         .redirect(reqwest::redirect::Policy::none())
@@ -72,20 +95,20 @@ async fn call(server: &Url, path: &str, body: Value) -> Result<Value, String> {
         .timeout(Duration::from_secs(10))
         .user_agent(concat!("bloodborne-launcher/", env!("CARGO_PKG_VERSION")))
         .build()
-        .map_err(|e| e.to_string())?;
-    let url = server.join(path).map_err(|e| e.to_string())?;
+        .map_err(|e| Failure::Final(e.to_string()))?;
+    let url = server.join(path).map_err(|e| Failure::Final(e.to_string()))?;
     let response = client
         .post(url)
         .header("Content-Type", "application/json")
         .header("Accept", "application/json")
-        .body(serde_json::to_vec(&body).map_err(|e| e.to_string())?)
+        .body(serde_json::to_vec(&body).map_err(|e| Failure::Final(e.to_string()))?)
         .send()
         .await
-        .map_err(|e| format!("Could not reach the server: {}", e.without_url()))?;
+        .map_err(|e| Failure::Transient(format!("Could not reach the server: {}", e.without_url())))?;
     let status = response.status().as_u16();
-    let raw = response.bytes().await.map_err(|_| "The reply was cut off.".to_string())?;
+    let raw = response.bytes().await.map_err(|_| Failure::Transient("The reply was cut off.".to_string()))?;
     if raw.len() > MAX_REPLY {
-        return Err("The server sent a reply that is too large.".into());
+        return Err(Failure::Final("The server sent a reply that is too large.".into()));
     }
     parse_reply(status, &raw)
 }
@@ -98,7 +121,7 @@ fn text(reply: &Value, key: &str) -> String {
 #[tauri::command]
 pub async fn thd_sign_in_start(app: tauri::AppHandle, server: String) -> Result<SignInStart, String> {
     let server = server_url(&server)?;
-    let reply = call(&server, "/auth/device/start", json!({ "DeviceName": format!("bloodborne-launcher on {}", std::env::consts::OS) })).await?;
+    let reply = call(&server, "/auth/device/start", json!({ "DeviceName": format!("bloodborne-launcher on {}", std::env::consts::OS) })).await.map_err(Failure::message)?;
     let (device_code, user_code) = (text(&reply, "DeviceCode"), text(&reply, "UserCode"));
     if device_code.is_empty() || device_code.len() > 256 || user_code.is_empty() || user_code.len() > 64 {
         return Err("The server sent no code.".into());
@@ -111,21 +134,27 @@ pub async fn thd_sign_in_start(app: tauri::AppHandle, server: String) -> Result<
     Ok(SignInStart { device_code, user_code, verification_uri: page.into(), interval, expires_in })
 }
 
-/// One poll. "denied" and "expired" come back as errors.
+/// One poll. An approved sign-in saves the token in its file and returns only the online ID.
+/// "denied" and "expired" come back as errors; a failed call that can pass is "retry".
 #[tauri::command]
-pub async fn thd_sign_in_poll(server: String, device_code: String) -> Result<SignInPoll, String> {
+pub async fn thd_sign_in_poll(state: State<'_, AppState>, server: String, device_code: String) -> Result<SignInPoll, String> {
     if device_code.is_empty() || device_code.len() > 256 {
         return Err("The sign-in code is missing.".into());
     }
-    let reply = call(&server_url(&server)?, "/auth/device/poll", json!({ "DeviceCode": device_code })).await?;
+    let reply = match call(&server_url(&server)?, "/auth/device/poll", json!({ "DeviceCode": device_code })).await {
+        Ok(reply) => reply,
+        Err(Failure::Transient(_)) => return Ok(SignInPoll { status: "retry".into(), online_id: None }),
+        Err(Failure::Final(message)) => return Err(message),
+    };
     match text(&reply, "Status").as_str() {
-        status @ ("pending" | "slow_down") => Ok(SignInPoll { status: status.into(), online_id: None, token: None }),
+        status @ ("pending" | "slow_down") => Ok(SignInPoll { status: status.into(), online_id: None }),
         "approved" => {
             let (online_id, token) = (text(&reply, "OnlineId"), text(&reply, "Token"));
             if online_id.is_empty() || token.is_empty() {
                 return Err("The server sent no token.".into());
             }
-            Ok(SignInPoll { status: "approved".into(), online_id: Some(online_id), token: Some(token) })
+            thd_token::save(&state.paths.data, &token)?;
+            Ok(SignInPoll { status: "approved".into(), online_id: Some(online_id) })
         }
         "denied" => Err("The sign-in was denied.".into()),
         "expired" => Err("The sign-in code expired.".into()),
@@ -133,15 +162,17 @@ pub async fn thd_sign_in_poll(server: String, device_code: String) -> Result<Sig
     }
 }
 
-/// Tells the service to forget the token. False when it could not be reached: the player is signed
-/// out here either way.
+/// Tells the service to forget the token, then deletes the file. False when the service could not
+/// be reached: the player is signed out here either way.
 #[tauri::command]
-pub async fn thd_sign_out(server: String, token: String) -> Result<bool, String> {
+pub async fn thd_sign_out(state: State<'_, AppState>, server: String) -> Result<bool, String> {
     let server = server_url(&server)?;
-    if token.is_empty() {
-        return Ok(true);
-    }
-    Ok(call(&server, "/auth/logout", json!({ "Token": token })).await.is_ok())
+    let forgotten = match thd_token::saved(&state.paths.data) {
+        Some(token) => call(&server, "/auth/logout", json!({ "Token": token })).await.is_ok(),
+        None => true,
+    };
+    thd_token::forget(&state.paths.data)?;
+    Ok(forgotten)
 }
 
 #[cfg(test)]
@@ -172,11 +203,16 @@ mod tests {
     #[test]
     fn replies_are_checked_like_the_game_does() {
         assert!(parse_reply(200, br#"{"ResKind":0,"Status":"pending"}"#).is_ok());
-        assert_eq!(parse_reply(429, br#"{"ResKind":3,"Message":"Too many tries"}"#).unwrap_err(), "Too many tries");
-        assert_eq!(parse_reply(502, b"<html>").unwrap_err(), "HTTP 502");
-        assert_eq!(parse_reply(200, b"<html>").unwrap_err(), "The server sent an invalid reply.");
-        assert!(parse_reply(200, br#"{"hello":1}"#).unwrap_err().contains("no account service"));
+        assert_eq!(parse_reply(429, br#"{"ResKind":3,"Message":"Too many tries"}"#), Err(Failure::Final("Too many tries".into())));
+        assert!(matches!(parse_reply(200, br#"{"hello":1}"#), Err(Failure::Final(m)) if m.contains("no account service")));
         let long = format!(r#"{{"ResKind":1,"Message":"{}"}}"#, "x".repeat(500));
-        assert_eq!(parse_reply(400, long.as_bytes()).unwrap_err().chars().count(), 200);
+        assert!(matches!(parse_reply(400, long.as_bytes()), Err(Failure::Final(m)) if m.chars().count() == 200));
+    }
+
+    #[test]
+    fn a_reply_that_is_not_json_can_pass_by_itself() {
+        assert_eq!(parse_reply(502, b"<html>"), Err(Failure::Transient("HTTP 502".into())));
+        assert_eq!(parse_reply(200, b"<html>"), Err(Failure::Transient("The server sent an invalid reply.".into())));
+        assert_eq!(parse_reply(200, b"").unwrap_err().message(), "The server sent an invalid reply.");
     }
 }

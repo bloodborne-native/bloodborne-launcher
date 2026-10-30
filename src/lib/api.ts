@@ -45,8 +45,8 @@ const tauriApi = {
   saveOnlinePassword: (password: string) => invoke<void>("save_online_password", { password }),
   thdSignInStart: (server: string) => invoke<ThdSignInStart>("thd_sign_in_start", { server }),
   thdSignInPoll: (server: string, deviceCode: string) => invoke<ThdSignInPoll>("thd_sign_in_poll", { server, deviceCode }),
-  /** False when the server could not be reached to forget the token. */
-  thdSignOut: (server: string, token: string) => invoke<boolean>("thd_sign_out", { server, token }),
+  /** Deletes the saved token; false when the server could not be reached to forget it. */
+  thdSignOut: (server: string) => invoke<boolean>("thd_sign_out", { server }),
   stop: () => invoke<void>("stop"),
   recompStatus: () => invoke<RecompStatus>("recomp_status"),
   /** Resolves when the build ends; its progress comes as onRecompProgress events. */
