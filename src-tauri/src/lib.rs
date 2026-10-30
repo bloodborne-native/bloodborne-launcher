@@ -1080,6 +1080,9 @@ async fn launch(app: AppHandle, state: State<'_, AppState>, password: Option<Str
     blocking(move || start_game(&app, &state, password.as_deref())).await
 }
 
+/// iOS: the game was started inside the app; the app ends with it (start_game, run).
+static GAME_IN_APP: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Result<(), String> {
     let app = app.clone();
     let p = state.paths.clone();
@@ -1102,8 +1105,14 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
     let log_path = p.data.join("logs/last.log");
     // bbport.ini from the database: run.sh, the patch scripts and the game read it at start.
     settings_store::export_ini(&p.data, &load_ini(&p)).map_err(step("Writing the game's settings"))?;
-    // iOS: one process, the game started inside the app (platform::start_in_app).
+    // iOS: one process, the game started inside the app (platform::start_in_app). The launcher's
+    // window, with its web view, is destroyed first: WebKit's memory in this process took the
+    // address space the game's start needs. The app ends with the game.
     if cfg!(target_os = "ios") {
+        GAME_IN_APP.store(true, std::sync::atomic::Ordering::Relaxed);
+        if let Some(window) = app.get_webview_window("main") {
+            let _ = window.destroy();
+        }
         return platform::start_in_app(&app, &p.data);
     }
     let mut cmd = Command::new(&p.bash);
@@ -1284,7 +1293,12 @@ pub fn run() {
         .run(|app, event| {
             #[cfg(target_os = "macos")]
             if let tauri::RunEvent::Reopen { .. } = event { tray::show_launcher(app); }
-            #[cfg(not(target_os = "macos"))]
+            // iOS: the game runs on after the launcher's last window is destroyed (start_game).
+            if let tauri::RunEvent::ExitRequested { api, .. } = &event {
+                if GAME_IN_APP.load(std::sync::atomic::Ordering::Relaxed) {
+                    api.prevent_exit();
+                }
+            }
             let _ = (app, event);
         });
 }
