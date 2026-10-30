@@ -1109,6 +1109,13 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
     // window, with its web view, is destroyed first: WebKit's memory in this process took the
     // address space the game's start needs. The app ends with the game.
     if cfg!(target_os = "ios") {
+        // The settings run.sh receives as its environment, in this process (the game reads them
+        // at start); not what only run.sh uses (its PATH, Python, the probe's path).
+        for (key, value) in game_environment(&p, &s, password)? {
+            if !matches!(key.as_str(), "PATH" | "PYTHON" | "PYTHONDONTWRITEBYTECODE" | "BB_PROBE" | "BB_PREBUILT") {
+                std::env::set_var(key, value);
+            }
+        }
         GAME_IN_APP.store(true, std::sync::atomic::Ordering::Relaxed);
         if let Some(window) = app.get_webview_window("main") {
             let _ = window.destroy();
