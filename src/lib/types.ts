@@ -44,7 +44,6 @@ export type Settings = {
   online_upnp: boolean;
   thd_server: string;
   thd_online_id: string;
-  thd_token: string;
   check_updates: boolean;
   crash_diag: boolean;
   gpu_profile: boolean;
@@ -82,6 +81,8 @@ export type Config = {
   running: boolean;
   /** A password is saved (online_save_password on and the file present). */
   online_password_saved?: boolean;
+  /** A Hunter's Dream sign-in token is saved (its own file; the page never sees it). */
+  thd_token_saved?: boolean;
 };
 
 export type Mod = { name: string; enabled: boolean };
@@ -212,3 +213,8 @@ export type RecompProgress = {
   functions?: number | null;
   message?: string;
 };
+
+/** The Hunter's Dream sign-in (src-tauri/src/thd_account.rs): a code the player approves on a page. */
+export type ThdSignInStart = { device_code: string; user_code: string; verification_uri: string; interval: number; expires_in: number };
+/** "retry": the server could not be reached; ask again at the next interval. The token is saved by the backend. */
+export type ThdSignInPoll = { status: "pending" | "slow_down" | "retry" | "approved"; online_id: string | null };

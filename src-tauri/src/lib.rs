@@ -24,6 +24,8 @@ mod game_lifecycle;
 mod updates;
 mod settings_store;
 mod online_password;
+mod thd_account;
+mod thd_token;
 mod platform;
 mod game_check;
 mod game_data;
@@ -141,7 +143,6 @@ fn default_settings() -> Map<String, Value> {
         "online_upnp": true,
         "thd_server": "https://thehuntersdream.com",
         "thd_online_id": "",
-        "thd_token": "",
         "check_updates": true,
         "crash_diag": false,
         "gpu_profile": false,
@@ -222,8 +223,10 @@ fn load_settings(p: &Paths) -> Map<String, Value> {
             }
         }
     }
-    // The password lives in its own file (online_password.rs), never among the settings.
+    // The password and the sign-in token live in files of their own (online_password.rs,
+    // thd_token.rs), never among the settings.
     settings.remove("online_password");
+    settings.remove("thd_token");
     // iOS: the game folder is the app's own (platform::fixed_game_dir), created so the Files app
     // shows it.
     if let Some(dir) = platform::fixed_game_dir(&p.data) {
@@ -326,6 +329,26 @@ fn set_tray_labels(app: AppHandle, labels: tray::Labels) -> Result<(), String> {
     tray::set_labels(&app, labels).map_err(|error| error.to_string())
 }
 
+/// The token an earlier build kept among the settings (`thd_token`, in the database and in
+/// launcher.json) moves into its own file once (thd_token.rs); the setting is then removed.
+fn migrate_thd_token(p: &Paths) -> Result<(), String> {
+    let from_database = settings_store::load(&p.data, settings_store::LAUNCHER)
+        .ok()
+        .and_then(|stored| stored.get("thd_token").map(|v| serde_json::from_str::<String>(v).unwrap_or_else(|_| v.clone())));
+    let from_file = || {
+        let text = fs::read_to_string(settings_file(p)).ok()?;
+        Some(serde_json::from_str::<Value>(&text).ok()?.get("thd_token")?.as_str()?.to_string())
+    };
+    let Some(legacy) = from_database.or_else(from_file) else { return Ok(()) };
+    thd_token::adopt(&p.data, &legacy)?;
+    // launcher.json first: an emptied database imports it again.
+    write_launcher_json(p, load_settings(p))?;
+    if let Err(e) = settings_store::put(&p.data, settings_store::LAUNCHER, &[("thd_token".into(), None)]) {
+        eprintln!("Settings: could not remove thd_token from the database ({e})");
+    }
+    Ok(())
+}
+
 // --- commands --------------------------------------------------------------------------------
 
 #[tauri::command]
@@ -335,6 +358,7 @@ async fn load_config(state: State<'_ , AppState>) -> Result<Value, String> {
     let p = &state.paths;
     // iOS: paths stored under an earlier container of this app (before an update).
     profiles::relocate_container(&p.data).map_err(|e| format!("Moving the saves into this app's storage: {e}"))?;
+    migrate_thd_token(p)?;
     let s = load_settings(p);
     Ok(json!({
         "settings": s,
@@ -352,6 +376,7 @@ async fn load_config(state: State<'_ , AppState>) -> Result<Value, String> {
         "memory_mb": system_memory_mb(),
         "running": state.game.lock().map(|g| g.child.is_some()).unwrap_or(false),
         "online_password_saved": bool_setting(&s, "online_save_password") && online_password::saved(&p.data).is_some(),
+        "thd_token_saved": thd_token::saved(&p.data).is_some(),
     }))
     }).await
 }
@@ -399,6 +424,9 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
     }
     if settings.contains_key("online_password") {
         return Err("The password is saved with save_online_password.".into());
+    }
+    if settings.contains_key("thd_token") {
+        return Err("The token is saved by the sign-in (thd_sign_in_poll).".into());
     }
     for key in ["online", "online_upnp", "online_save_password"] {
         if settings.get(key).is_some_and(|v| !v.is_boolean()) {
@@ -1044,7 +1072,7 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
         let pool = str_setting(s, "online_pool");
         if pool == "huntersdream" {
             let name = str_setting(s, "thd_online_id");
-            let token = str_setting(s, "thd_token");
+            let token = thd_token::saved(&p.data).unwrap_or_default();
             if name.is_empty() || token.is_empty() {
                 return Err("Sign in to The Hunter's Dream before starting online play.".into());
             }
@@ -1272,7 +1300,7 @@ pub fn run() {
             updates::open_release,
             load_config, save_settings, save_ini, check_game, game_icon, list_mods, save_mods, list_patches,
             recomp_status, recomp_build, recomp_cancel, recomp_delete,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, thd_account::thd_sign_in_start, thd_account::thd_sign_in_poll, thd_account::thd_sign_out, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {
@@ -1312,6 +1340,29 @@ pub fn run() {
 
 #[cfg(test)]
 mod save_tests {
+    #[test]
+    fn an_old_thd_token_setting_moves_into_its_file() {
+        let dir = std::env::temp_dir().join(format!("bb-thd-migrate-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let dir = dir.canonicalize().unwrap(); // the database refuses a path through a link (/var on macOS)
+        let p = super::Paths::find(dir.clone());
+        // An earlier build: the token in the database and in launcher.json.
+        super::settings_store::put(&dir, super::settings_store::LAUNCHER, &[("thd_token".into(), Some("\"old-token\"".into())), ("thd_online_id".into(), Some("\"Hunter\"".into()))]).unwrap();
+        std::fs::write(super::settings_file(&p), r#"{"thd_token":"old-token","thd_online_id":"Hunter"}"#).unwrap();
+        super::migrate_thd_token(&p).unwrap();
+        assert_eq!(super::thd_token::saved(&dir).as_deref(), Some("old-token"));
+        assert!(!super::load_settings(&p).contains_key("thd_token"));
+        let stored = super::settings_store::load(&dir, super::settings_store::LAUNCHER).unwrap();
+        assert!(!stored.contains_key("thd_token"));
+        let json = std::fs::read_to_string(super::settings_file(&p)).unwrap();
+        assert!(!json.contains("old-token") && json.contains("Hunter"));
+        // Nothing left to move: the file is untouched.
+        super::thd_token::save(&dir, "newer").unwrap();
+        super::migrate_thd_token(&p).unwrap();
+        assert_eq!(super::thd_token::saved(&dir).as_deref(), Some("newer"));
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
     #[test]
     fn launcher_data_defaults_and_absolute_override_are_explicit() {
         assert_eq!(super::launcher_data_dir(None).unwrap(), super::platform::data_dir());

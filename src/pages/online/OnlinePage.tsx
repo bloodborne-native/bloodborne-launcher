@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageHeader, SelectRow, SettingsSection, SwitchRow, TextRow } from "@/components/settings";
 import { useConfig, useProfiles, useSetting, useSettingsData } from "@/hooks";
 import { api, queryKeys } from "@/lib";
+import { ThdSignIn } from "@/pages/online/ThdSignIn";
 import { SavePasswordDialog } from "@/pages/online/SavePasswordDialog";
 import { Message } from "@/components/common";
 
@@ -42,10 +43,7 @@ export function OnlinePage() {
     </SettingsSection>
     {thd ? <>
       <SettingsSection title={t("online.thdAccount")} description={t("online.thdAccountHint")}>
-        <TextRow title={t("online.onlineId")} value={settings.thd_online_id}
-          onChange={(value) => set("thd_online_id", value)} />
-        <TextRow title={t("online.token")} type="password" value={settings.thd_token}
-          onChange={(value) => set("thd_token", value)} />
+        <ThdSignIn />
         <TextRow title={t("online.thdServer")} value={settings.thd_server}
           onChange={(value) => set("thd_server", value)} />
       </SettingsSection>
