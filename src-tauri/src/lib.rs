@@ -333,6 +333,8 @@ async fn load_config(state: State<'_ , AppState>) -> Result<Value, String> {
     let state=state.inner().clone();
     blocking(move || {
     let p = &state.paths;
+    // iOS: paths stored under an earlier container of this app (before an update).
+    profiles::relocate_container(&p.data).map_err(|e| format!("Moving the saves into this app's storage: {e}"))?;
     let s = load_settings(p);
     Ok(json!({
         "settings": s,
@@ -487,6 +489,7 @@ async fn list_profiles(state: State<'_, AppState>) -> Result<profiles::ProfileLi
     let state=state.inner().clone();
     blocking(move || {
     let _game = state.game.lock().map_err(|e| e.to_string())?;
+    profiles::relocate_container(&state.paths.data).map_err(|e| format!("Moving the saves into this app's storage: {e}"))?;
     let s = load_settings(&state.paths);
     profiles::list(&state.paths.data, &original_user_dir(&state.paths, &s))
     }).await
@@ -1084,17 +1087,21 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
     if game.child.is_some() {
         return Err("The game is already running.".into());
     }
+    // Each step names itself in its error: "Operation not permitted" alone does not say which.
+    let step = |what: &str| { let what = what.to_string(); move |e: String| format!("{what}: {e}") };
     saves_idle(&game)?;
     let s = load_settings(&p);
-    selected_user_dir(&p)?;
-    let registry = profiles::require(&p.data)?;
-    fs::create_dir_all(&registry.original_user_dir).map_err(|e| e.to_string())?;
+    // iOS: a saves folder stored under an earlier container of this app (before an update).
+    profiles::relocate_container(&p.data).map_err(step("Moving the saves folder into this app's storage"))?;
+    selected_user_dir(&p).map_err(step("Finding the profile's saves"))?;
+    let registry = profiles::require(&p.data).map_err(step("Reading the profiles"))?;
+    fs::create_dir_all(&registry.original_user_dir).map_err(|e| step("Creating the saves folder")(e.to_string()))?;
     // Back up the complete set before launch. Failure prevents starting without a recovery copy.
-    save_operation(&p, &registry.active, "backup", None)?;
-    fs::create_dir_all(p.data.join("logs")).map_err(|e| e.to_string())?;
+    save_operation(&p, &registry.active, "backup", None).map_err(step("Backing up the saves"))?;
+    fs::create_dir_all(p.data.join("logs")).map_err(|e| step("Creating the log folder")(e.to_string()))?;
     let log_path = p.data.join("logs/last.log");
     // bbport.ini from the database: run.sh, the patch scripts and the game read it at start.
-    settings_store::export_ini(&p.data, &load_ini(&p))?;
+    settings_store::export_ini(&p.data, &load_ini(&p)).map_err(step("Writing the game's settings"))?;
     // iOS: one process, the game started inside the app (platform::start_in_app).
     if cfg!(target_os = "ios") {
         return platform::start_in_app(&app, &p.data);

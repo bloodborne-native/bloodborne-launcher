@@ -204,10 +204,12 @@ fn locale_tag(value: &str) -> Option<String> {
 /// only if the game could not start (its error code). A launcher built without it (development)
 /// reports that the game is not in this build.
 #[cfg(target_os = "ios")]
-pub fn start_in_app(app: &tauri::AppHandle, data: &Path) -> Result<(), String> {
+pub fn start_in_app(_app: &tauri::AppHandle, data: &Path) -> Result<(), String> {
     use std::ffi::{c_char, c_int, c_void, CString};
     extern "C" {
         fn dlsym(handle: *mut c_void, symbol: *const c_char) -> *mut c_void;
+        static _dispatch_main_q: c_void;
+        fn dispatch_async_f(queue: *const c_void, context: *mut c_void, work: extern "C" fn(*mut c_void));
     }
     const RTLD_DEFAULT: *mut c_void = -2isize as *mut c_void;
     let symbol = unsafe { dlsym(RTLD_DEFAULT, c"bb_ios_start_game".as_ptr()) };
@@ -216,11 +218,19 @@ pub fn start_in_app(app: &tauri::AppHandle, data: &Path) -> Result<(), String> {
     }
     let start: extern "C" fn(*const c_char) -> c_int = unsafe { std::mem::transmute(symbol) };
     let data = CString::new(data.as_os_str().as_encoded_bytes()).map_err(|e| e.to_string())?;
-    app.run_on_main_thread(move || {
+    // From the main dispatch queue, not app.run_on_main_thread: the game's window loop runs the
+    // main run loop itself (SDL's event pump), and inside tao's event handler that re-enters tao's
+    // run-loop observers, which abort the app. From the queue the nested iterations are ordinary
+    // ones to tao, and the launcher's events keep being handled.
+    struct Start { start: extern "C" fn(*const c_char) -> c_int, data: CString }
+    extern "C" fn run(context: *mut c_void) {
+        let Start { start, data } = *unsafe { Box::from_raw(context as *mut Start) };
         let code = start(data.as_ptr());
         eprintln!("Game: could not start ({code})");
-    })
-    .map_err(|e| e.to_string())
+    }
+    let context = Box::into_raw(Box::new(Start { start, data })) as *mut c_void;
+    unsafe { dispatch_async_f(&_dispatch_main_q, context, run) };
+    Ok(())
 }
 
 /// Other systems start the game as its own program (lib.rs, start_game).

@@ -34,6 +34,54 @@ async fn registry(connection: &mut SqliteConnection) -> Result<Option<Registry>>
     })
     .transpose()
 }
+/// An app container's root: the folder under `.../Containers/Data/Application/`.
+fn container_root(path: &Path) -> Option<&Path> {
+    path.ancestors().find(|a| a.parent().and_then(Path::file_name) == Some("Application".as_ref()))
+}
+/// `path` moved from its earlier container into the container `data` is in; None if it is
+/// already there or not in a container.
+fn in_this_container(path: &Path, data: &Path) -> Option<PathBuf> {
+    let (old, here) = (container_root(path)?, container_root(data)?);
+    if old == here {
+        return None;
+    }
+    Some(here.join(path.strip_prefix(old).ok()?))
+}
+/// iOS: the app's container path changes when the app is installed again or updated, while the
+/// files move with it. Every stored path under an earlier container (the original saves folder,
+/// save sets, backups; where nothing may be created any more: "Operation not permitted") is moved
+/// to this container. Elsewhere nothing changes.
+pub fn relocate_container(data: &Path) -> Result<()> {
+    if !cfg!(target_os = "ios") {
+        return Ok(());
+    }
+    db::block(async {
+        let mut connection = db::connect(data).await?;
+        let mut tx = connection.begin_with("BEGIN IMMEDIATE").await.map_err(err)?;
+        for (table, key, column) in [
+            ("launcher_state", "id", "original_user_dir"),
+            ("save_sets", "id", "user_dir"),
+            ("backups", "id", "path"),
+        ] {
+            let rows: Vec<(String, String)> =
+                sqlx::query_as(&format!("SELECT CAST({key} AS TEXT), {column} FROM {table}"))
+                    .fetch_all(&mut *tx)
+                    .await
+                    .map_err(err)?;
+            for (id, stored) in rows {
+                let Some(moved) = in_this_container(Path::new(&stored), data) else { continue };
+                sqlx::query(&format!("UPDATE {table} SET {column}=? WHERE CAST({key} AS TEXT)=?"))
+                    .bind(moved.to_string_lossy().to_string())
+                    .bind(id)
+                    .execute(&mut *tx)
+                    .await
+                    .map_err(err)?;
+            }
+        }
+        tx.commit().await.map_err(err)
+    })
+}
+
 pub fn require(data: &Path) -> Result<Registry> {
     db::block(async {
         let mut connection = db::connect(data).await?;
@@ -372,6 +420,17 @@ pub fn recover_operations(data: &Path) -> Result<()> {
 mod tests {
     use super::*;
     use std::fs;
+
+    #[test]
+    fn paths_follow_the_ios_container() {
+        let apps = "/private/var/mobile/Containers/Data/Application";
+        let data = PathBuf::from(format!("{apps}/NEW/Documents"));
+        let moved = in_this_container(Path::new(&format!("{apps}/OLD/Documents/user")), &data);
+        assert_eq!(moved, Some(PathBuf::from(format!("{apps}/NEW/Documents/user"))));
+        assert_eq!(in_this_container(&data.join("user"), &data), None);
+        assert_eq!(in_this_container(Path::new("/Users/me/user"), &data), None);
+        assert_eq!(in_this_container(&data, Path::new("/Users/me/data")), None);
+    }
     struct Fixture(PathBuf);
     impl Fixture {
         fn new() -> Self {
