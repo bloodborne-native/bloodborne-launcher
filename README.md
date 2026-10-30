@@ -37,9 +37,11 @@ npx tauri build      # Bloodborne.app (packaging/macos.sh adds the game to it)
 The launcher has: profiles and saves with backups and restore; the save editor (attributes, Blood
 Echoes, Insight, items, weapons, armor, gems and runes; an edited save earns no trophies and plays
 offline only); trophies with notices drawn by the game; settings shared with the in-game menu;
-online play (Seamless Hunt and The Hunter's Dream); the Recompiled code page; mods and patches;
+online play (Seamless Hunt, and The Hunter's Dream with its Discord sign-in); the Recompiled code page; mods and patches;
 new-version notices; 20 languages; layouts from phone width up; one backend for every system
-([Platforms](#platforms-and-screen-sizes)).
+([Platforms](#platforms-and-screen-sizes)). On the iPhone (a proof of concept, in bloodborne-ios) it runs
+the game in its own process, with options for the device: the screen's shape, at most 540 lines,
+the on-screen controls.
 
 Not done yet:
 
@@ -114,7 +116,7 @@ launcher's library (`lib.rs`, `run()`), as `main.rs` does on desktops. On iOS th
 tray and the single-instance plugin are left out (`tray_mobile.rs` stands in for `tray.rs`), the
 identifier and minimum version come from `tauri.ios.conf.json`, and Play does not start a program:
 it calls `bb_ios_start_game`, which the app around the launcher provides
-([bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios), private), on the main
+([bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios)), on the main
 thread (`platform::start_in_app`). Without it Play says the game is not in this build.
 
 The project's Rust build phase is `scripts/ios-rust.sh` (the front end, then the library for
