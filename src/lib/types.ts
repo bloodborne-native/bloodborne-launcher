@@ -212,3 +212,7 @@ export type RecompProgress = {
   functions?: number | null;
   message?: string;
 };
+
+/** The Hunter's Dream sign-in (src-tauri/src/thd_account.rs): a code the player approves on a page. */
+export type ThdSignInStart = { device_code: string; user_code: string; verification_uri: string; interval: number; expires_in: number };
+export type ThdSignInPoll = { status: "pending" | "slow_down" | "approved"; online_id: string | null; token: string | null };

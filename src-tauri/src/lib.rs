@@ -24,6 +24,7 @@ mod game_lifecycle;
 mod updates;
 mod settings_store;
 mod online_password;
+mod thd_account;
 mod platform;
 mod game_check;
 mod game_data;
@@ -1256,7 +1257,7 @@ pub fn run() {
             updates::open_release,
             load_config, save_settings, save_ini, check_game, game_icon, list_mods, save_mods, list_patches,
             recomp_status, recomp_build, recomp_cancel, recomp_delete,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, thd_account::thd_sign_in_start, thd_account::thd_sign_in_poll, thd_account::thd_sign_out, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {

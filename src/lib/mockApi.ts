@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, Inventory, SaveEdit, CatalogItem, RecompProgress, RecompStatus } from "@/lib/types";
+import type { ThdSignInStart, ThdSignInPoll, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, Inventory, SaveEdit, CatalogItem, RecompProgress, RecompStatus } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -151,6 +151,7 @@ const previewRecomp: RecompStatus = {
 };
 const previewRecompListeners = new Set<(progress: RecompProgress) => void>();
 let previewRecompCancelled = false;
+let previewPolls = 0;
 async function previewRecompBuild() {
   previewRecompCancelled = false;
   previewRecomp.status.state = "building";
@@ -327,6 +328,11 @@ export const mockApi = {
   openPath: () => wait(undefined),
   launch: (_password?: string) => wait(undefined),
   saveOnlinePassword: (password: string) => wait(void (config.online_password_saved = password !== "")),
+  thdSignInStart: (_server: string) => wait<ThdSignInStart>({ device_code: "preview", user_code: "PREV-1234", verification_uri: "https://thehuntersdream.com/link", interval: 1, expires_in: 60 }),
+  thdSignInPoll: (_server: string, _deviceCode: string) => wait<ThdSignInPoll>(++previewPolls < 4
+    ? { status: "pending", online_id: null, token: null }
+    : { status: "approved", online_id: "PreviewHunter", token: "preview-token" }),
+  thdSignOut: (_server: string, _token: string) => wait(true),
   stop: () => wait(undefined),
   recompStatus: () => wait(structuredClone(previewRecomp)),
   recompBuild: () => previewRecompBuild(),
