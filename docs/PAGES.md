@@ -23,7 +23,7 @@ move with it in all 20 locales.
 | Saves | `profiles/SavesPage`, `saves/` | The active profile's save set: its characters (name, level, attributes, Insight, Blood Echoes, playtime, journey), each with **Edit character** opening the save editor in place of the page ([Save editor](SAVE_EDITOR.md)); **Create backup**, the folder, and the backups (each marked edited or original) with Restore ([Profiles and saves](SAVE_MANAGER.md)) |
 | Trophies | `profiles/TrophiesPage` | The active profile's trophies by game, filtered and sorted ([Trophies](TROPHIES.md)) |
 | Profiles | `profiles/` | Every profile: use, rename, delete (with confirmation), and create a new one |
-| Online | `online/` | Online play on or off; the pool (Seamless Hunt or The Hunter's Dream); that pool's account (the Seamless Hunt password saved only after a warning, below), servers and UPnP. A warning when the active profile's save set is edited: it cannot go online |
+| Online | `online/` | Online play on or off; the pool (Seamless Hunt or The Hunter's Dream); that pool's account (The Hunter's Dream: sign in with Discord through a code approved on the server's page, `thd_account.rs`; the token is saved in a file of its own, `<data>/thd-token`, readable by the player's account alone (`thd_token.rs`; not in the database, its backups or `launcher.json`, and never sent to the page); Seamless Hunt: the password saved only after a warning, below), servers and UPnP. A warning when the active profile's save set is edited: it cannot go online |
 
 The Seamless Hunt password is saved only after the player accepts that it is stored unencrypted
 on this device, in a file of its own readable by their account alone (`online_password.rs`;

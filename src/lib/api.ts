@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { profilesService } from "@/services";
 import { mockApi } from "@/lib/mockApi";
-import type { ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, Inventory, SaveEdit, CatalogItem, RecompStatus, RecompProgress } from "@/lib/types";
+import type { ThdSignInStart, ThdSignInPoll, ReleaseInfo, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveList, SaveChange, Character, Inventory, SaveEdit, CatalogItem, RecompStatus, RecompProgress } from "@/lib/types";
 
 /** Running inside the Tauri app (else a browser preview with mock data). */
 const inTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -43,6 +43,10 @@ const tauriApi = {
   openPath: (path: string) => invoke<void>("open_path", { path }),
   launch: (password?: string) => invoke<void>("launch", { password }),
   saveOnlinePassword: (password: string) => invoke<void>("save_online_password", { password }),
+  thdSignInStart: (server: string) => invoke<ThdSignInStart>("thd_sign_in_start", { server }),
+  thdSignInPoll: (server: string, deviceCode: string) => invoke<ThdSignInPoll>("thd_sign_in_poll", { server, deviceCode }),
+  /** Deletes the saved token; false when the server could not be reached to forget it. */
+  thdSignOut: (server: string) => invoke<boolean>("thd_sign_out", { server }),
   stop: () => invoke<void>("stop"),
   recompStatus: () => invoke<RecompStatus>("recomp_status"),
   /** Resolves when the build ends; its progress comes as onRecompProgress events. */
