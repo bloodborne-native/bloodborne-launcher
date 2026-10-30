@@ -38,8 +38,9 @@ pub type Jobs = Arc<Mutex<Job>>;
 
 #[derive(Serialize)]
 pub struct Status {
-    /// "none", "ready", "stale" (built for another executable or recompiler: `reason` says which)
-    /// or "building".
+    /// "none", "ready", "update" (built by an earlier recompiler with the same library interface:
+    /// the game uses it, and building again compiles only what changed), "stale" (built for another
+    /// executable or library interface: `reason` says which) or "building".
     pub state: &'static str,
     pub reason: Option<&'static str>,
     /// The library's record (library.json): built, seconds, functions, size, compiler.
@@ -68,6 +69,22 @@ fn kit_version(python: &Path, game_root: &Path) -> Option<String> {
             out.status.success().then(|| String::from_utf8_lossy(&out.stdout).trim().to_string())
         })
         .clone()
+}
+
+/// The library interface the kit builds for (`build_library.py --api`), asked once.
+fn kit_api(python: &Path, game_root: &Path) -> Option<u64> {
+    static API: OnceLock<Option<u64>> = OnceLock::new();
+    *API.get_or_init(|| {
+        let out = Command::new(python).arg(script(game_root)?).arg("--api").env("PYTHONDONTWRITEBYTECODE", "1").output().ok()?;
+        String::from_utf8_lossy(&out.stdout).trim().parse().ok()
+    })
+}
+
+/// Recompiler versions with the kit's library interface (the kit's COMPATIBLE: every commit since
+/// it last changed), for libraries whose record predates the `api` field.
+fn compatible(game_root: &Path, version: &str) -> bool {
+    fs::read_to_string(game_root.join("recomp/COMPATIBLE"))
+        .is_ok_and(|list| list.lines().any(|line| line.trim() == version))
 }
 
 /// The executable's SHA-256, remembered while its size and time stay the same.
@@ -104,22 +121,28 @@ pub fn status(data: &Path, python: &Path, game_root: &Path, game_dir: &Path, job
     let Some(found) = library.clone() else {
         return Status { state: "none", reason: None, library, available };
     };
-    let reason = if found["eboot_sha256"].as_str() != eboot_sha256(game_dir).as_deref() {
-        Some("game")
-    } else if found["recomp"].as_str() != kit_version(python, game_root).as_deref() {
-        Some("recompiler")
-    } else {
-        None
+    if found["eboot_sha256"].as_str() != eboot_sha256(game_dir).as_deref() {
+        return Status { state: "stale", reason: Some("game"), library, available };
+    }
+    if found["recomp"].as_str() == kit_version(python, game_root).as_deref() {
+        return Status { state: "ready", reason: None, library, available };
+    }
+    // Another recompiler: still loadable with the same library interface, and an update compiles
+    // only the files whose code changed (build_library.py keeps the objects).
+    let same_api = match found["api"].as_u64() {
+        Some(api) => kit_api(python, game_root) == Some(api),
+        None => found["recomp"].as_str().is_some_and(|version| compatible(game_root, version)),
     };
-    Status { state: if reason.is_some() { "stale" } else { "ready" }, reason, library, available }
+    let state = if same_api { "update" } else { "stale" };
+    Status { state, reason: Some("recompiler"), library, available }
 }
 
 /// The library to start the game with: only one built from this executable by this recompiler.
 pub fn ready_library(data: &Path, python: &Path, game_root: &Path, game_dir: &Path, jobs: &Jobs) -> Result<PathBuf> {
     match status(data, python, game_root, game_dir, jobs) {
-        Status { state: "ready", .. } => Ok(dir(data).join("librecomp.dylib")),
+        Status { state: "ready" | "update", .. } => Ok(dir(data).join("librecomp.dylib")),
         Status { state: "stale", reason: Some("game"), .. } => Err("it was built from another copy of the game".into()),
-        Status { state: "stale", .. } => Err("it was built by another version of the recompiler".into()),
+        Status { state: "stale", .. } => Err("it was built for another version of the library interface".into()),
         Status { state: "building", .. } => Err("it is being built".into()),
         _ => Err("it has not been built".into()),
     }
@@ -320,7 +343,8 @@ pub fn disk_use(data: &Path) -> u64 {
 mod tests {
     use super::*;
 
-    /// A data folder, a game folder with an eboot.bin and a kit whose script prints a version.
+    /// A data folder, a game folder with an eboot.bin and a kit whose script prints a version (and
+    /// library interface 4 for --api).
     fn setup(version: &str) -> (PathBuf, PathBuf, PathBuf) {
         let root = std::env::temp_dir().join(format!("bb-recomp-test-{}-{version}", std::process::id()));
         let (data, game, kit) = (root.join("data"), root.join("game"), root.join("runtime"));
@@ -328,13 +352,18 @@ mod tests {
         fs::create_dir_all(kit.join("recomp/tools")).unwrap();
         fs::create_dir_all(dir(&data)).unwrap();
         fs::write(game.join("eboot.bin"), b"synthetic executable").unwrap();
-        fs::write(kit.join("recomp/tools/build_library.py"), format!("print('{version}')\n")).unwrap();
+        fs::write(kit.join("recomp/tools/build_library.py"), format!("import sys\nprint('4' if '--api' in sys.argv else '{version}')\n")).unwrap();
         (data, game, kit)
     }
 
     fn record(data: &Path, eboot: &str, recomp: &str) {
         fs::write(dir(data).join("librecomp.dylib"), b"library").unwrap();
         fs::write(dir(data).join("library.json"), json!({"eboot_sha256": eboot, "recomp": recomp}).to_string()).unwrap();
+    }
+
+    fn record_api(data: &Path, eboot: &str, recomp: &str, api: u64) {
+        fs::write(dir(data).join("librecomp.dylib"), b"library").unwrap();
+        fs::write(dir(data).join("library.json"), json!({"eboot_sha256": eboot, "recomp": recomp, "api": api}).to_string()).unwrap();
     }
 
     #[test]
@@ -351,6 +380,20 @@ mod tests {
         record(&data, &eboot, "v0");
         let found = status(&data, &python, &kit, &game, &jobs);
         assert_eq!((found.state, found.reason), ("stale", Some("recompiler")));
+        // An earlier recompiler with the kit's library interface: still used, and an update offered.
+        record_api(&data, &eboot, "v0", 4);
+        let found = status(&data, &python, &kit, &game, &jobs);
+        assert_eq!((found.state, found.reason), ("update", Some("recompiler")));
+        assert_eq!(ready_library(&data, &python, &kit, &game, &jobs).unwrap(), dir(&data).join("librecomp.dylib"));
+        record_api(&data, &eboot, "v0", 3);
+        assert_eq!(status(&data, &python, &kit, &game, &jobs).state, "stale");
+        assert!(ready_library(&data, &python, &kit, &game, &jobs).is_err());
+        // A record without the interface: the kit's COMPATIBLE list of recompiler versions decides.
+        record(&data, &eboot, "v0");
+        fs::write(kit.join("recomp/COMPATIBLE"), "v1\nv0\n").unwrap();
+        assert_eq!(status(&data, &python, &kit, &game, &jobs).state, "update");
+        fs::write(kit.join("recomp/COMPATIBLE"), "v1\n").unwrap();
+        assert_eq!(status(&data, &python, &kit, &game, &jobs).state, "stale");
         record(&data, &eboot, "v1");
         assert_eq!(status(&data, &python, &kit, &game, &jobs).state, "ready");
         assert_eq!(ready_library(&data, &python, &kit, &game, &jobs).unwrap(), dir(&data).join("librecomp.dylib"));

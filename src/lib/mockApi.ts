@@ -141,12 +141,12 @@ let previewCharacter: Character = { title_id: "CUSA03173", slot: 0, name: "Hunte
   skill: 9, bloodtinge: 6, arcane: 7, echoes: 12140, insight: 3, playtime_ms: 4_800_000,
   new_game_cycle: 0, stats_consistent: true, fingerprint: "preview" };
 
-// The recompiled library in the preview: ?recomp=ready or ?recomp=stale; a build runs in seconds.
+// The recompiled library in the preview: ?recomp=ready, ?recomp=update or ?recomp=stale; a build runs in seconds.
 const previewRecompState = new URLSearchParams(window.location.search).get("recomp");
 const previewLibrary = { built: "2026-10-28T10:15:00+00:00", seconds: 742, functions: 241821, size: 330459824, compiler: "clang version 23.1.4" };
 const previewRecomp: RecompStatus = {
-  status: { state: previewRecompState === "ready" ? "ready" : previewRecompState === "stale" ? "stale" : "none",
-    reason: previewRecompState === "stale" ? "game" : null, library: previewRecompState ? previewLibrary : null, available: true },
+  status: { state: previewRecompState === "ready" ? "ready" : previewRecompState === "stale" ? "stale" : previewRecompState === "update" ? "update" : "none",
+    reason: previewRecompState === "stale" ? "game" : previewRecompState === "update" ? "recompiler" : null, library: previewRecompState ? previewLibrary : null, available: true },
   disk_used: previewRecompState ? previewLibrary.size : 0, disk_needed: 3_000_000_000,
 };
 const previewRecompListeners = new Set<(progress: RecompProgress) => void>();

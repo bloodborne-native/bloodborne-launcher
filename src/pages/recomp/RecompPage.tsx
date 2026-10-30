@@ -22,7 +22,8 @@ export function RecompPage() {
   const status = data?.status;
   const building = status?.state === "building" || build.isPending || running;
   const library = status?.library;
-  const ready = status?.state === "ready";
+  // An "update" library still loads: the game keeps using it until the update is built.
+  const ready = status?.state === "ready" || status?.state === "update";
   const noGame = !settings.game_dir;
   return <>
     <PageHeader title={t("recomp.title")} subtitle={t("recomp.subtitle")} />
@@ -46,7 +47,8 @@ export function RecompPage() {
           : noGame && !library ? <Message tone="warning">{t("recomp.needsGame")}</Message>
           : building ? (progress ? <RecompProgressBar progress={progress} /> : <p className="text-sm text-muted-foreground">{t("recomp.steps.start")}</p>)
           : <p className="text-sm">
-            {status?.state === "stale" ? t(status.reason === "game" ? "recomp.staleGame" : "recomp.staleRecompiler")
+            {status?.state === "update" ? t("recomp.updateAvailable")
+              : status?.state === "stale" ? t(status.reason === "game" ? "recomp.staleGame" : "recomp.staleRecompiler")
               : library ? t("recomp.ready", { date: new Date(library.built).toLocaleDateString(i18n.language), functions: library.functions.toLocaleString(i18n.language), size: megabytes(library.size) })
               : t("recomp.none")}
           </p>}
@@ -56,7 +58,7 @@ export function RecompPage() {
           {building
             ? <Button size="sm" variant="secondary" disabled={cancel.isPending} onClick={() => cancel.mutate()}>{t("recomp.cancel")}</Button>
             : <Button size="sm" disabled={!status?.available || noGame} onClick={() => build.mutate()}>
-              {library ? t("recomp.rebuild") : t("recomp.build")}</Button>}
+              {status?.state === "update" ? t("recomp.update") : library ? t("recomp.rebuild") : t("recomp.build")}</Button>}
           {!building && (data?.disk_used ?? 0) > 0 && <Button size="sm" variant="ghost" disabled={remove.isPending}
             onClick={() => { if (settings.cpu === "recompiled") set("cpu", "translated"); remove.mutate(); }}>{t("recomp.delete")}</Button>}
           {(data?.disk_used ?? 0) > 0 && <span className="ml-auto text-xs text-muted-foreground">{t("recomp.disk", { size: megabytes(data!.disk_used) })}</span>}

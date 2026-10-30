@@ -190,8 +190,10 @@ export type ReleaseInfo = { version: string; tag: string; newer: boolean; notes:
 /** The recompiled library (recomp.rs): its state and record, and the disk it takes. */
 export type RecompStatus = {
   status: {
-    state: "none" | "ready" | "stale" | "building";
-    /** stale: built from another copy of the game, or by another recompiler version. */
+    state: "none" | "ready" | "update" | "stale" | "building";
+    /** update: built by an earlier recompiler with the same library interface: the game uses it,
+     *  and building again compiles only what changed. stale: built from another copy of the game,
+     *  or for another library interface. */
     reason: "game" | "recompiler" | null;
     library: { built: string; seconds: number; functions: number; size: number; compiler: string } | null;
     /** Whether this build of the app has the recompiler. */

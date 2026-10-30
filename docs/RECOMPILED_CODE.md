@@ -31,7 +31,7 @@ guide; the build itself is bloodborne-recomp's
 
 | Command | What it does |
 |---|---|
-| `recomp_status` | `status`: `state` (`none`, `ready`, `stale` with `reason` `game` or `recompiler`, or `building`), `library` (the record) and `available` (whether the app ships the kit; without it the page says so and Build is off); `disk_used` (what `<data>/recomp/` takes) and `disk_needed` (the peak, 3,000 MB) |
+| `recomp_status` | `status`: `state` (`none`, `ready`, `update` (built by an earlier recompiler with the same library interface: the game keeps using it, and building again compiles only what changed), `stale` with `reason` `game` or `recompiler` (another library interface), or `building`), `library` (the record) and `available` (whether the app ships the kit; without it the page says so and Build is off); `disk_used` (what `<data>/recomp/` takes) and `disk_needed` (the peak, 3,000 MB) |
 | `recomp_build` | Downloads and unpacks the toolchain if needed, runs `build_library.py --jobs <cores − 2>`, sends its progress as `recomp-progress` events (`download`, `unpack`, `check`, `extract`, `scan`, `generate`, `compile` with `done`/`total`, `link`, then `done`, `error` or `cancelled`) and resolves when it ends |
 | `recomp_cancel` | Stops the download at its next chunk or kills the script; what was compiled stays, so the next build continues |
 | `recomp_delete` | Removes `<data>/recomp/` (refused while building) |
@@ -47,7 +47,7 @@ An explanation (less CPU time at about the same frame rate; not a native version
 (Recompiled is offered once a library is ready), and the library's state with Build, Build again,
 Cancel and Delete. During a build: the step, a bar (MB or files), the elapsed time and an
 estimate from the compile rate (`useRecompStore` keeps the progress while the player is on
-another page). The browser preview simulates a build (`?recomp=ready` or `?recomp=stale` for the
+another page). The browser preview simulates a build (`?recomp=ready`, `?recomp=update` or `?recomp=stale` for the
 other states).
 
 ## Measured
