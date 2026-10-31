@@ -35,6 +35,8 @@ export type Settings = {
   /** How the game's code runs: "translated" (bbcpu's translator) or "recompiled" (the library built
    * on the Recompiled code page, used only while it matches the game and the recompiler). */
   cpu: "translated" | "recompiled";
+  /** The game compiles its shaders before play, once (BB_SHADER_COMPILE in the runtime). */
+  compile_shaders: boolean;
   online: boolean;
   online_pool: "seamless" | "huntersdream";
   online_server: string;

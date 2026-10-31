@@ -136,6 +136,7 @@ fn default_settings() -> Map<String, Value> {
         "metal_hud": false,
         "renderer": "metal",
         "cpu": "translated",
+        "compile_shaders": false,
         "online": false,
         "online_pool": "seamless",
         "online_server": "play.seamlesshunt.com:31313",
@@ -1174,6 +1175,9 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
     // The recompiled library, when chosen and built from this game by this recompiler; otherwise
     // the translator runs the game's code, and the log's first line says why.
     let mut note = None;
+    if bool_setting(&s, "compile_shaders") {
+        cmd.env("BB_SHADER_COMPILE", "1");
+    }
     if str_setting(&s, "cpu") == "recompiled" {
         let game_dir = expand(&str_setting(&s, "game_dir"));
         match recomp::ready_library(&p.data, &p.python, &p.game_root, &game_dir, &state.recomp) {

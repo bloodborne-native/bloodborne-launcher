@@ -30,6 +30,7 @@ const config: Config = {
     metal_hud: false,
     renderer: "metal",
     cpu: "translated",
+    compile_shaders: false,
     online: false,
     online_pool: "seamless",
     online_server: "play.seamlesshunt.com:31313",

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui";
 import { Message } from "@/components/common";
-import { PageHeader, SelectRow, SettingsSection } from "@/components/settings";
+import { PageHeader, SelectRow, SettingsSection, SwitchRow } from "@/components/settings";
 import { useRecompBuild, useRecompCancel, useRecompDelete, useRecompStatus, useSetting, useSettingsData } from "@/hooks";
 import { useRecompStore } from "@/stores";
 import { RecompProgressBar } from "@/pages/recomp/RecompProgressBar";
@@ -40,6 +40,10 @@ export function RecompPage() {
         options={[{ value: "translated", label: "recomp.translated", hint: "recomp.translatedHint" },
                   { value: "recompiled", label: "recomp.recompiled", hint: "recomp.recompiledHint" }]}
         onChange={(value) => set("cpu", value)} />
+    </SettingsSection>
+    <SettingsSection title={t("recomp.shadersTitle")}>
+      <SwitchRow title={t("recomp.shadersAhead")} description={t("recomp.shadersAheadHint")}
+        checked={settings.compile_shaders} onChange={(value) => set("compile_shaders", value)} />
     </SettingsSection>
     <SettingsSection title={t("recomp.libraryTitle")} description={t("recomp.buildHint")}>
       <div className="grid gap-4 px-4 pb-4 pt-1 sm:px-5">
