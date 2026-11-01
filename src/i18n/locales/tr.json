@@ -417,7 +417,7 @@
     "modeNeedsLibrary": "Yeniden derlenmiş seçeneği için aşağıdaki kitaplığı oluşturun.",
     "shadersTitle": "Gölgelendiriciler",
     "shadersAhead": "Gölgelendiricileri önceden derle",
-    "shadersAheadHint": "Oyun bir sonraki başlatılışında ilerlemeyi ekranda göstererek önce gölgelendiricilerini derler. Bu, bir kez olmak üzere birkaç dakika sürer. Derlenmiş gölgelendiriciler atlanır, böylece durdurup daha sonra devam edebilirsin.",
+    "shadersAheadHint": "Oyun bir sonraki başlatılışında ilerlemeyi ekranda göstererek önce gölgelendiricilerini derler. Bu, ilk seferde birkaç dakika sürer. Derlenmiş gölgelendiriciler atlanır, böylece durdurup daha sonra devam edebilirsin.",
     "libraryTitle": "Kitaplık",
     "buildHint": "Oluşturma 70 MB'lık bir derleyici indirir, hızlı bir cihazda yaklaşık 14 dakika sürer (daha az çekirdekle daha uzun) ve sürerken yaklaşık 3 GB boş alan gerektirir. Sonrasında kitaplık yaklaşık 710 MB yer kaplar ve derleyici silinir. Başlatıcıyı kullanmaya devam edebilirsiniz, ancak oluşturma sırasında oynamak yavaş olur.",
     "none": "Henüz oluşturulmadı.",

@@ -609,7 +609,7 @@
     "modeNeedsLibrary": "Crie a biblioteca abaixo para escolher Recompilado.",
     "shadersTitle": "Shaders",
     "shadersAhead": "Compilar shaders antecipadamente",
-    "shadersAheadHint": "Na próxima vez que o jogo iniciar, ele compilará primeiro os shaders, com o progresso na tela. Isso leva alguns minutos, uma única vez. Shaders já compilados são ignorados, então você pode parar e continuar depois.",
+    "shadersAheadHint": "Na próxima vez que o jogo iniciar, ele compilará primeiro os shaders, com o progresso na tela. Na primeira vez, isso leva alguns minutos. Shaders já compilados são ignorados, então você pode parar e continuar depois.",
     "libraryTitle": "A biblioteca",
     "buildHint": "A criação baixa um compilador de 70 MB, leva cerca de 14 minutos em um dispositivo rápido (mais com menos núcleos) e precisa de cerca de 3 GB livres enquanto roda. Depois, a biblioteca ocupa cerca de 710 MB e o compilador é apagado. Você pode continuar usando o launcher, mas jogar durante a criação será lento.",
     "none": "Ainda não criada.",

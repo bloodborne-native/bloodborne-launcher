@@ -417,7 +417,7 @@
     "modeNeedsLibrary": "Maak hieronder de bibliotheek om Hercompileerd te kiezen.",
     "shadersTitle": "Shaders",
     "shadersAhead": "Shaders vooraf compileren",
-    "shadersAheadHint": "De volgende keer dat de game start, compileert deze eerst de shaders, met de voortgang op het scherm. Dit duurt eenmalig een paar minuten. Reeds gecompileerde shaders worden overgeslagen, dus je kunt stoppen en later verdergaan.",
+    "shadersAheadHint": "De volgende keer dat de game start, compileert deze eerst de shaders, met de voortgang op het scherm. Dit duurt de eerste keer een paar minuten. Reeds gecompileerde shaders worden overgeslagen, dus je kunt stoppen en later verdergaan.",
     "libraryTitle": "De bibliotheek",
     "buildHint": "Het maken downloadt een compiler van 70 MB, duurt ongeveer 14 minuten op een snel apparaat (langer met minder kernen) en heeft ongeveer 3 GB vrije ruimte nodig zolang het loopt. Daarna neemt de bibliotheek ongeveer 710 MB in en wordt de compiler verwijderd. Je kunt de launcher blijven gebruiken, maar spelen tijdens het maken gaat traag.",
     "none": "Nog niet gemaakt.",
