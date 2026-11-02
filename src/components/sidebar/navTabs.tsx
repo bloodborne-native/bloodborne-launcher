@@ -16,6 +16,7 @@ export const NAV_GROUPS: { title: "nav.groupSettings" | "nav.groupDeveloper" | n
     { id: "trophies", icon: <Trophy /> },
     { id: "profiles", icon: <Users /> },
     { id: "online", icon: <Globe2 /> },
+    { id: "about", icon: <Info /> },
   ] },
   { title: "nav.groupSettings", tabs: [
     { id: "graphics", icon: <MonitorCog /> },
@@ -29,7 +30,6 @@ export const NAV_GROUPS: { title: "nav.groupSettings" | "nav.groupDeveloper" | n
     { id: "advanced", icon: <Settings2 /> },
     { id: "log", icon: <ScrollText /> },
   ] },
-  { title: null, tabs: [{ id: "about", icon: <Info /> }] },
 ].map((group) => ({ ...group, tabs: group.tabs.filter((tab) => ONLINE_READY || tab.id !== "online") })) as { title: "nav.groupSettings" | "nav.groupDeveloper" | null; tabs: NavTab[] }[];
 
 /** All tabs, in order. */

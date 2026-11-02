@@ -1,6 +1,6 @@
 {
   "app": { "name": "Bloodborne", "tagline": "原生移植版", "version": "v{{version}}" },
-  "about": { "subtitle": "这个项目是什么，以及在哪里找到它。", "what1": "《血源诅咒》是为 PS4 制作的。本项目使用你自己的游戏副本，在其他设备上运行它：不包含任何游戏文件。", "what2": "目标是真正原生的游戏。替代 PS4 的各个层正在被逐一移除，让游戏无论运行在什么设备上，都能直接与该设备通信。", "linksTitle": "实用链接", "sourceCode": "源代码", "report": "报告问题", "guides": "玩家指南", "roadmap": "路线图", "creditsTitle": "致谢", "credits": "基于 deadinside28 的 bbport 和 shadPS4。没有他们，以及每一位贡献者和测试者，就没有这个项目。", "legal": "基于 GNU GPL 的自由软件。与 Sony Interactive Entertainment、FromSoftware 和 shadPS4 无关。Bloodborne 是 Sony Interactive Entertainment 的商标。" },
+  "about": { "subtitle": "我们是谁，以及在哪里找到我们。", "what1": "嗨，谢谢你的到来！这是一个社区项目，让《血源诅咒》能在更多设备上运行。你只需准备自己的游戏副本，其余的交给我们。", "what2": "我们的梦想是让它真正原生运行，中间不再有任何东西假装成 PS4。我们还没走到那一步，但每次更新都让我们更近一点。", "linksTitle": "实用链接", "sourceCode": "源代码", "report": "报告问题", "guides": "玩家指南", "roadmap": "路线图", "creditsTitle": "致谢", "credits": "没有 deadinside28 的 bbport、shadPS4，以及每一位测试、反馈问题和提供帮助的朋友，这一切都不会存在。谢谢你们！", "legal": "基于 GNU GPL 的自由软件。与 Sony Interactive Entertainment、FromSoftware 和 shadPS4 无关。Bloodborne 是 Sony Interactive Entertainment 的商标。" },
   "nav": { "about": "关于", "recomp": "重新编译的代码", "trophies": "奖杯", "groupSettings": "设置", "groupDeveloper": "开发者", "home": "主页", "graphics": "图形", "controls": "操作", "game": "游戏", "mods": "模组", "patches": "补丁", "online": "Online", "advanced": "高级", "log": "日志", "saves": "存档", "profiles": "用户资料" },
   "online": {
     "title": "在线",
