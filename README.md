@@ -10,6 +10,11 @@ macOS app around the game (`packaging/macos.sh`). Player guides are in the app's
 own design is in [docs](docs/README.md). [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) builds it with the game inside as an
 iPhone app (a proof of concept).
 
+The project's goal is a game that is truly native on any platform, with no
+[layer standing in for a PS4](https://github.com/bloodborne-native/bloodborne-mac/blob/main/docs/ROADMAP.md#the-ps4-layers). The launcher
+is what a player sees of that: it is written for every system, and it builds the recompiled code
+and the shaders on the player's own device.
+
 The launcher has a game folder check, graphics, controls (controller choice and button mapping),
 game options, online play, user profiles, saves with backups, a save editor, trophies, mods,
 patches, the recompiled library ([Recompiled code](docs/RECOMPILED_CODE.md)), advanced options and
