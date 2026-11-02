@@ -1,6 +1,7 @@
 {
   "app": { "name": "Bloodborne", "tagline": "原生移植版", "version": "v{{version}}" },
-  "nav": { "recomp": "重新編譯的程式碼", "trophies": "獎盃", "groupSettings": "設定", "groupDeveloper": "開發者", "home": "首頁", "graphics": "圖形", "controls": "操作", "game": "遊戲", "mods": "模組", "patches": "修補", "online": "Online", "advanced": "進階", "log": "記錄", "saves": "存檔", "profiles": "使用者設定檔" },
+  "about": { "subtitle": "這個專案是什麼，以及在哪裡找到它。", "what1": "《血源詛咒》是為 PS4 製作的。本專案使用你自己的遊戲副本，在其他裝置上執行：不包含任何遊戲檔案。", "what2": "目標是真正原生的遊戲。取代 PS4 的各個層正被逐一移除，讓遊戲無論在什麼裝置上執行，都能直接與該裝置溝通。", "linksTitle": "實用連結", "sourceCode": "原始碼", "report": "回報問題", "guides": "玩家指南", "roadmap": "路線圖", "creditsTitle": "致謝", "credits": "基於 deadinside28 的 bbport 和 shadPS4。沒有他們，以及每一位貢獻者和測試者，就沒有這個專案。", "legal": "基於 GNU GPL 的自由軟體。與 Sony Interactive Entertainment、FromSoftware 和 shadPS4 無關。Bloodborne 是 Sony Interactive Entertainment 的商標。" },
+  "nav": { "about": "關於", "recomp": "重新編譯的程式碼", "trophies": "獎盃", "groupSettings": "設定", "groupDeveloper": "開發者", "home": "首頁", "graphics": "圖形", "controls": "操作", "game": "遊戲", "mods": "模組", "patches": "修補", "online": "Online", "advanced": "進階", "log": "記錄", "saves": "存檔", "profiles": "使用者設定檔" },
   "online": {
     "title": "線上",
     "subtitle": "與其他獵人一起遊玩：留下訊息、尋找血跡並結伴合作。",

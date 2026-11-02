@@ -30,6 +30,14 @@ on this device, in a file of its own readable by their account alone (`online_pa
 `<data>/online-password`, not in the database, its backups or `launcher.json`). Otherwise Play asks
 for it each time and it goes to that launch only.
 
+## About
+
+| Tab | Folder | What it holds |
+|---|---|---|
+| About | `about/` | What the project is and its goal, links (Discord, source code, reporting a problem, the guides, the roadmap), credits and the version |
+
+Links open in the browser through `open_link`, by name from a fixed list (`updates.rs`).
+
 ## Settings
 
 | Tab | Folder | What it holds |

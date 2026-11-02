@@ -46,7 +46,7 @@ export function SummaryGrid() {
         value={settings.mods_enabled ? t("home.modsActive", { count: activeMods }) : t("home.modsOff")}
         onClick={() => setTab("mods")}
       />
-      <SummaryTile icon={<DiscordIcon />} label={t("home.discord")} value="Discord" onClick={() => void api.openDiscord()} />
+      <SummaryTile icon={<DiscordIcon />} label={t("home.discord")} value="Discord" onClick={() => void api.openLink("discord")} />
     </nav>
   );
 }

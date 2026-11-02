@@ -11,7 +11,18 @@ const RELEASES: &str =
 /// Every recent release, candidates included (newest first; drafts are not listed publicly).
 const RELEASE_LIST: &str =
     "https://api.github.com/repos/bloodborne-native/bloodborne-mac/releases?per_page=20";
-const DISCORD_INVITE: &str = "https://discord.gg/QS6vHz45xA";
+/// The links the launcher offers: the page names one, so it cannot open other addresses.
+fn link(id: &str) -> Option<&'static str> {
+    Some(match id {
+        "discord" => "https://discord.gg/QS6vHz45xA",
+        "source" => "https://github.com/bloodborne-native",
+        "issues" => "https://github.com/bloodborne-native/bloodborne-mac/issues",
+        "guides" => "https://github.com/bloodborne-native/bloodborne-mac/tree/main/docs/guide",
+        "roadmap" => "https://github.com/bloodborne-native/bloodborne-mac/blob/main/docs/ROADMAP.md#the-ps4-layers",
+        _ => return None,
+    })
+}
+
 const RELEASE_PAGE: &str = "https://github.com/bloodborne-native/bloodborne-mac/releases/tag/";
 const MAX_RESPONSE: usize = 512 * 1024;
 
@@ -165,8 +176,9 @@ fn release_url(tag: &str, candidate: bool) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn open_discord(app: tauri::AppHandle) -> Result<(), String> {
-    app.opener().open_url(DISCORD_INVITE, None::<&str>).map_err(|e| e.to_string())
+pub fn open_link(app: tauri::AppHandle, id: String) -> Result<(), String> {
+    let url = link(&id).ok_or("Unknown link.")?;
+    app.opener().open_url(url, None::<&str>).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -187,6 +199,11 @@ mod tests {
             &serde_json::json!({"tag_name": tag, "draft": false, "prerelease": false}),
         )
         .unwrap()
+    }
+    #[test]
+    fn only_listed_links_open() {
+        assert!(link("discord").is_some());
+        assert!(link("https://example.com").is_none());
     }
     #[test]
     fn compares_numeric_precedence_and_ignores_build_metadata() {

@@ -4,8 +4,9 @@
     "tagline": "Port nativo",
     "version": "v{{version}}"
   },
+  "about": { "subtitle": "O que é este projeto e onde encontrá-lo.", "what1": "Bloodborne foi feito para o PS4. Este projeto o executa em outros dispositivos a partir da sua própria cópia do jogo: nenhum arquivo do jogo está incluído.", "what2": "O objetivo é um jogo verdadeiramente nativo. As camadas que substituem um PS4 estão sendo removidas uma a uma, para que o jogo fale diretamente com o dispositivo em que roda, seja ele qual for.", "linksTitle": "Links úteis", "sourceCode": "Código-fonte", "report": "Relatar um problema", "guides": "Guias do jogador", "roadmap": "Roteiro", "creditsTitle": "Créditos", "credits": "Baseado no bbport de deadinside28 e no shadPS4. Este projeto não existiria sem eles, nem sem todos que contribuem e testam.", "legal": "Software livre sob a GNU GPL. Sem afiliação com Sony Interactive Entertainment, FromSoftware ou shadPS4. Bloodborne é uma marca registrada da Sony Interactive Entertainment." },
   "nav": {
-    "recomp": "Código recompilado",
+    "about": "Sobre", "recomp": "Código recompilado",
     "trophies": "Troféus",
     "groupSettings": "Configurações",
     "groupDeveloper": "Desenvolvedor",

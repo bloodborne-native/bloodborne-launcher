@@ -286,7 +286,7 @@ export const mockApi = {
     ? { version: "0.8.1", tag: "v0.8.1", newer: true, notes: new URLSearchParams(window.location.search).has("empty-notes") ? "" : "## What’s new\n\n- Improved opening-video playback.\n- Profile and save management in the launcher.\n\nRead the **release notes** before installing. [GitHub](https://github.com)\n\n<script>window.untrustedReleaseScript = true</script>\n![Remote image](https://example.com/image.png)" }
     : { version: "0.8.0", tag: "v0.8.0", newer: false, notes: "" }),
   openRelease: (_tag: string) => wait(undefined),
-  openDiscord: () => wait(undefined),
+  openLink: (_id: string) => wait(undefined),
   loadConfig: () => wait(structuredClone(config)),
   saveSettings: (settings: Partial<Settings>) => wait(void (Object.assign(config.settings, settings),
     config.settings.online_save_password || (config.online_password_saved = false))),
