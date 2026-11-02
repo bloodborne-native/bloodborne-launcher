@@ -61,6 +61,7 @@
     "notAssigned": "未割り当て", "saveFailed": "保存できませんでした。", "restartNote": "次にゲームを起動したときに反映されます。"
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "ヤーナムへ戻る",
     "title": "夜を狩れ", "subtitle": "狩りが再び始まる。",
     "gameFolderHint": "アップデート1.09を適用した Bloodborne（地域は問いません）を選択してください。", "checking": "ゲームファイルを確認しています…", "ready": "狩りの準備完了",

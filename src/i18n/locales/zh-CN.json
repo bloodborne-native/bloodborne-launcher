@@ -61,6 +61,7 @@
     "notAssigned": "未分配", "saveFailed": "无法保存。", "restartNote": "下次启动游戏时生效。"
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "回到亚楠",
     "title": "狩猎长夜", "subtitle": "狩猎再次开始。",
     "gameFolderHint": "选择你的 Bloodborne 副本（任意地区），需已应用 1.09 更新。", "checking": "正在检查游戏文件…", "ready": "准备狩猎",

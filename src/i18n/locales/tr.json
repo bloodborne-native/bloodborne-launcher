@@ -61,6 +61,7 @@
     "notAssigned": "Atanmadı", "saveFailed": "Kaydedilemedi.", "restartNote": "Oyunu bir sonraki başlatışınızda geçerli olur."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Yharnam’a geri dön",
     "title": "Geceyi avla", "subtitle": "Av yeniden başlıyor.",
     "gameFolderHint": "Herhangi bir bölgeden, 1.09 güncellemesi uygulanmış Bloodborne kopyanızı seçin.", "checking": "Oyun dosyaları denetleniyor…", "ready": "Avlanmaya hazır",

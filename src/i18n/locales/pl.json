@@ -61,6 +61,7 @@
     "notAssigned": "Nieprzypisane", "saveFailed": "Nie udało się zapisać.", "restartNote": "Zadziała przy następnym uruchomieniu gry."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Z powrotem do Yharnam",
     "title": "Zapoluj na noc", "subtitle": "Polowanie zaczyna się na nowo.",
     "gameFolderHint": "Wybierz swoją kopię Bloodborne z dowolnego regionu, z zainstalowaną aktualizacją 1.09.", "checking": "Sprawdzanie plików gry…", "ready": "Gotowy do łowów",

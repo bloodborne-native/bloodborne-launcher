@@ -11,6 +11,7 @@ const RELEASES: &str =
 /// Every recent release, candidates included (newest first; drafts are not listed publicly).
 const RELEASE_LIST: &str =
     "https://api.github.com/repos/bloodborne-native/bloodborne-mac/releases?per_page=20";
+const DISCORD_INVITE: &str = "https://discord.gg/QS6vHz45xA";
 const RELEASE_PAGE: &str = "https://github.com/bloodborne-native/bloodborne-mac/releases/tag/";
 const MAX_RESPONSE: usize = 512 * 1024;
 
@@ -161,6 +162,11 @@ fn release_url(tag: &str, candidate: bool) -> Result<String, String> {
         stable_version(tag)?;
     }
     Ok(format!("{RELEASE_PAGE}{tag}"))
+}
+
+#[tauri::command]
+pub fn open_discord(app: tauri::AppHandle) -> Result<(), String> {
+    app.opener().open_url(DISCORD_INVITE, None::<&str>).map_err(|e| e.to_string())
 }
 
 #[tauri::command]

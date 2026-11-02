@@ -61,6 +61,7 @@
     "notAssigned": "Ikke tilordnet", "saveFailed": "Kunne ikke lagre.", "restartNote": "Trer i kraft neste gang du starter spillet."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Tilbake til Yharnam",
     "title": "Jakt på natten", "subtitle": "Jakten begynner igjen.",
     "gameFolderHint": "Velg din kopi av Bloodborne, fra hvilken som helst region, med oppdatering 1.09 installert.", "checking": "Kontrollerer spillfiler…", "ready": "Klar til jakt",

@@ -61,6 +61,7 @@
     "notAssigned": "Niet toegewezen", "saveFailed": "Kon niet opslaan.", "restartNote": "Geldt vanaf de volgende keer dat je het spel start."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Terug naar Yharnam",
     "title": "Jaag op de nacht", "subtitle": "De jacht begint opnieuw.",
     "gameFolderHint": "Kies je kopie van Bloodborne, uit elke regio, met update 1.09 toegepast.", "checking": "Spelbestanden controleren…", "ready": "Klaar om te jagen",
