@@ -61,6 +61,7 @@
     "notAssigned": "Non assegnato", "saveFailed": "Impossibile salvare.", "restartNote": "Ha effetto al prossimo avvio del gioco."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Ritorno a Yharnam",
     "title": "Caccia la notte", "subtitle": "La caccia ricomincia.",
     "gameFolderHint": "Seleziona la tua copia di Bloodborne, di qualsiasi regione, con l’aggiornamento 1.09 applicato.", "checking": "Verifica dei file del gioco…", "ready": "Pronto a cacciare",

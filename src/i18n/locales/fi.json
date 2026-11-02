@@ -61,6 +61,7 @@
     "notAssigned": "Ei määritetty", "saveFailed": "Tallentaminen epäonnistui.", "restartNote": "Tulee voimaan, kun seuraavan kerran käynnistät pelin."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Takaisin Yharnamiin",
     "title": "Metsästä yötä", "subtitle": "Metsästys alkaa jälleen.",
     "gameFolderHint": "Valitse Bloodborne-kopiosi, miltä tahansa alueelta, päivitys 1.09 asennettuna.", "checking": "Tarkistetaan pelitiedostoja…", "ready": "Valmis metsästykseen",

@@ -61,6 +61,7 @@
     "notAssigned": "Inte tilldelad", "saveFailed": "Kunde inte spara.", "restartNote": "Gäller nästa gång du startar spelet."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Tillbaka till Yharnam",
     "title": "Jaga natten", "subtitle": "Jakten börjar igen.",
     "gameFolderHint": "Välj ditt exemplar av Bloodborne, från valfri region, med uppdatering 1.09 installerad.", "checking": "Kontrollerar spelfiler…", "ready": "Redo att jaga",

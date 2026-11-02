@@ -1,12 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Gamepad2, Gauge, MonitorCog, Package } from "lucide-react";
+import { DiscordIcon } from "@/components/brand";
 import { SummaryTile } from "@/pages/home/SummaryTile";
 import { useMods, useSettingsData } from "@/hooks";
+import { api } from "@/lib";
 import { FPS_MODES, PRESETS, renderSize } from "@/lib/data";
 import { useUiStore } from "@/stores";
 
 /** Upscaler, frame rate, controller and mods at a glance: a row of small buttons under Play, each
- * opening its page. */
+ * opening its page; and the project's Discord server, in the browser. */
 export function SummaryGrid() {
   const { t } = useTranslation();
   const { settings, ini } = useSettingsData();
@@ -44,6 +46,7 @@ export function SummaryGrid() {
         value={settings.mods_enabled ? t("home.modsActive", { count: activeMods }) : t("home.modsOff")}
         onClick={() => setTab("mods")}
       />
+      <SummaryTile icon={<DiscordIcon />} label={t("home.discord")} value="Discord" onClick={() => void api.openDiscord()} />
     </nav>
   );
 }

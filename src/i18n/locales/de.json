@@ -61,6 +61,7 @@
     "notAssigned": "Nicht zugewiesen", "saveFailed": "Speichern fehlgeschlagen.", "restartNote": "Wirkt beim nächsten Spielstart."
   },
   "home": {
+    "discord": "Discord",
     "eyebrow": "Zurück nach Yharnam",
     "title": "Jage die Nacht", "subtitle": "Die Jagd beginnt von Neuem.",
     "gameFolderHint": "Wähle deine Kopie von Bloodborne aus, aus beliebiger Region, mit installiertem Update 1.09.", "checking": "Spieldateien werden geprüft…", "ready": "Bereit zur Jagd",

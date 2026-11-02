@@ -19,7 +19,7 @@ move with it in all 20 locales.
 
 | Tab | Folder | What it holds |
 |---|---|---|
-| Home | `home/` | A night-city picture with the title and Play; a row of buttons with the upscaler and render size, frame-rate mode, controller and mods, each opening its page; the last run's exit; the game card: the game's own tile from the player's dump (`sce_sys/icon0.png`, read when shown, never stored), title, region, version, whether The Old Hunters is included, whether the game can start (`game_check.rs`), and its folder |
+| Home | `home/` | A night-city picture with the title and Play; a row of buttons with Discord, the upscaler and render size, frame-rate mode, controller and mods, each opening its page; the last run's exit; the game card: the game's own tile from the player's dump (`sce_sys/icon0.png`, read when shown, never stored), title, region, version, whether The Old Hunters is included, whether the game can start (`game_check.rs`), and its folder |
 | Saves | `profiles/SavesPage`, `saves/` | The active profile's save set: its characters (name, level, attributes, Insight, Blood Echoes, playtime, journey), each with **Edit character** opening the save editor in place of the page ([Save editor](SAVE_EDITOR.md)); **Create backup**, the folder, and the backups (each marked edited or original) with Restore ([Profiles and saves](SAVE_MANAGER.md)) |
 | Trophies | `profiles/TrophiesPage` | The active profile's trophies by game, filtered and sorted ([Trophies](TROPHIES.md)) |
 | Profiles | `profiles/` | Every profile: use, rename, delete (with confirmation), and create a new one |

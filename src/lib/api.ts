@@ -12,6 +12,7 @@ const inTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window
 const tauriApi = {
   checkRelease: () => invoke<ReleaseInfo | null>("check_release"),
   openRelease: (tag: string) => invoke<void>("open_release", { tag }),
+  openDiscord: () => invoke<void>("open_discord"),
   setTrayLabels: (labels: { show: string; stop: string }) => invoke<void>("set_tray_labels", { labels }),
   listProfiles: profilesService.list,
   changeProfile: profilesService.change,
