@@ -1,6 +1,7 @@
 {
   "app": { "name": "Bloodborne", "tagline": "ネイティブ移植版", "version": "v{{version}}" },
-  "nav": { "recomp": "再コンパイルされたコード", "trophies": "トロフィー", "groupSettings": "設定", "groupDeveloper": "開発者", "home": "ホーム", "graphics": "グラフィック", "controls": "操作", "game": "ゲーム", "mods": "MOD", "patches": "パッチ", "online": "Online", "advanced": "詳細設定", "log": "ログ", "saves": "セーブ", "profiles": "プロフィール" },
+  "about": { "subtitle": "このプロジェクトの概要とリンク。", "what1": "BloodborneはPS4向けに作られたゲームです。このプロジェクトは、お持ちのゲームのコピーを使って他のデバイスで動かします。ゲームファイルは含まれていません。", "what2": "目標は真にネイティブなゲームです。PS4の代わりをしている層を一つずつ取り除き、どのデバイスでもゲームがそのデバイスと直接やり取りできるようにします。", "linksTitle": "便利なリンク", "sourceCode": "ソースコード", "report": "問題を報告", "guides": "プレイヤーガイド", "roadmap": "ロードマップ", "creditsTitle": "クレジット", "credits": "deadinside28氏のbbportとshadPS4をもとにしています。彼らと、貢献しテストしてくださる皆さんがいなければ、このプロジェクトは存在しません。", "legal": "GNU GPLのフリーソフトウェアです。Sony Interactive Entertainment、FromSoftware、shadPS4とは関係ありません。BloodborneはSony Interactive Entertainmentの商標です。" },
+  "nav": { "about": "このアプリについて", "recomp": "再コンパイルされたコード", "trophies": "トロフィー", "groupSettings": "設定", "groupDeveloper": "開発者", "home": "ホーム", "graphics": "グラフィック", "controls": "操作", "game": "ゲーム", "mods": "MOD", "patches": "パッチ", "online": "Online", "advanced": "詳細設定", "log": "ログ", "saves": "セーブ", "profiles": "プロフィール" },
   "online": {
     "title": "オンライン",
     "subtitle": "他の狩人と遊ぶ：メッセージを残し、血痕を見つけ、協力しましょう。",

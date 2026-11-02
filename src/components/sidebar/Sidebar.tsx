@@ -22,7 +22,7 @@ export function Sidebar() {
     >
       <div className="mb-7 px-2"><Brand /></div>
       <nav className="no-drag flex flex-col gap-0.5">
-        {NAV_GROUPS.map((group) => <div key={group.title ?? "main"} className="flex flex-col gap-0.5 [&+&]:mt-4">
+        {NAV_GROUPS.map((group, index) => <div key={index} className="flex flex-col gap-0.5 [&+&]:mt-4">
           {group.title && <p className="px-3 pb-1 text-[11px] text-muted-foreground">{t(group.title)}</p>}
           {group.tabs.map((item) => (
             <SidebarNavItem

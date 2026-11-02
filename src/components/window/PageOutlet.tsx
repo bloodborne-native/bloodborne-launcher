@@ -1,10 +1,12 @@
-import { AdvancedPage, ControlsPage, GamePage, GraphicsPage, HomePage, LogPage, ModsPage, OnlinePage, PatchesPage, ProfilesPage, RecompPage, SavesPage, TrophiesPage } from "@/pages";
+import { AboutPage, AdvancedPage, ControlsPage, GamePage, GraphicsPage, HomePage, LogPage, ModsPage, OnlinePage, PatchesPage, ProfilesPage, RecompPage, SavesPage, TrophiesPage } from "@/pages";
 import { useUiStore } from "@/stores";
 
 /** The page of the chosen tab. */
 export function PageOutlet() {
   const tab = useUiStore((s) => s.tab);
   switch (tab) {
+    case "about":
+      return <AboutPage />;
     case "home":
       return <HomePage />;
     case "graphics":

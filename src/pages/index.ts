@@ -10,3 +10,4 @@ export * from "@/pages/patches";
 export * from "@/pages/saves";
 export * from "@/pages/profiles";
 export * from "@/pages/recomp";
+export * from "@/pages/about";
