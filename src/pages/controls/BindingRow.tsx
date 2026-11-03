@@ -6,7 +6,7 @@ import { IconAction } from "@/components/common";
 import { Badge, Button } from "@/components/ui";
 import { useIni, useSettingsData } from "@/hooks";
 import { api } from "@/lib";
-import { padLabel } from "@/lib/data";
+import { CHORD_MODIFIERS, keyName, padLabel } from "@/lib/data";
 import type { Control } from "@/lib/data";
 
 type Props = { control: Control; kind: "pad" | "key" };
@@ -28,13 +28,50 @@ export function BindingRow({ control, kind }: Props) {
   const setIni = useIni();
   const [capturing, setCapturing] = useState(false);
   const [mouse, setMouse] = useState(false);
+  const [keys, setKeys] = useState(false);
   const iniKey = `${kind}.${control.id}`;
   const fallback = kind === "pad" ? control.pad : control.key;
   const custom = iniKey in ini;
   const binding = custom ? ini[iniKey] : (fallback ?? "");
   const shown = binding ? (kind === "pad" ? padLabel(binding, t("controls.or")) : binding) : t("common.notAssigned");
 
+  // Keys are read here, where the launcher already has the keyboard: the helper's window may not
+  // get focus (macOS 14 and later do not let a process started in the background take it; issue #12).
+  useEffect(() => {
+    if (!keys) return;
+    let held: string | null = null; // a Shift, Ctrl or Alt held down, which may start a chord
+    const done = (name: string | null) => {
+      setKeys(false);
+      if (name) setIni(iniKey, name);
+    };
+    const onDown = (event: KeyboardEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.repeat) return;
+      if (event.code === "Escape") return done(null);
+      if (CHORD_MODIFIERS.has(event.code)) {
+        held ??= event.code;
+        return;
+      }
+      const name = keyName(event.code);
+      if (!name) return;
+      const modifier = held ? keyName(held) : null;
+      done(modifier ? `${modifier}+${name}` : name);
+    };
+    const onUp = (event: KeyboardEvent) => {
+      event.preventDefault();
+      if (event.code === held) done(keyName(held)); // a modifier pressed alone
+    };
+    window.addEventListener("keydown", onDown, true);
+    window.addEventListener("keyup", onUp, true);
+    return () => {
+      window.removeEventListener("keydown", onDown, true);
+      window.removeEventListener("keyup", onUp, true);
+    };
+  }, [keys, iniKey, setIni]);
+
   const assign = async () => {
+    if (kind === "key") return setKeys(true);
     setCapturing(true);
     try {
       const pressed = await api.readInput(kind);
@@ -101,7 +138,7 @@ export function BindingRow({ control, kind }: Props) {
         <span>{t(`controls.inputs.${control.id}` as "controls.inputs.cross")}</span>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        {capturing || mouse ? (
+        {capturing || mouse || keys ? (
           <span className="flex items-center gap-2 text-xs text-blood-400">
             <LoaderCircle className="size-3.5 animate-spin" /> {t(mouse ? "controls.pressMouse" : "controls.press")}
           </span>
@@ -110,11 +147,11 @@ export function BindingRow({ control, kind }: Props) {
             {shown}
           </Badge>
         )}
-        <Button variant="secondary" size="sm" onClick={assign} disabled={capturing || mouse}>
+        <Button variant="secondary" size="sm" onClick={assign} disabled={capturing || mouse || keys}>
           <Crosshair /> {t("controls.assign")}
         </Button>
         {kind === "key" && (
-          <Button variant="secondary" size="sm" onClick={() => setMouse(true)} disabled={capturing || mouse}>
+          <Button variant="secondary" size="sm" onClick={() => setMouse(true)} disabled={capturing || mouse || keys}>
             <Mouse /> {t("controls.mouse")}
           </Button>
         )}

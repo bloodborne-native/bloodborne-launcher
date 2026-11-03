@@ -963,6 +963,11 @@ async fn read_input(state: State<'_, AppState>, kind: String) -> Result<Option<S
         .map_err(|e| e.to_string())?
         .map_err(|e| e.to_string())?;
     let text = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if !out.status.success() {
+        // A helper that could not open its window says why; the launcher shows it.
+        let error = String::from_utf8_lossy(&out.stderr).trim().to_string();
+        return Err(if error.is_empty() { format!("input reader exited with {}", out.status) } else { error });
+    }
     Ok(text.split_once(' ').map(|(_, name)| name.to_string()))
 }
 
