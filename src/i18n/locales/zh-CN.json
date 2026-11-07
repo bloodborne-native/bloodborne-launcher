@@ -116,7 +116,7 @@
       "cross": "叉键", "circle": "圆圈键", "square": "方块键", "triangle": "三角键", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "OPTIONS", "touchpad": "触摸板（左半部分）", "touchpad_right": "触摸板（右半部分）",
       "up": "方向键上", "down": "方向键下", "left": "方向键左", "right": "方向键右",
-      "move_up": "前进", "move_down": "后退", "move_left": "向左移动", "move_right": "向右移动", "sprint": "奔跑", "dodge": "闪避",
+      "move_up": "前进", "move_down": "后退", "move_left": "向左移动", "move_right": "向右移动", "sprint": "奔跑", "dodge": "闪避", "walk": "步行（按住）",
       "look_up": "镜头向上", "look_down": "镜头向下", "look_left": "镜头向左", "look_right": "镜头向右"
     },
     "or": "或"

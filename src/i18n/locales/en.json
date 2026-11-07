@@ -232,6 +232,7 @@
       "move_right": "Move right",
       "sprint": "Run",
       "dodge": "Dodge",
+      "walk": "Walk (hold)",
       "look_up": "Camera up",
       "look_down": "Camera down",
       "look_left": "Camera left",

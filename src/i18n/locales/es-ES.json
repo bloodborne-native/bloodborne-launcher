@@ -116,7 +116,7 @@
       "cross": "Equis", "circle": "Círculo", "square": "Cuadrado", "triangle": "Triángulo", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Panel táctil (mitad izquierda)", "touchpad_right": "Panel táctil (mitad derecha)",
       "up": "Cruceta arriba", "down": "Cruceta abajo", "left": "Cruceta izquierda", "right": "Cruceta derecha",
-      "move_up": "Avanzar", "move_down": "Retroceder", "move_left": "Moverse a la izquierda", "move_right": "Moverse a la derecha", "sprint": "Correr", "dodge": "Esquivar",
+      "move_up": "Avanzar", "move_down": "Retroceder", "move_left": "Moverse a la izquierda", "move_right": "Moverse a la derecha", "sprint": "Correr", "dodge": "Esquivar", "walk": "Caminar (mantener)",
       "look_up": "Cámara arriba", "look_down": "Cámara abajo", "look_left": "Cámara a la izquierda", "look_right": "Cámara a la derecha"
     },
     "or": "o"

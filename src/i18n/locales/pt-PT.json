@@ -116,7 +116,7 @@
       "cross": "Cruz", "circle": "Círculo", "square": "Quadrado", "triangle": "Triângulo", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Painel tátil (metade esquerda)", "touchpad_right": "Painel tátil (metade direita)",
       "up": "Direcional para cima", "down": "Direcional para baixo", "left": "Direcional para a esquerda", "right": "Direcional para a direita",
-      "move_up": "Avançar", "move_down": "Recuar", "move_left": "Mover para a esquerda", "move_right": "Mover para a direita", "sprint": "Correr", "dodge": "Esquivar",
+      "move_up": "Avançar", "move_down": "Recuar", "move_left": "Mover para a esquerda", "move_right": "Mover para a direita", "sprint": "Correr", "dodge": "Esquivar", "walk": "Andar (manter)",
       "look_up": "Câmara para cima", "look_down": "Câmara para baixo", "look_left": "Câmara para a esquerda", "look_right": "Câmara para a direita"
     },
     "or": "ou"

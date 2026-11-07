@@ -116,7 +116,7 @@
       "cross": "Krzyżyk", "circle": "Kółko", "square": "Kwadrat", "triangle": "Trójkąt", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Panel dotykowy (lewa połowa)", "touchpad_right": "Panel dotykowy (prawa połowa)",
       "up": "Krzyżak w górę", "down": "Krzyżak w dół", "left": "Krzyżak w lewo", "right": "Krzyżak w prawo",
-      "move_up": "Naprzód", "move_down": "Do tyłu", "move_left": "W lewo", "move_right": "W prawo", "sprint": "Bieg", "dodge": "Unik",
+      "move_up": "Naprzód", "move_down": "Do tyłu", "move_left": "W lewo", "move_right": "W prawo", "sprint": "Bieg", "dodge": "Unik", "walk": "Chód (przytrzymaj)",
       "look_up": "Kamera w górę", "look_down": "Kamera w dół", "look_left": "Kamera w lewo", "look_right": "Kamera w prawo"
     },
     "or": "lub"

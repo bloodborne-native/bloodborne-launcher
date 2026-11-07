@@ -116,7 +116,7 @@
       "cross": "叉叉鈕", "circle": "圓圈鈕", "square": "方塊鈕", "triangle": "三角鈕", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "OPTIONS", "touchpad": "觸控板（左半部）", "touchpad_right": "觸控板（右半部）",
       "up": "方向鍵上", "down": "方向鍵下", "left": "方向鍵左", "right": "方向鍵右",
-      "move_up": "前進", "move_down": "後退", "move_left": "向左移動", "move_right": "向右移動", "sprint": "奔跑", "dodge": "閃避",
+      "move_up": "前進", "move_down": "後退", "move_left": "向左移動", "move_right": "向右移動", "sprint": "奔跑", "dodge": "閃避", "walk": "步行（按住）",
       "look_up": "鏡頭向上", "look_down": "鏡頭向下", "look_left": "鏡頭向左", "look_right": "鏡頭向右"
     },
     "or": "或"

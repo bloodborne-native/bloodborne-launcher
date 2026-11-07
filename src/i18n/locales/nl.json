@@ -116,7 +116,7 @@
       "cross": "Kruis", "circle": "Cirkel", "square": "Vierkant", "triangle": "Driehoek", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Touchpad (linkerhelft)", "touchpad_right": "Touchpad (rechterhelft)",
       "up": "Richting omhoog", "down": "Richting omlaag", "left": "Richting links", "right": "Richting rechts",
-      "move_up": "Vooruit", "move_down": "Achteruit", "move_left": "Naar links", "move_right": "Naar rechts", "sprint": "Rennen", "dodge": "Ontwijken",
+      "move_up": "Vooruit", "move_down": "Achteruit", "move_left": "Naar links", "move_right": "Naar rechts", "sprint": "Rennen", "dodge": "Ontwijken", "walk": "Lopen (ingedrukt)",
       "look_up": "Camera omhoog", "look_down": "Camera omlaag", "look_left": "Camera links", "look_right": "Camera rechts"
     },
     "or": "of"

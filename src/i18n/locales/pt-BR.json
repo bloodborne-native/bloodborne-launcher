@@ -216,6 +216,7 @@
       "move_right": "Andar para a direita",
       "sprint": "Correr",
       "dodge": "Esquivar",
+      "walk": "Andar (segurar)",
       "look_up": "Câmera para cima",
       "look_down": "Câmera para baixo",
       "look_left": "Câmera para a esquerda",

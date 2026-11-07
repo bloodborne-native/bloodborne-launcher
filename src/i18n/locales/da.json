@@ -116,7 +116,7 @@
       "cross": "Kryds", "circle": "Cirkel", "square": "Firkant", "triangle": "Trekant", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Touchpad (venstre halvdel)", "touchpad_right": "Touchpad (højre halvdel)",
       "up": "Retning op", "down": "Retning ned", "left": "Retning venstre", "right": "Retning højre",
-      "move_up": "Fremad", "move_down": "Tilbage", "move_left": "Til venstre", "move_right": "Til højre", "sprint": "Løb", "dodge": "Undvig",
+      "move_up": "Fremad", "move_down": "Tilbage", "move_left": "Til venstre", "move_right": "Til højre", "sprint": "Løb", "dodge": "Undvig", "walk": "Gå (hold)",
       "look_up": "Kamera op", "look_down": "Kamera ned", "look_left": "Kamera til venstre", "look_right": "Kamera til højre"
     },
     "or": "eller"

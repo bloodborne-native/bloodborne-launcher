@@ -116,7 +116,7 @@
       "cross": "×ボタン", "circle": "○ボタン", "square": "□ボタン", "triangle": "△ボタン", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "OPTIONS", "touchpad": "タッチパッド（左半分）", "touchpad_right": "タッチパッド（右半分）",
       "up": "方向キー上", "down": "方向キー下", "left": "方向キー左", "right": "方向キー右",
-      "move_up": "前進", "move_down": "後退", "move_left": "左に移動", "move_right": "右に移動", "sprint": "ダッシュ", "dodge": "回避",
+      "move_up": "前進", "move_down": "後退", "move_left": "左に移動", "move_right": "右に移動", "sprint": "ダッシュ", "dodge": "回避", "walk": "歩く (長押し)",
       "look_up": "カメラ上", "look_down": "カメラ下", "look_left": "カメラ左", "look_right": "カメラ右"
     },
     "or": "または"

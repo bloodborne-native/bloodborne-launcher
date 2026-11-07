@@ -40,6 +40,7 @@ export const CONTROLS: Control[] = [
   { id: "move_right", label: "Move right", key: "D", pad: null, group: "Movement and camera" },
   { id: "sprint", label: "Run", key: "Left Shift", pad: null, group: "Movement and camera" },
   { id: "dodge", label: "Dodge", key: "Space", pad: null, group: "Movement and camera" },
+  { id: "walk", label: "Walk (hold)", key: "Left Alt", pad: null, group: "Movement and camera" },
   { id: "look_up", label: "Camera up", key: "I", pad: null, group: "Movement and camera" },
   { id: "look_down", label: "Camera down", key: "K", pad: null, group: "Movement and camera" },
   { id: "look_left", label: "Camera left", key: "J", pad: null, group: "Movement and camera" },
