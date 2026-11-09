@@ -344,7 +344,7 @@ dependencies = [
 
 [[package]]
 name = "bloodborne-launcher"
-version = "0.9.10"
+version = "0.9.11"
 dependencies = [
  "base64 0.22.1",
  "flate2",
