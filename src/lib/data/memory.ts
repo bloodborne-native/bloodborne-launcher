@@ -28,7 +28,9 @@ export function estimateMemoryMb(ini: Record<string, string>): number {
   const { size, patched } = sceneSize(ini);
   const pixels = size[0] * size[1];
   const extra = patched ? Math.max(0, (pixels - NATIVE[0] * NATIVE[1]) * 448) : 0;
-  const game = 5056 + Math.ceil(extra / (64 << 20)) * 64 + 1024;
+  // run.sh gives any scene above 1080p at least 5376 MiB (the larger graphics heaps).
+  const dmem = extra > 0 ? Math.max(5376, 5056 + Math.ceil(extra / (64 << 20)) * 64) : 5056;
+  const game = dmem + 1024;
   const renderer = 1000 + (360 * pixels) / 1e6;
   return Math.round(game + renderer);
 }
