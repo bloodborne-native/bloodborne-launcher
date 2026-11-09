@@ -233,6 +233,7 @@
       "sprint": "Run",
       "dodge": "Dodge",
       "walk": "Walk (hold)",
+      "quit": "Quit the game",
       "look_up": "Camera up",
       "look_down": "Camera down",
       "look_left": "Camera left",

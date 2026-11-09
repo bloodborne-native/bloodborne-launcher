@@ -116,7 +116,7 @@
       "cross": "Kreuz", "circle": "Kreis", "square": "Quadrat", "triangle": "Dreieck", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Touchpad (linke Hälfte)", "touchpad_right": "Touchpad (rechte Hälfte)",
       "up": "Steuerkreuz oben", "down": "Steuerkreuz unten", "left": "Steuerkreuz links", "right": "Steuerkreuz rechts",
-      "move_up": "Vorwärts", "move_down": "Rückwärts", "move_left": "Nach links", "move_right": "Nach rechts", "sprint": "Rennen", "dodge": "Ausweichen", "walk": "Gehen (halten)",
+      "move_up": "Vorwärts", "move_down": "Rückwärts", "move_left": "Nach links", "move_right": "Nach rechts", "sprint": "Rennen", "dodge": "Ausweichen", "walk": "Gehen (halten)", "quit": "Spiel beenden",
       "look_up": "Kamera nach oben", "look_down": "Kamera nach unten", "look_left": "Kamera nach links", "look_right": "Kamera nach rechts"
     },
     "or": "oder"

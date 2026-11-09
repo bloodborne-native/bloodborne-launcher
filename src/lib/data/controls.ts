@@ -30,6 +30,9 @@ export const CONTROLS: Control[] = [
   { id: "options", label: "Options", key: "Escape", pad: "start", group: "System" },
   { id: "touchpad", label: "Touchpad (left half)", key: "G", pad: "back, touchpad", group: "System" },
   { id: "touchpad_right", label: "Touchpad (right half)", key: "Backspace", pad: "", group: "System" },
+  // Keyboard only, on a new press with Command already held (app issue #20). Not assignable as a
+  // Command chord here: the launcher's own window would take Command+Q as its Quit.
+  { id: "quit", label: "Quit the game", key: "Left GUI+Q, Right GUI+Q", pad: null, group: "System" },
   { id: "up", label: "D-pad up", key: "3, Up, Wheel Up", pad: "dpup", group: "D-pad" },
   { id: "down", label: "D-pad down", key: "4, Down, Wheel Down", pad: "dpdown", group: "D-pad" },
   { id: "left", label: "D-pad left", key: "1, Left", pad: "dpleft", group: "D-pad" },

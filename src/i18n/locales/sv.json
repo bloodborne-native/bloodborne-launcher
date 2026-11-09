@@ -116,7 +116,7 @@
       "cross": "Kryss", "circle": "Cirkel", "square": "Fyrkant", "triangle": "Triangel", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Pekplatta (vänster halva)", "touchpad_right": "Pekplatta (höger halva)",
       "up": "Styrkors upp", "down": "Styrkors ned", "left": "Styrkors vänster", "right": "Styrkors höger",
-      "move_up": "Framåt", "move_down": "Bakåt", "move_left": "Åt vänster", "move_right": "Åt höger", "sprint": "Spring", "dodge": "Undvik", "walk": "Gå (håll)",
+      "move_up": "Framåt", "move_down": "Bakåt", "move_left": "Åt vänster", "move_right": "Åt höger", "sprint": "Spring", "dodge": "Undvik", "walk": "Gå (håll)", "quit": "Avsluta spelet",
       "look_up": "Kamera upp", "look_down": "Kamera ned", "look_left": "Kamera vänster", "look_right": "Kamera höger"
     },
     "or": "eller"

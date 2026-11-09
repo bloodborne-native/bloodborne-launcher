@@ -116,7 +116,7 @@
       "cross": "Çarpı", "circle": "Daire", "square": "Kare", "triangle": "Üçgen", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Dokunmatik yüzey (sol yarı)", "touchpad_right": "Dokunmatik yüzey (sağ yarı)",
       "up": "Yön yukarı", "down": "Yön aşağı", "left": "Yön sola", "right": "Yön sağa",
-      "move_up": "İleri", "move_down": "Geri", "move_left": "Sola", "move_right": "Sağa", "sprint": "Koşma", "dodge": "Kaçınma", "walk": "Yürüme (basılı tut)",
+      "move_up": "İleri", "move_down": "Geri", "move_left": "Sola", "move_right": "Sağa", "sprint": "Koşma", "dodge": "Kaçınma", "walk": "Yürüme (basılı tut)", "quit": "Oyundan çık",
       "look_up": "Kamera yukarı", "look_down": "Kamera aşağı", "look_left": "Kamera sola", "look_right": "Kamera sağa"
     },
     "or": "veya"

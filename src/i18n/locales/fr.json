@@ -116,7 +116,7 @@
       "cross": "Croix", "circle": "Rond", "square": "Carré", "triangle": "Triangle", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Pavé tactile (moitié gauche)", "touchpad_right": "Pavé tactile (moitié droite)",
       "up": "Croix haut", "down": "Croix bas", "left": "Croix gauche", "right": "Croix droite",
-      "move_up": "Avancer", "move_down": "Reculer", "move_left": "Aller à gauche", "move_right": "Aller à droite", "sprint": "Courir", "dodge": "Esquiver", "walk": "Marcher (maintenir)",
+      "move_up": "Avancer", "move_down": "Reculer", "move_left": "Aller à gauche", "move_right": "Aller à droite", "sprint": "Courir", "dodge": "Esquiver", "walk": "Marcher (maintenir)", "quit": "Quitter le jeu",
       "look_up": "Caméra vers le haut", "look_down": "Caméra vers le bas", "look_left": "Caméra vers la gauche", "look_right": "Caméra vers la droite"
     },
     "or": "ou"

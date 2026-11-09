@@ -116,7 +116,7 @@
       "cross": "X 버튼", "circle": "○ 버튼", "square": "□ 버튼", "triangle": "△ 버튼", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "OPTIONS", "touchpad": "터치패드(왼쪽 절반)", "touchpad_right": "터치패드(오른쪽 절반)",
       "up": "방향 버튼 위", "down": "방향 버튼 아래", "left": "방향 버튼 왼쪽", "right": "방향 버튼 오른쪽",
-      "move_up": "앞으로", "move_down": "뒤로", "move_left": "왼쪽으로", "move_right": "오른쪽으로", "sprint": "달리기", "dodge": "회피", "walk": "걷기 (누르고 있기)",
+      "move_up": "앞으로", "move_down": "뒤로", "move_left": "왼쪽으로", "move_right": "오른쪽으로", "sprint": "달리기", "dodge": "회피", "walk": "걷기 (누르고 있기)", "quit": "게임 종료",
       "look_up": "카메라 위", "look_down": "카메라 아래", "look_left": "카메라 왼쪽", "look_right": "카메라 오른쪽"
     },
     "or": "또는"

@@ -116,7 +116,7 @@
       "cross": "Kryss", "circle": "Sirkel", "square": "Firkant", "triangle": "Trekant", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Styreplate (venstre halvdel)", "touchpad_right": "Styreplate (høyre halvdel)",
       "up": "Retning opp", "down": "Retning ned", "left": "Retning venstre", "right": "Retning høyre",
-      "move_up": "Fremover", "move_down": "Bakover", "move_left": "Til venstre", "move_right": "Til høyre", "sprint": "Løp", "dodge": "Unnvik", "walk": "Gå (hold)",
+      "move_up": "Fremover", "move_down": "Bakover", "move_left": "Til venstre", "move_right": "Til høyre", "sprint": "Løp", "dodge": "Unnvik", "walk": "Gå (hold)", "quit": "Avslutt spillet",
       "look_up": "Kamera opp", "look_down": "Kamera ned", "look_left": "Kamera til venstre", "look_right": "Kamera til høyre"
     },
     "or": "eller"

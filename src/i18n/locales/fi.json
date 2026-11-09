@@ -116,7 +116,7 @@
       "cross": "Risti", "circle": "Ympyrä", "square": "Neliö", "triangle": "Kolmio", "l1": "L1", "r1": "R1", "l2": "L2", "r2": "R2",
       "l3": "L3", "r3": "R3", "options": "Options", "touchpad": "Kosketuslevy (vasen puoli)", "touchpad_right": "Kosketuslevy (oikea puoli)",
       "up": "Ristiohjain ylös", "down": "Ristiohjain alas", "left": "Ristiohjain vasemmalle", "right": "Ristiohjain oikealle",
-      "move_up": "Eteenpäin", "move_down": "Taaksepäin", "move_left": "Vasemmalle", "move_right": "Oikealle", "sprint": "Juokse", "dodge": "Väistä", "walk": "Kävele (pidä)",
+      "move_up": "Eteenpäin", "move_down": "Taaksepäin", "move_left": "Vasemmalle", "move_right": "Oikealle", "sprint": "Juokse", "dodge": "Väistä", "walk": "Kävele (pidä)", "quit": "Lopeta peli",
       "look_up": "Kamera ylös", "look_down": "Kamera alas", "look_left": "Kamera vasemmalle", "look_right": "Kamera oikealle"
     },
     "or": "tai"
