@@ -1,5 +1,6 @@
 // The memory the game uses at its next start for these settings, as run.sh and the runtime size
-// it. The game's memory: the PS4's 5056 MiB, plus 448 bytes per scene pixel above 1080p (run.sh),
+// it. The game's memory: the PS4's 5056 MiB (3072 in the low memory mode), plus 448 bytes per scene
+// pixel above 1080p (run.sh),
 // plus 1024 MiB the runtime adds. The renderer's: about 1000 MiB plus 360 MiB per million scene
 // pixels (measured on an M3 Pro, 2026-10-20: 1465 MiB at 1506x848, 1655 at 1920x1080, 2051 at
 // 2258x1270, 2200 at 2400x1350, about 2330 at 2560x1440; the output size made no difference).
@@ -29,8 +30,11 @@ export function estimateMemoryMb(ini: Record<string, string>): number {
   const pixels = size[0] * size[1];
   const extra = patched ? Math.max(0, (pixels - NATIVE[0] * NATIVE[1]) * 448) : 0;
   // run.sh gives any scene above 1080p at least 5376 MiB (the larger graphics heaps).
-  const dmem = extra > 0 ? Math.max(5376, 5056 + Math.ceil(extra / (64 << 20)) * 64) : 5056;
-  const game = dmem + 1024;
+  const steps = Math.ceil(extra / (64 << 20)) * 64;
+  const dmem = extra > 0 ? Math.max(5376, 5056 + steps) : 5056;
+  // Low memory mode (run.sh low_memory=1): only the memory the GPU reaches is given to it, 3072 MiB
+  // of the pool after a 49-minute session across areas at 1080p (M3 Pro), plus the larger scene.
+  const game = (ini.low_memory === "1" ? 3072 + steps : dmem) + 1024;
   const renderer = 1000 + (360 * pixels) / 1e6;
   return Math.round(game + renderer);
 }
