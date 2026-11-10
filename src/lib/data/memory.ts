@@ -35,5 +35,8 @@ export function estimateMemoryMb(ini: Record<string, string>): number {
   return Math.round(game + renderer);
 }
 
+/** Devices with this much memory or less are pointed at the low memory mode (run.sh low_memory). */
+export const LOW_MEMORY_SUGGESTED_MB = 16 * 1024;
+
 /** Above this share of the Mac's memory the game may slow down or lose its GPU device. */
 export const MEMORY_WARNING_SHARE = 0.75;

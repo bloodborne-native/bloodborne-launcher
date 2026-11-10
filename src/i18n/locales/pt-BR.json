@@ -113,7 +113,7 @@
     "modsActive_other": "{{count}} ativos",
     "modsOff": "Desligados",
     "lastRun": "Última sessão",
-    "lastRunOk": "O jogo fechou normalmente.",
+    "lastRunOk": "O jogo fechou normalmente.", "lowMemory": "Este dispositivo tem {{gb}} GB de memória. Ative o Modo de pouca memória para o jogo precisar de menos.", "lowMemoryButton": "Abrir Gráficos",
     "lastRunError": "O jogo fechou com o código de saída {{code}}."
   },
   "graphics": {
@@ -135,7 +135,7 @@
     "aspectAutoScreen": "Automática (esta tela)",
     "memory": "Memória estimada",
     "memoryHint": "Uso de memória estimado do jogo e dos gráficos na próxima inicialização, com estas configurações.",
-    "memoryHigh": "Isto usa mais de 75% da memória do seu dispositivo. O jogo pode ficar lento ou fechar. Tente uma resolução de saída ou predefinição de qualidade menor.",
+    "memoryHigh": "Isto usa mais de 75% da memória do seu dispositivo. O jogo pode ficar lento ou fechar. Tente uma resolução de saída ou predefinição de qualidade menor.", "lowMemory": "Modo de pouca memória", "lowMemoryHint": "Entrega à GPU só a memória do jogo que ela usa, em vez de toda: cerca de metade da memória em jogo. Recomendado para dispositivos com 16 GB de memória ou menos. Vale a partir da próxima inicialização.",
     "memoryOf": "{{used}} GB de {{total}} GB",
     "memoryGb": "{{used}} GB",
     "fullscreen": "Tela cheia",

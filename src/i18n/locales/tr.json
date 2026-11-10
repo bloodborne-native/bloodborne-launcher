@@ -70,7 +70,7 @@
     "noFolder": "Oyun klasörünüzü seçin.", "folder": "Oyun klasörü", "edition": "{{id}} · sürüm {{version}}", "region": { "america": "Amerika", "europe": "Avrupa", "japan": "Japonya", "asia": "Asya", "unknown": "Bilinmeyen bölge" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Dahil", "dlcMissing": "Dahil değil", "dlcMissingHint": "Bu sürüm The Old Hunters’ı içermiyor ve port henüz eklentileri yükleyemiyor.", "summary": "Genel bakış", "upscaler": "Ölçekleyici", "renderSize": "{{size}} çözünürlükte işleniyor",
     "frameRate": "Kare hızı", "controller": "Kumanda", "mods": "Modlar",
     "modsActive": "{{count}} etkin", "modsActive_one": "{{count}} etkin", "modsActive_other": "{{count}} etkin", "modsOff": "Kapalı",
-    "lastRun": "Son oturum", "lastRunOk": "Oyun normal şekilde kapandı.", "lastRunError": "Oyun {{code}} çıkış koduyla kapandı."
+    "lastRun": "Son oturum", "lastRunOk": "Oyun normal şekilde kapandı.", "lowMemory": "Bu cihazda {{gb}} GB bellek var. Oyunun daha az belleğe ihtiyaç duyması için Az bellek modunu aç.", "lowMemoryButton": "Grafiği aç", "lastRunError": "Oyun {{code}} çıkış koduyla kapandı."
   },
   "graphics": {
     "effects": "Efektler",
@@ -83,7 +83,7 @@
     "outputRes": "Çıkış çözünürlüğü", "outputResHint": "Ekranda gösterilen çözünürlük. Ölçekleme ek ayrıntıları tamamlar.", "outputResHintIos": "Oyunun çizdiği çözünürlük. Bu cihazda en fazla 540 satır: daha büyük bir görüntü, sistemin bir uygulamaya izin verdiği alana sığmaz.", "aspectRatio": "En boy oranı", "aspectRatioHint": "Daha geniş ekranlar yanlarda, daha uzun ekranlar üstte ve altta daha fazlasını gösterir. HUD kenarlara yakın kalır.", "aspectAuto": "Otomatik (bu monitör)", "aspectAutoScreen": "Otomatik (bu ekran)", "fullscreen": "Tam ekran", "monitor": "Monitör", "monitorHint": "Oyun penceresinin veya tam ekran modunun hangi ekranı kullanacağını seçin.", "monitorMain": "Ana ekran",
     "memory": "Tahmini bellek",
     "memoryHint": "Bu ayarlarla bir sonraki başlatmada oyunun ve grafiklerin tahmini bellek kullanımı.",
-    "memoryHigh": "Bu, cihazınızın belleğinin %75’inden fazlasını kullanıyor. Oyun yavaşlayabilir veya kapanabilir. Daha düşük bir çıkış çözünürlüğü ya da kalite ön ayarı deneyin.",
+    "memoryHigh": "Bu, cihazınızın belleğinin %75’inden fazlasını kullanıyor. Oyun yavaşlayabilir veya kapanabilir. Daha düşük bir çıkış çözünürlüğü ya da kalite ön ayarı deneyin.", "lowMemory": "Az bellek modu", "lowMemoryHint": "GPU'ya oyunun tüm belleği yerine yalnızca kullandığı kısmı verir: oyunda belleğin yaklaşık yarısı. 16 GB veya daha az belleğe sahip cihazlar için önerilir. Sonraki açılışta geçerli olur.",
     "memoryOf": "{{used}} GB / {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "Kare sunumu", "showFps": "FPS göster", "upscaling": "Ölçekleme",

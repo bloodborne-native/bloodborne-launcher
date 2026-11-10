@@ -68,6 +68,10 @@ export function GraphicsPage() {
         {!ios && (
           <>
             <MemoryEstimate />
+            {macos && (
+              <SwitchRow title={t("graphics.lowMemory")} description={t("graphics.lowMemoryHint")}
+                checked={ini.low_memory === "1"} onChange={(v) => setIni("low_memory", v ? "1" : "0")} />
+            )}
             <DisplayPicker />
             <SwitchRow title={t("graphics.fullscreen")} checked={settings.fullscreen} onChange={(v) => setSetting("fullscreen", v)} />
             <SelectRow

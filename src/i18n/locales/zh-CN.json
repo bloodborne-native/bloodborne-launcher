@@ -70,7 +70,7 @@
     "noFolder": "请选择游戏文件夹。", "folder": "游戏文件夹", "edition": "{{id}} · 版本 {{version}}", "region": { "america": "美洲", "europe": "欧洲", "japan": "日本", "asia": "亚洲", "unknown": "未知地区" }, "oldHunters": "The Old Hunters", "dlcIncluded": "已包含", "dlcMissing": "未包含", "dlcMissingHint": "此版本不包含 The Old Hunters，而移植版目前还无法加载扩展内容。", "summary": "概览", "upscaler": "超分辨率", "renderSize": "以 {{size}} 渲染",
     "frameRate": "帧率", "controller": "手柄", "mods": "模组",
     "modsActive": "已启用 {{count}} 个", "modsActive_other": "已启用 {{count}} 个", "modsOff": "已关闭",
-    "lastRun": "上次运行", "lastRunOk": "游戏已正常关闭。", "lastRunError": "游戏以退出代码 {{code}} 关闭。"
+    "lastRun": "上次运行", "lastRunOk": "游戏已正常关闭。", "lowMemory": "此设备有 {{gb}} GB 内存。打开低内存模式，让游戏需要的内存更少。", "lowMemoryButton": "打开图形", "lastRunError": "游戏以退出代码 {{code}} 关闭。"
   },
   "graphics": {
     "effects": "效果",
@@ -83,7 +83,7 @@
     "outputRes": "输出分辨率", "outputResHint": "屏幕上显示的分辨率。超分辨率会补全额外的细节。", "outputResHintIos": "游戏绘制的分辨率。在此设备上最多 540 行：更大的画面超出系统允许单个应用使用的范围。", "aspectRatio": "宽高比", "aspectRatioHint": "更宽的屏幕在两侧显示更多，更高的屏幕在上下显示更多。HUD 会停留在边缘附近。", "aspectAuto": "自动（此显示器）", "aspectAutoScreen": "自动（此屏幕）", "fullscreen": "全屏", "monitor": "显示器", "monitorHint": "选择游戏窗口或全屏模式使用的屏幕。", "monitorMain": "主显示器",
     "memory": "预计内存",
     "memoryHint": "使用这些设置时，下次启动游戏和图形的预计内存占用。",
-    "memoryHigh": "这会使用超过 75% 的设备内存。游戏可能变慢或退出。请尝试更低的输出分辨率或画质预设。",
+    "memoryHigh": "这会使用超过 75% 的设备内存。游戏可能变慢或退出。请尝试更低的输出分辨率或画质预设。", "lowMemory": "低内存模式", "lowMemoryHint": "只把 GPU 用到的游戏内存交给它，而不是全部：游戏中内存约减半。推荐内存为 16 GB 或更少的设备使用。下次启动时生效。",
     "memoryOf": "{{used}} GB / {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "帧呈现方式", "showFps": "显示 FPS", "upscaling": "超分辨率",

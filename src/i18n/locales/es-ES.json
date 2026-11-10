@@ -70,7 +70,7 @@
     "noFolder": "Selecciona la carpeta del juego.", "folder": "Carpeta del juego", "edition": "{{id}} · versión {{version}}", "region": { "america": "América", "europe": "Europa", "japan": "Japón", "asia": "Asia", "unknown": "Región desconocida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluido", "dlcMissing": "No incluido", "dlcMissingHint": "Esta edición no incluye The Old Hunters, y el port aún no puede cargar complementos.", "summary": "Resumen", "upscaler": "Escalador", "renderSize": "Renderizando a {{size}}",
     "frameRate": "Tasa de fotogramas", "controller": "Mando", "mods": "Mods",
     "modsActive": "{{count}} activos", "modsActive_one": "{{count}} activo", "modsActive_other": "{{count}} activos", "modsOff": "Desactivados",
-    "lastRun": "Última sesión", "lastRunOk": "El juego se cerró con normalidad.", "lastRunError": "El juego se cerró con el código de salida {{code}}."
+    "lastRun": "Última sesión", "lastRunOk": "El juego se cerró con normalidad.", "lowMemory": "Este dispositivo tiene {{gb}} GB de memoria. Activa el Modo de poca memoria para que el juego necesite menos.", "lowMemoryButton": "Abrir Gráficos", "lastRunError": "El juego se cerró con el código de salida {{code}}."
   },
   "graphics": {
     "effects": "Efectos",
@@ -83,7 +83,7 @@
     "outputRes": "Resolución de salida", "outputResHint": "La resolución que se muestra en pantalla. El reescalado rellena el detalle adicional.", "outputResHintIos": "La resolución con la que dibuja el juego. En este dispositivo, como máximo 540 líneas: una imagen más grande no cabe en lo que el sistema permite a una app.", "aspectRatio": "Relación de aspecto", "aspectRatioHint": "Las pantallas más anchas muestran más a los lados; las más altas, más arriba y abajo. El HUD se queda cerca de los bordes.", "aspectAuto": "Automática (este monitor)", "aspectAutoScreen": "Automática (esta pantalla)", "fullscreen": "Pantalla completa", "monitor": "Monitor", "monitorHint": "Elige qué pantalla usa la ventana del juego o el modo de pantalla completa.", "monitorMain": "Pantalla principal",
     "memory": "Memoria estimada",
     "memoryHint": "Uso de memoria estimado del juego y los gráficos en el próximo inicio, con estos ajustes.",
-    "memoryHigh": "Esto usa más del 75% de la memoria de tu dispositivo. El juego puede ir lento o cerrarse. Prueba una resolución de salida o un preajuste de calidad más bajos.",
+    "memoryHigh": "Esto usa más del 75% de la memoria de tu dispositivo. El juego puede ir lento o cerrarse. Prueba una resolución de salida o un preajuste de calidad más bajos.", "lowMemory": "Modo de poca memoria", "lowMemoryHint": "Da a la GPU solo la memoria del juego que usa, en lugar de toda: cerca de la mitad de la memoria en juego. Recomendado para dispositivos con 16 GB de memoria o menos. Se aplica en el próximo inicio.",
     "memoryOf": "{{used}} GB de {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "Presentación de fotogramas", "showFps": "Mostrar FPS", "upscaling": "Escalado",

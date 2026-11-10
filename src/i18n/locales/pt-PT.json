@@ -70,7 +70,7 @@
     "noFolder": "Selecione a pasta do jogo.", "folder": "Pasta do jogo", "edition": "{{id}} · versão {{version}}", "region": { "america": "Américas", "europe": "Europa", "japan": "Japão", "asia": "Ásia", "unknown": "Região desconhecida" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Incluído", "dlcMissing": "Não incluído", "dlcMissingHint": "Esta edição não inclui The Old Hunters, e o port ainda não consegue carregar extras.", "summary": "Visão geral", "upscaler": "Upscaler", "renderSize": "A renderizar a {{size}}",
     "frameRate": "Taxa de fotogramas", "controller": "Comando", "mods": "Mods",
     "modsActive": "{{count}} ativos", "modsActive_one": "{{count}} ativo", "modsActive_other": "{{count}} ativos", "modsOff": "Desligados",
-    "lastRun": "Última sessão", "lastRunOk": "O jogo fechou normalmente.", "lastRunError": "O jogo fechou com o código de saída {{code}}."
+    "lastRun": "Última sessão", "lastRunOk": "O jogo fechou normalmente.", "lowMemory": "Este dispositivo tem {{gb}} GB de memória. Ative o Modo de pouca memória para o jogo precisar de menos.", "lowMemoryButton": "Abrir Gráficos", "lastRunError": "O jogo fechou com o código de saída {{code}}."
   },
   "graphics": {
     "effects": "Efeitos",
@@ -83,7 +83,7 @@
     "outputRes": "Resolução de saída", "outputResHint": "A resolução apresentada no ecrã. O upscaling preenche o detalhe adicional.", "outputResHintIos": "A resolução em que o jogo desenha. Neste dispositivo, no máximo 540 linhas: uma imagem maior não cabe no que o sistema permite a uma app.", "aspectRatio": "Proporção do ecrã", "aspectRatioHint": "Ecrãs mais largos mostram mais nas laterais; ecrãs mais altos mostram mais em cima e em baixo. O HUD fica junto às margens.", "aspectAuto": "Automática (este monitor)", "aspectAutoScreen": "Automática (este ecrã)", "fullscreen": "Ecrã inteiro", "monitor": "Monitor", "monitorHint": "Escolha que ecrã a janela do jogo ou o modo de ecrã inteiro usa.", "monitorMain": "Ecrã principal",
     "memory": "Memória estimada",
     "memoryHint": "Utilização de memória estimada do jogo e dos gráficos no próximo arranque, com estas definições.",
-    "memoryHigh": "Isto usa mais de 75% da memória do seu dispositivo. O jogo pode ficar lento ou fechar. Experimente uma resolução de saída ou predefinição de qualidade mais baixa.",
+    "memoryHigh": "Isto usa mais de 75% da memória do seu dispositivo. O jogo pode ficar lento ou fechar. Experimente uma resolução de saída ou predefinição de qualidade mais baixa.", "lowMemory": "Modo de pouca memória", "lowMemoryHint": "Dá à GPU apenas a memória do jogo que ela usa, em vez de toda: cerca de metade da memória em jogo. Recomendado para dispositivos com 16 GB de memória ou menos. Aplica-se no próximo arranque.",
     "memoryOf": "{{used}} GB de {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "Apresentação de fotogramas", "showFps": "Mostrar FPS", "upscaling": "Upscaling",

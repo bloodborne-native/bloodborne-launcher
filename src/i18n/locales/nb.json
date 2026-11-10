@@ -70,7 +70,7 @@
     "noFolder": "Velg spillmappen din.", "folder": "Spillmappe", "edition": "{{id}} · versjon {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asia", "unknown": "Ukjent region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inkludert", "dlcMissing": "Ikke inkludert", "dlcMissingHint": "Denne utgaven inneholder ikke The Old Hunters, og porten kan ikke laste inn tillegg ennå.", "summary": "Oversikt", "upscaler": "Oppskalering", "renderSize": "Gjengir i {{size}}",
     "frameRate": "Bildefrekvens", "controller": "Kontroller", "mods": "Modder",
     "modsActive": "{{count}} aktive", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktive", "modsOff": "Av",
-    "lastRun": "Siste økt", "lastRunOk": "Spillet ble lukket normalt.", "lastRunError": "Spillet ble avsluttet med avslutningskode {{code}}."
+    "lastRun": "Siste økt", "lastRunOk": "Spillet ble lukket normalt.", "lowMemory": "Denne enheten har {{gb}} GB minne. Slå på Lite minne-modus så spillet trenger mindre.", "lowMemoryButton": "Åpne Grafikk", "lastRunError": "Spillet ble avsluttet med avslutningskode {{code}}."
   },
   "graphics": {
     "effects": "Effekter",
@@ -83,7 +83,7 @@
     "outputRes": "Utdataoppløsning", "outputResHint": "Oppløsningen som vises på skjermen. Oppskaleringen fyller inn de ekstra detaljene.", "outputResHintIos": "Oppløsningen spillet tegner i. På denne enheten høyst 540 linjer: et større bilde får ikke plass innenfor det systemet tillater en app.", "aspectRatio": "Bildeformat", "aspectRatioHint": "Bredere skjermer viser mer på sidene; høyere skjermer mer øverst og nederst. HUD-en blir nær kantene.", "aspectAuto": "Automatisk (denne skjermen)", "aspectAutoScreen": "Automatisk (denne skjermen)", "fullscreen": "Fullskjerm", "monitor": "Skjerm", "monitorHint": "Velg hvilken skjerm spillvinduet eller fullskjermmodusen bruker.", "monitorMain": "Hovedskjerm",
     "memory": "Anslått minne",
     "memoryHint": "Anslått minnebruk for spill og grafikk ved neste start, med disse innstillingene.",
-    "memoryHigh": "Dette bruker mer enn 75 % av enhetens minne. Spillet kan bli tregt eller avslutte. Prøv en lavere utgangsoppløsning eller kvalitetsforhåndsinnstilling.",
+    "memoryHigh": "Dette bruker mer enn 75 % av enhetens minne. Spillet kan bli tregt eller avslutte. Prøv en lavere utgangsoppløsning eller kvalitetsforhåndsinnstilling.", "lowMemory": "Lite minne-modus", "lowMemoryHint": "Gir GPU-en bare spillminnet den bruker, i stedet for alt: omtrent halvparten av minnet under spilling. Anbefalt for enheter med 16 GB minne eller mindre. Gjelder fra neste start.",
     "memoryOf": "{{used}} GB av {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "Bildevisning", "showFps": "Vis FPS", "upscaling": "Oppskalering",

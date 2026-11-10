@@ -70,7 +70,7 @@
     "noFolder": "Valitse pelikansio.", "folder": "Pelikansio", "edition": "{{id}} · versio {{version}}", "region": { "america": "Amerikka", "europe": "Eurooppa", "japan": "Japani", "asia": "Aasia", "unknown": "Tuntematon alue" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Mukana", "dlcMissing": "Ei mukana", "dlcMissingHint": "Tämä versio ei sisällä The Old Hunters -lisäosaa, eikä portti voi vielä ladata lisäosia.", "summary": "Yleiskatsaus", "upscaler": "Skaalain", "renderSize": "Renderöidään resoluutiolla {{size}}",
     "frameRate": "Kuvataajuus", "controller": "Ohjain", "mods": "Modit",
     "modsActive": "{{count}} käytössä", "modsActive_one": "{{count}} käytössä", "modsActive_other": "{{count}} käytössä", "modsOff": "Pois",
-    "lastRun": "Edellinen istunto", "lastRunOk": "Peli suljettiin normaalisti.", "lastRunError": "Peli sulkeutui paluukoodilla {{code}}."
+    "lastRun": "Edellinen istunto", "lastRunOk": "Peli suljettiin normaalisti.", "lowMemory": "Tässä laitteessa on {{gb}} Gt muistia. Ota Vähän muistia -tila käyttöön, niin peli tarvitsee vähemmän.", "lowMemoryButton": "Avaa Grafiikka", "lastRunError": "Peli sulkeutui paluukoodilla {{code}}."
   },
   "graphics": {
     "effects": "Tehosteet",
@@ -83,7 +83,7 @@
     "outputRes": "Lähtötarkkuus", "outputResHint": "Ruudulla näytettävä resoluutio. Skaalaus täydentää lisäyksityiskohdat.", "outputResHintIos": "Resoluutio, jolla peli piirtää. Tällä laitteella enintään 540 riviä: suurempi kuva ei mahdu siihen, mitä järjestelmä sallii sovellukselle.", "aspectRatio": "Kuvasuhde", "aspectRatioHint": "Leveämmät näytöt näyttävät enemmän sivuilta, korkeammat enemmän ylhäältä ja alhaalta. HUD pysyy lähellä reunoja.", "aspectAuto": "Automaattinen (tämä näyttö)", "aspectAutoScreen": "Automaattinen (tämä näyttö)", "fullscreen": "Koko näyttö", "monitor": "Näyttö", "monitorHint": "Valitse, mitä näyttöä peli-ikkuna tai koko näytön tila käyttää.", "monitorMain": "Päänäyttö",
     "memory": "Arvioitu muisti",
     "memoryHint": "Pelin ja grafiikan arvioitu muistinkäyttö seuraavalla käynnistyksellä näillä asetuksilla.",
-    "memoryHigh": "Tämä käyttää yli 75 % laitteesi muistista. Peli voi hidastua tai sulkeutua. Kokeile pienempää lähtöresoluutiota tai laatuasetusta.",
+    "memoryHigh": "Tämä käyttää yli 75 % laitteesi muistista. Peli voi hidastua tai sulkeutua. Kokeile pienempää lähtöresoluutiota tai laatuasetusta.", "lowMemory": "Vähän muistia -tila", "lowMemoryHint": "Antaa grafiikkasuorittimelle vain sen käyttämän pelimuistin kaiken sijaan: noin puolet muistista pelatessa. Suositellaan laitteille, joissa on 16 Gt muistia tai vähemmän. Tulee voimaan seuraavalla käynnistyskerralla.",
     "memoryOf": "{{used}} Gt / {{total}} Gt",
     "memoryGb": "{{used}} Gt",
     "presentMode": "Kuvien esitys", "showFps": "Näytä FPS", "upscaling": "Skaalaus",

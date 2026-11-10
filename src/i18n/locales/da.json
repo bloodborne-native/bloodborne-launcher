@@ -70,7 +70,7 @@
     "noFolder": "Vælg din spilmappe.", "folder": "Spilmappe", "edition": "{{id}} · version {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Asien", "unknown": "Ukendt region" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inkluderet", "dlcMissing": "Ikke inkluderet", "dlcMissingHint": "Denne udgave indeholder ikke The Old Hunters, og porten kan endnu ikke indlæse tilføjelser.", "summary": "Oversigt", "upscaler": "Opskalering", "renderSize": "Renderer i {{size}}",
     "frameRate": "Billedhastighed", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} aktive", "modsActive_one": "{{count}} aktiv", "modsActive_other": "{{count}} aktive", "modsOff": "Fra",
-    "lastRun": "Seneste session", "lastRunOk": "Spillet lukkede normalt.", "lastRunError": "Spillet lukkede med afslutningskode {{code}}."
+    "lastRun": "Seneste session", "lastRunOk": "Spillet lukkede normalt.", "lowMemory": "Denne enhed har {{gb}} GB hukommelse. Slå Lav hukommelse-tilstand til, så spillet bruger mindre.", "lowMemoryButton": "Åbn Grafik", "lastRunError": "Spillet lukkede med afslutningskode {{code}}."
   },
   "graphics": {
     "effects": "Effekter",
@@ -83,7 +83,7 @@
     "outputRes": "Outputopløsning", "outputResHint": "Opløsningen, der vises på skærmen. Opskaleringen udfylder de ekstra detaljer.", "outputResHintIos": "Den opløsning, spillet tegner i. På denne enhed højst 540 linjer: et større billede kan ikke være inden for det, systemet tillader en app.", "aspectRatio": "Billedformat", "aspectRatioHint": "Bredere skærme viser mere i siderne; højere skærme mere foroven og forneden. HUD’en bliver nær kanterne.", "aspectAuto": "Automatisk (denne skærm)", "aspectAutoScreen": "Automatisk (denne skærm)", "fullscreen": "Fuld skærm", "monitor": "Skærm", "monitorHint": "Vælg, hvilken skærm spilvinduet eller fuldskærmstilstanden bruger.", "monitorMain": "Hovedskærm",
     "memory": "Anslået hukommelse",
     "memoryHint": "Anslået hukommelsesforbrug for spil og grafik ved næste start med disse indstillinger.",
-    "memoryHigh": "Dette bruger mere end 75 % af din enheds hukommelse. Spillet kan blive langsomt eller lukke. Prøv en lavere udgangsopløsning eller kvalitetsforudindstilling.",
+    "memoryHigh": "Dette bruger mere end 75 % af din enheds hukommelse. Spillet kan blive langsomt eller lukke. Prøv en lavere udgangsopløsning eller kvalitetsforudindstilling.", "lowMemory": "Lav hukommelse-tilstand", "lowMemoryHint": "Giver GPU’en kun den spilhukommelse, den bruger, i stedet for det hele: omtrent halvdelen af hukommelsen under spil. Anbefales til enheder med 16 GB hukommelse eller mindre. Gælder fra næste start.",
     "memoryOf": "{{used}} GB af {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "Billedvisning", "showFps": "Vis FPS", "upscaling": "Opskalering",

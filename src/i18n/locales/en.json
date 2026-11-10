@@ -129,7 +129,7 @@
     "modsActive_other": "{{count}} active",
     "modsOff": "Off",
     "lastRun": "Last run",
-    "lastRunOk": "The game closed normally.",
+    "lastRunOk": "The game closed normally.", "lowMemory": "This device has {{gb}} GB of memory. Turn on Low memory mode so the game needs less of it.", "lowMemoryButton": "Open Graphics",
     "lastRunError": "The game closed with exit code {{code}}."
   },
   "graphics": {
@@ -151,7 +151,7 @@
     "aspectAutoScreen": "Auto (this screen)",
     "memory": "Estimated memory",
     "memoryHint": "Estimated memory use by the game and graphics at the next launch, with these settings.",
-    "memoryHigh": "This uses more than 75% of your device’s memory. The game may slow down or quit. Try a lower output resolution or quality preset.",
+    "memoryHigh": "This uses more than 75% of your device’s memory. The game may slow down or quit. Try a lower output resolution or quality preset.", "lowMemory": "Low memory mode", "lowMemoryHint": "Gives the GPU only the game memory it uses, instead of all of it: about half the memory in play. Recommended for devices with 16 GB of memory or less. Takes effect at the next launch.",
     "memoryOf": "{{used}} GB of {{total}} GB",
     "memoryGb": "{{used}} GB",
     "fullscreen": "Fullscreen",

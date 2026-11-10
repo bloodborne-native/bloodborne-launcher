@@ -70,7 +70,7 @@
     "noFolder": "Kies je spelmap.", "folder": "Spelmap", "edition": "{{id}} · versie {{version}}", "region": { "america": "Amerika", "europe": "Europa", "japan": "Japan", "asia": "Azië", "unknown": "Onbekende regio" }, "oldHunters": "The Old Hunters", "dlcIncluded": "Inbegrepen", "dlcMissing": "Niet inbegrepen", "dlcMissingHint": "Deze editie bevat The Old Hunters niet, en de port kan nog geen uitbreidingen laden.", "summary": "Overzicht", "upscaler": "Upscaler", "renderSize": "Rendert op {{size}}",
     "frameRate": "Framerate", "controller": "Controller", "mods": "Mods",
     "modsActive": "{{count}} actief", "modsActive_one": "{{count}} actief", "modsActive_other": "{{count}} actief", "modsOff": "Uit",
-    "lastRun": "Laatste sessie", "lastRunOk": "Het spel is normaal afgesloten.", "lastRunError": "Het spel is afgesloten met afsluitcode {{code}}."
+    "lastRun": "Laatste sessie", "lastRunOk": "Het spel is normaal afgesloten.", "lowMemory": "Dit apparaat heeft {{gb}} GB geheugen. Zet de weinig-geheugenmodus aan zodat het spel er minder nodig heeft.", "lowMemoryButton": "Graphics openen", "lastRunError": "Het spel is afgesloten met afsluitcode {{code}}."
   },
   "graphics": {
     "effects": "Effecten",
@@ -83,7 +83,7 @@
     "outputRes": "Uitvoerresolutie", "outputResHint": "De resolutie op het scherm. Upscaling vult de extra details aan.", "outputResHintIos": "De resolutie waarin het spel tekent. Op dit apparaat hoogstens 540 lijnen: een groter beeld past niet in wat het systeem een app toestaat.", "aspectRatio": "Beeldverhouding", "aspectRatioHint": "Bredere schermen tonen meer aan de zijkanten; hogere schermen meer boven en onder. De HUD blijft bij de randen.", "aspectAuto": "Automatisch (dit scherm)", "aspectAutoScreen": "Automatisch (dit scherm)", "fullscreen": "Volledig scherm", "monitor": "Monitor", "monitorHint": "Kies welk scherm het spelvenster of de volledige schermmodus gebruikt.", "monitorMain": "Hoofdscherm",
     "memory": "Geschat geheugen",
     "memoryHint": "Geschat geheugengebruik van spel en graphics bij de volgende start, met deze instellingen.",
-    "memoryHigh": "Dit gebruikt meer dan 75% van het geheugen van je apparaat. Het spel kan trager worden of afsluiten. Probeer een lagere uitvoerresolutie of kwaliteitsinstelling.",
+    "memoryHigh": "Dit gebruikt meer dan 75% van het geheugen van je apparaat. Het spel kan trager worden of afsluiten. Probeer een lagere uitvoerresolutie of kwaliteitsinstelling.", "lowMemory": "Weinig-geheugenmodus", "lowMemoryHint": "Geeft de GPU alleen het spelgeheugen dat hij gebruikt, in plaats van alles: ongeveer de helft van het geheugen tijdens het spelen. Aanbevolen voor apparaten met 16 GB geheugen of minder. Geldt bij de volgende start.",
     "memoryOf": "{{used}} GB van {{total}} GB",
     "memoryGb": "{{used}} GB",
     "presentMode": "Beeldweergave", "showFps": "FPS tonen", "upscaling": "Upscaling",
