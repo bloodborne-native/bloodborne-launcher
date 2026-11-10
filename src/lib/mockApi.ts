@@ -60,7 +60,8 @@ const config: Config = {
   version: "0.8.0",
   // ?platform=ios (browser preview, screenshots): the iOS launcher's pages.
   platform: typeof window !== "undefined" && new URLSearchParams(window.location.search).get("platform") || "macos",
-  memory_mb: 18432,
+  // ?memory=8192 (browser preview): another device's memory, e.g. for the low memory notice.
+  memory_mb: Number(typeof window !== "undefined" && new URLSearchParams(window.location.search).get("memory")) || 18432,
   running: false,
   online_password_saved: false,
   thd_token_saved: false,
