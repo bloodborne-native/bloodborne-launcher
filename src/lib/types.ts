@@ -221,4 +221,7 @@ export type RecompProgress = {
 /** The Hunter's Dream sign-in (src-tauri/src/thd_account.rs): a code the player approves on a page. */
 export type ThdSignInStart = { device_code: string; user_code: string; verification_uri: string; interval: number; expires_in: number };
 /** "retry": the server could not be reached; ask again at the next interval. The token is saved by the backend. */
+/** What the server says of the saved sign-in (src-tauri/src/thd_account.rs): "valid" with the account's name,
+ *  "refused" (sign in again) or "unchecked" with the reason, or "signed_out". */
+export type ThdSignInCheck = { verdict: "valid" | "refused" | "unchecked" | "signed_out"; detail: string };
 export type ThdSignInPoll = { status: "pending" | "slow_down" | "retry" | "approved"; online_id: string | null };

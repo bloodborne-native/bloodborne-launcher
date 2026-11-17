@@ -25,6 +25,8 @@
     "signInExpired": "De code is verlopen voordat deze werd goedgekeurd.",
     "signedInAs": "Ingelogd als {{name}}",
     "signedInHint": "Je aanmelding wordt bewaard in een privébestand op dit apparaat dat alleen jouw account kan lezen. Bij uitloggen vergeet de server deze ook.",
+    "signInRefused": "De server accepteert deze aanmelding niet meer. Log opnieuw in.",
+    "signInUnchecked": "Kon deze aanmelding niet controleren bij de server.",
     "signOut": "Uitloggen",
     "signOutOffline": "Hier uitgelogd, maar de server kon niet worden bereikt om de aanmelding te vergeten.",
     "onlineId": "Online ID",

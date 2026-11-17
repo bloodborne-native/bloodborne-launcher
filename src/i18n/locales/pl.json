@@ -25,6 +25,8 @@
     "signInExpired": "Kod wygasł, zanim został zatwierdzony.",
     "signedInAs": "Zalogowano jako {{name}}",
     "signedInHint": "Twoje dane logowania są przechowywane w prywatnym pliku na tym urządzeniu, który może odczytać tylko Twoje konto. Wylogowanie sprawia, że serwer również o nich zapomina.",
+    "signInRefused": "Serwer nie akceptuje już tych danych logowania. Zaloguj się ponownie.",
+    "signInUnchecked": "Nie udało się sprawdzić tych danych logowania na serwerze.",
     "signOut": "Wyloguj się",
     "signOutOffline": "Wylogowano tutaj, ale nie udało się połączyć z serwerem, aby usunąć dane logowania.",
     "onlineId": "Online ID",

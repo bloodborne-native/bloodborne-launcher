@@ -25,6 +25,8 @@
     "signInExpired": "El código caducó antes de ser aprobado.",
     "signedInAs": "Sesión iniciada como {{name}}",
     "signedInHint": "Tu inicio de sesión se guarda en un archivo privado en este dispositivo que solo tu cuenta puede leer. Al cerrar sesión, el servidor también lo olvida.",
+    "signInRefused": "El servidor ya no acepta este inicio de sesión. Vuelve a iniciar sesión.",
+    "signInUnchecked": "No se pudo comprobar este inicio de sesión con el servidor.",
     "signOut": "Cerrar sesión",
     "signOutOffline": "Se cerró sesión aquí, pero no se pudo contactar con el servidor para que olvide el inicio de sesión.",
     "onlineId": "ID en línea",

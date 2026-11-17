@@ -45,6 +45,8 @@
     "signInExpired": "The code expired before it was approved.",
     "signedInAs": "Signed in as {{name}}",
     "signedInHint": "Your sign-in is kept in a private file on this device that only your account can read. Signing out also makes the server forget it.",
+    "signInRefused": "The server no longer accepts this sign-in. Sign in again.",
+    "signInUnchecked": "Could not check this sign-in with the server.",
     "signOut": "Sign out",
     "signOutOffline": "Signed out here, but the server could not be reached to forget the sign-in.",
     "onlineId": "Online ID",

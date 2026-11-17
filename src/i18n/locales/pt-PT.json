@@ -25,6 +25,8 @@
     "signInExpired": "O código expirou antes de ser aprovado.",
     "signedInAs": "Sessão iniciada como {{name}}",
     "signedInHint": "O seu início de sessão é guardado num ficheiro privado neste dispositivo que apenas a sua conta pode ler. Terminar sessão também faz com que o servidor o esqueça.",
+    "signInRefused": "O servidor já não aceita este início de sessão. Inicie sessão novamente.",
+    "signInUnchecked": "Não foi possível verificar este início de sessão com o servidor.",
     "signOut": "Terminar sessão",
     "signOutOffline": "Sessão terminada aqui, mas não foi possível contactar o servidor para esquecer o início de sessão.",
     "onlineId": "ID online",

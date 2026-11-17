@@ -25,6 +25,8 @@
     "signInExpired": "Le code a expiré avant d’avoir été approuvé.",
     "signedInAs": "Connecté en tant que {{name}}",
     "signedInHint": "Votre connexion est conservée dans un fichier privé sur cet appareil que seul votre compte peut lire. Se déconnecter permet aussi au serveur de l’oublier.",
+    "signInRefused": "Le serveur n’accepte plus cette connexion. Reconnectez-vous.",
+    "signInUnchecked": "Impossible de vérifier cette connexion auprès du serveur.",
     "signOut": "Se déconnecter",
     "signOutOffline": "Déconnecté ici, mais le serveur n’a pas pu être joint pour oublier la connexion.",
     "onlineId": "Online ID",

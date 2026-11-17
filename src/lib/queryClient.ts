@@ -15,6 +15,7 @@ export const queryKeys = {
   profiles: ["profiles"] as const,
   saves: ["saves"] as const,
   config: ["config"] as const,
+  thdSignInCheck: ["thd-sign-in-check"] as const,
   gameCheck: (dir: string) => ["game-check", dir] as const,
   mods: ["mods"] as const,
   patches: ["patches"] as const,

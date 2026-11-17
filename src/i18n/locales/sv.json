@@ -25,6 +25,8 @@
     "signInExpired": "Koden gick ut innan den godkändes.",
     "signedInAs": "Inloggad som {{name}}",
     "signedInHint": "Din inloggning sparas i en privat fil på den här enheten som bara ditt konto kan läsa. När du loggar ut glömmer servern den också.",
+    "signInRefused": "Servern godkänner inte längre den här inloggningen. Logga in igen.",
+    "signInUnchecked": "Kunde inte kontrollera den här inloggningen med servern.",
     "signOut": "Logga ut",
     "signOutOffline": "Utloggad här, men servern kunde inte nås för att glömma inloggningen.",
     "onlineId": "Online ID",

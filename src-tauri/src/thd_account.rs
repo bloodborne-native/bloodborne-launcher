@@ -42,12 +42,14 @@ pub struct SignInPoll {
 enum Failure {
     Transient(String),
     Final(String),
+    /// The account service answered and said no (ResKind other than 0), in its own words.
+    Refused(String),
 }
 
 impl Failure {
     fn message(self) -> String {
         match self {
-            Failure::Transient(message) | Failure::Final(message) => message,
+            Failure::Transient(message) | Failure::Final(message) | Failure::Refused(message) => message,
         }
     }
 }
@@ -82,7 +84,8 @@ fn parse_reply(status: u16, raw: &[u8]) -> Result<Value, Failure> {
     };
     if kind.as_i64() != Some(0) {
         let message: String = reply.get("Message").and_then(Value::as_str).unwrap_or("The server refused.").chars().take(200).collect();
-        return Err(Failure::Final(message));
+        // A busy server (429, 5xx) is not a verdict on the sign-in; a refusal is its 200 or 401.
+        return Err(if matches!(status, 200 | 401) { Failure::Refused(message) } else { Failure::Final(message) });
     }
     Ok(reply)
 }
@@ -144,7 +147,7 @@ pub async fn thd_sign_in_poll(state: State<'_, AppState>, server: String, device
     let reply = match call(&server_url(&server)?, "/auth/device/poll", json!({ "DeviceCode": device_code })).await {
         Ok(reply) => reply,
         Err(Failure::Transient(_)) => return Ok(SignInPoll { status: "retry".into(), online_id: None }),
-        Err(Failure::Final(message)) => return Err(message),
+        Err(Failure::Final(message) | Failure::Refused(message)) => return Err(message),
     };
     match text(&reply, "Status").as_str() {
         status @ ("pending" | "slow_down") => Ok(SignInPoll { status: status.into(), online_id: None }),
@@ -175,6 +178,33 @@ pub async fn thd_sign_out(state: State<'_, AppState>, server: String) -> Result<
     Ok(forgotten)
 }
 
+#[derive(Serialize)]
+pub struct SignInCheck {
+    /// "valid" (the server knows the sign-in), "refused" (it does not: sign in again), "unchecked"
+    /// (no verdict: not signed in, no answer, a busy server) or "signed_out".
+    verdict: &'static str,
+    /// Valid: the account's name as the server spells it. Refused or unchecked: the reason.
+    detail: String,
+}
+
+/// What the server says of the saved sign-in (POST /auth/whoami, as bbhost 0.2.31's check): only a
+/// clear refusal is a verdict against it; no answer or a busy server leaves it unchecked.
+#[tauri::command]
+pub async fn thd_sign_in_check(state: State<'_, AppState>, server: String) -> Result<SignInCheck, String> {
+    let server = server_url(&server)?;
+    let Some(token) = thd_token::saved(&state.paths.data) else {
+        return Ok(SignInCheck { verdict: "signed_out", detail: String::new() });
+    };
+    Ok(match call(&server, "/auth/whoami", json!({ "Token": token })).await {
+        Ok(reply) => match text(&reply, "OnlineId") {
+            name if !name.is_empty() => SignInCheck { verdict: "valid", detail: name },
+            _ => SignInCheck { verdict: "unchecked", detail: "The server sent no name.".into() },
+        },
+        Err(Failure::Refused(message)) => SignInCheck { verdict: "refused", detail: message },
+        Err(failure) => SignInCheck { verdict: "unchecked", detail: failure.message() },
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -203,10 +233,14 @@ mod tests {
     #[test]
     fn replies_are_checked_like_the_game_does() {
         assert!(parse_reply(200, br#"{"ResKind":0,"Status":"pending"}"#).is_ok());
+        assert_eq!(parse_reply(200, br#"{"ResKind":1,"Message":"no such token"}"#), Err(Failure::Refused("no such token".into())));
+        assert_eq!(parse_reply(401, br#"{"ResKind":1}"#), Err(Failure::Refused("The server refused.".into())));
+        // A busy server's refusal-shaped body is no verdict.
         assert_eq!(parse_reply(429, br#"{"ResKind":3,"Message":"Too many tries"}"#), Err(Failure::Final("Too many tries".into())));
+        assert_eq!(parse_reply(503, br#"{"ResKind":1,"Message":"no such token"}"#), Err(Failure::Final("no such token".into())));
         assert!(matches!(parse_reply(200, br#"{"hello":1}"#), Err(Failure::Final(m)) if m.contains("no account service")));
         let long = format!(r#"{{"ResKind":1,"Message":"{}"}}"#, "x".repeat(500));
-        assert!(matches!(parse_reply(400, long.as_bytes()), Err(Failure::Final(m)) if m.chars().count() == 200));
+        assert!(matches!(parse_reply(200, long.as_bytes()), Err(Failure::Refused(m)) if m.chars().count() == 200));
     }
 
     #[test]
