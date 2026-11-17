@@ -42,6 +42,8 @@
     "signInExpired": "O código expirou antes de ser aprovado.",
     "signedInAs": "Conectado como {{name}}",
     "signedInHint": "Seu login fica salvo em um arquivo privado neste dispositivo que apenas sua conta pode ler. Ao sair, o servidor também o esquece.",
+    "signInRefused": "O servidor não aceita mais este login. Entre novamente.",
+    "signInUnchecked": "Não foi possível verificar este login com o servidor.",
     "signOut": "Sair",
     "signOutOffline": "Sessão encerrada aqui, mas não foi possível acessar o servidor para esquecer o login.",
     "onlineId": "ID online",

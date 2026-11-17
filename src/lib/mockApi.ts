@@ -1,6 +1,6 @@
 // Browser preview (npm run dev outside Tauri): the backend's answers, in memory, so the
 // interface can be developed and screenshotted in any browser. Never used in the app.
-import type { ThdSignInStart, ThdSignInPoll, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, Inventory, SaveEdit, CatalogItem, RecompProgress, RecompStatus } from "@/lib/types";
+import type { ThdSignInStart, ThdSignInPoll, ThdSignInCheck, Config, Display, Fsr411Support, GameCheck, Gamepad, GameState, Mod, Patch, Settings, SaveChange, SaveList, ProfileList, ProfileChange, TrophyUnlock, Character, Inventory, SaveEdit, CatalogItem, RecompProgress, RecompStatus } from "@/lib/types";
 
 const config: Config = {
   settings: {
@@ -341,6 +341,11 @@ export const mockApi = {
     config.thd_token_saved = true;
     return wait<ThdSignInPoll>({ status: "approved", online_id: "PreviewHunter" });
   },
+  thdSignInCheck: (_server: string) => wait<ThdSignInCheck>(
+    config.thd_token_saved
+      ? (new URLSearchParams(window.location.search).has("signin-refused")
+        ? { verdict: "refused", detail: "no such token" } : { verdict: "valid", detail: "PreviewHunter" })
+      : { verdict: "signed_out", detail: "" }),
   thdSignOut: (_server: string) => {
     config.thd_token_saved = false;
     previewPolls = 0;

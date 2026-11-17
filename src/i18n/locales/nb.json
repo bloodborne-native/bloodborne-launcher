@@ -25,6 +25,8 @@
     "signInExpired": "Koden utløp før den ble godkjent.",
     "signedInAs": "Logget på som {{name}}",
     "signedInHint": "Påloggingen din oppbevares i en privat fil på denne enheten som bare kontoen din kan lese. Hvis du logger av, glemmer serveren den også.",
+    "signInRefused": "Serveren godtar ikke lenger denne påloggingen. Logg på igjen.",
+    "signInUnchecked": "Kunne ikke kontrollere denne påloggingen med serveren.",
     "signOut": "Logg av",
     "signOutOffline": "Logget av her, men serveren kunne ikke nås for å glemme påloggingen.",
     "onlineId": "Online ID",

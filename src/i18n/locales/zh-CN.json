@@ -25,6 +25,8 @@
     "signInExpired": "代码在批准前已过期。",
     "signedInAs": "已登录为 {{name}}",
     "signedInHint": "你的登录信息保存在此设备上的私有文件中，只有你的账号能读取。退出登录也会让服务器忘记它。",
+    "signInRefused": "服务器已不再接受这个登录，请重新登录。",
+    "signInUnchecked": "无法向服务器确认这个登录。",
     "signOut": "退出登录",
     "signOutOffline": "已在此设备退出登录，但无法连接到服务器，服务器尚未忘记此登录。",
     "onlineId": "Online ID",

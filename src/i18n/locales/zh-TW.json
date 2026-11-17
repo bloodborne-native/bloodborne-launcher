@@ -25,6 +25,8 @@
     "signInExpired": "代碼在核准前已過期。",
     "signedInAs": "已登入為 {{name}}",
     "signedInHint": "你的登入資訊保存在此裝置上的私人檔案中，只有你的帳號能讀取。登出也會讓伺服器忘記它。",
+    "signInRefused": "伺服器已不再接受這個登入，請重新登入。",
+    "signInUnchecked": "無法向伺服器確認這個登入。",
     "signOut": "登出",
     "signOutOffline": "已在此裝置登出，但無法連線到伺服器，伺服器尚未忘記此登入。",
     "onlineId": "Online ID",

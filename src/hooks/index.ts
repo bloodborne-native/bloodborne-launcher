@@ -14,6 +14,7 @@ export * from "@/hooks/useSaves";
 export * from "@/hooks/useProfiles";
 export * from "@/hooks/useTrayLabels";
 export * from "@/hooks/useRelease";
+export * from "@/hooks/useThdSignInCheck";
 export * from "@/hooks/useOpenRelease";
 export * from "@/hooks/useCanHover";
 export * from "@/hooks/useRecomp";

@@ -25,6 +25,8 @@
     "signInExpired": "Kod onaylanmadan önce süresi doldu.",
     "signedInAs": "{{name}} olarak giriş yapıldı",
     "signedInHint": "Oturum bilgileriniz bu cihazda yalnızca hesabınızın okuyabileceği özel bir dosyada saklanır. Çıkış yaptığınızda sunucu da bu bilgiyi unutur.",
+    "signInRefused": "Sunucu artık bu oturumu kabul etmiyor. Tekrar giriş yapın.",
+    "signInUnchecked": "Bu oturum sunucuda doğrulanamadı.",
     "signOut": "Çıkış yap",
     "signOutOffline": "Burada çıkış yapıldı ancak oturumun unutulması için sunucuya ulaşılamadı.",
     "onlineId": "Online ID",

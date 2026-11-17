@@ -25,6 +25,8 @@
     "signInExpired": "Koodi vanhentui ennen kuin se vahvistettiin.",
     "signedInAs": "Kirjautuneena nimellä {{name}}",
     "signedInHint": "Kirjautumisesi säilytetään tämän laitteen yksityisessä tiedostossa, jota vain tilisi voi lukea. Uloskirjautuminen saa myös palvelimen unohtamaan sen.",
+    "signInRefused": "Palvelin ei enää hyväksy tätä kirjautumista. Kirjaudu sisään uudelleen.",
+    "signInUnchecked": "Tätä kirjautumista ei voitu tarkistaa palvelimelta.",
     "signOut": "Kirjaudu ulos",
     "signOutOffline": "Kirjauduttu ulos täältä, mutta palvelimeen ei saatu yhteyttä kirjautumisen unohtamiseksi.",
     "onlineId": "Online ID",

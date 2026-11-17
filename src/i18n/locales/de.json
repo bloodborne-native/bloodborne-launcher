@@ -25,6 +25,8 @@
     "signInExpired": "Der Code ist abgelaufen, bevor er bestätigt wurde.",
     "signedInAs": "Angemeldet als {{name}}",
     "signedInHint": "Deine Anmeldung wird in einer privaten Datei auf diesem Gerät gespeichert, die nur dein Konto lesen kann. Beim Abmelden vergisst der Server sie ebenfalls.",
+    "signInRefused": "Der Server akzeptiert diese Anmeldung nicht mehr. Melde dich erneut an.",
+    "signInUnchecked": "Diese Anmeldung konnte nicht mit dem Server überprüft werden.",
     "signOut": "Abmelden",
     "signOutOffline": "Hier abgemeldet, aber der Server konnte nicht erreicht werden, um die Anmeldung zu vergessen.",
     "onlineId": "Online ID",

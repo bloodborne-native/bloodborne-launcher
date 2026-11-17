@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { SettingRow } from "@/components/settings";
 import { Button } from "@/components/ui";
-import { useConfig, useSettingsData } from "@/hooks";
+import { useConfig, useSettingsData, useThdSignInCheck } from "@/hooks";
 import { api, queryKeys } from "@/lib";
 
 type Waiting = { userCode: string; uri: string };
@@ -24,8 +24,14 @@ export function ThdSignIn() {
   const run = useRef(0);
   useEffect(() => () => { run.current += 1; }, []);
   const signedIn = settings.thd_online_id !== "" && !!config?.thd_token_saved;
+  const { data: check } = useThdSignInCheck(settings.thd_server, signedIn);
+  const refused = signedIn && check?.verdict === "refused";
+  const unchecked = signedIn && check?.verdict === "unchecked";
   const saveOnlineId = (thd_online_id: string) => api.saveSettings({ thd_online_id })
-    .finally(() => client.invalidateQueries({ queryKey: queryKeys.config }));
+    .finally(() => {
+      void client.invalidateQueries({ queryKey: queryKeys.config });
+      void client.invalidateQueries({ queryKey: queryKeys.thdSignInCheck }); // a new or removed sign-in is asked again
+    });
 
   const signIn = async () => {
     const id = ++run.current;
@@ -76,7 +82,9 @@ export function ThdSignIn() {
     </SettingRow>;
   }
   return signedIn
-    ? <SettingRow title={t("online.signedInAs", { name: settings.thd_online_id })} description={t("online.signedInHint")}>
+    ? <SettingRow title={t("online.signedInAs", { name: settings.thd_online_id })}
+        description={refused ? t("online.signInRefused") : unchecked ? t("online.signInUnchecked") : t("online.signedInHint")}>
+        {refused && <Button disabled={busy} onClick={() => void signIn()}>{t("online.signIn")}</Button>}
         <Button variant="secondary" disabled={busy} onClick={() => void signOut()}>{t("online.signOut")}</Button>
       </SettingRow>
     : <SettingRow title={t("online.signedOut")} description={t("online.signedOutHint")}>
